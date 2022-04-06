@@ -1,6 +1,20 @@
 plugins {
     id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android'
+    id 'dagger.hilt.android.plugin'
+    id 'kotlin-kapt'
+}
+
+static def computeVersionCode() {
+    def initValue = 1
+    def process = "git rev-list HEAD --count".execute()
+    def gitVersion = process.text
+    if (gitVersion == "") {
+        return initValue
+    } else {
+        def versionCode = initValue + gitVersion.toInteger()
+        return versionCode
+    }
 }
 
 android {
@@ -8,36 +22,37 @@ android {
 
     defaultConfig {
         applicationId "dev.katiebarnett.welcometoflip"
-        minSdk 21
-        targetSdk 31
-        versionCode 1
-        versionName "1.0"
+        minSdk min_sdk_version
+        targetSdk compile_sdk_version
+        versionCode computeVersionCode()
+        versionName app_version_name
 
+        // Required because of https://commonsware.com/blog/2020/10/14/android-studio-4p1-library-modules-version-code.html
+        buildConfigField ('int', 'APP_VERSION_CODE', computeVersionCode().toString())
+        buildConfigField 'String', 'APP_VERSION_NAME', "\"$app_version_name\""
+        
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
+        debug {
+            versionNameSuffix ".debug"
+        }
+        
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
+
+    buildFeatures {
+        viewBinding true
+        dataBinding true
     }
 }
 
-dependencies {
-
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+dependencies {    
+    implementation libraries
+    kapt librariesKapt
 }
