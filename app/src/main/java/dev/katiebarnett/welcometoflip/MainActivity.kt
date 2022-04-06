@@ -2,10 +2,9 @@ package dev.katiebarnett.welcometoflip
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity)
-    }
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity(R.layout.main_activity) {
+    
 }
