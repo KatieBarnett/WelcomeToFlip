@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import dev.katiebarnett.welcometoflip.databinding.ObjectAnimatorFlipFragmentBinding
 
 @AndroidEntryPoint
-class ObjectAnimatorFlipFragment : Fragment(R.layout.object_animator_flip_fragment) {
+class NoAnimationFlipFragment : Fragment(R.layout.no_animation_flip_fragment) {
 
     private val viewModel: DeckViewModel by viewModels()
     
@@ -26,10 +25,14 @@ class ObjectAnimatorFlipFragment : Fragment(R.layout.object_animator_flip_fragme
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.numberDeck.setOnClickListener {
+            viewModel.nextCardDeckUpdate()
+        }
         
-//        binding.numberDeck.setOnClickListener { 
-//            viewModel.
-//        }
-//        
+        binding.actionDeck.setOnClickListener {
+            viewModel.previousCardDeckUpdate()
+        }
+
     }
 }
