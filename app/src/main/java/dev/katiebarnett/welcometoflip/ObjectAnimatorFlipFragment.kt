@@ -46,6 +46,12 @@ class ObjectAnimatorFlipFragment : Fragment(R.layout.object_animator_flip_fragme
             // Update the number deck position
             viewModel.nextCardNumberDeck()
 
+            // Stop the view getting cut off 
+            val scale = resources.displayMetrics.density
+            val cameraDist = 8000 * scale
+            binding.flipCardFront.cameraDistance = cameraDist
+            binding.flipCardBack.cameraDistance = cameraDist
+
             // Do the flip animation
             try {
                 // Front card
