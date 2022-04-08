@@ -7,7 +7,7 @@
         
         <variable
             name="viewModel"
-            type="dev.katiebarnett.welcometoflip.DeckViewModel" />
+            type="dev.katiebarnett.welcometoflip.NoAnimationViewModel" />
 
     </data>
         

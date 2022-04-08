@@ -8,7 +8,7 @@ buildscript {
         // global variables
         app_version_name = "1.0.0"
         compile_sdk_version = 31
-        min_sdk_version = 21
+        min_sdk_version = 26
 
         // local variables (use def)
         def annotations_version = '1.1.0'

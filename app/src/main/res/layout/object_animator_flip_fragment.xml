@@ -7,7 +7,7 @@
         
         <variable
             name="viewModel"
-            type="dev.katiebarnett.welcometoflip.DeckViewModel" />
+            type="dev.katiebarnett.welcometoflip.ObjectAnimatorViewModel" />
 
     </data>
         
@@ -39,15 +39,30 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ImageView
-            android:id="@+id/flipCard"
+            android:id="@+id/flipCardBack"
             android:layout_width="0dp"
             android:layout_height="0dp"
             tools:src="@drawable/number_6"
-            app:loadImage="@{viewModel.numberDeckTop}"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/actionDeck"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:loadImage="@{viewModel.flipCardBack}"
+            app:layout_constraintTop_toTopOf="@id/actionDeck"
+            app:layout_constraintStart_toStartOf="@id/actionDeck"
+            app:layout_constraintEnd_toEndOf="@id/actionDeck"
+            app:layout_constraintBottom_toBottomOf="@id/actionDeck"/>
+
+        <ImageView
+            android:id="@+id/flipCardFront"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            tools:src="@drawable/number_6"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:loadImage="@{viewModel.flipCardFront}"
+            app:layout_constraintTop_toTopOf="@id/actionDeck"
+            app:layout_constraintStart_toStartOf="@id/actionDeck"
+            app:layout_constraintEnd_toEndOf="@id/actionDeck"
+            app:layout_constraintBottom_toBottomOf="@id/actionDeck"/>
         
         
     </androidx.constraintlayout.widget.ConstraintLayout>
