@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">WelcomeToFlip</string>
+
+
+    <string name="card_aspect_ratio">H,3072:4080</string>
+    
+    
 </resources>

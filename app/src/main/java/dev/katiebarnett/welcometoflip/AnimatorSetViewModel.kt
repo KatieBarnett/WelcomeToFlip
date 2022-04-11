@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ObjectAnimatorViewModel @Inject constructor(
+class AnimatorSetViewModel @Inject constructor(
 ) : DeckViewModel() {
     
     private val numberDeckTopPosition = MutableLiveData(1)

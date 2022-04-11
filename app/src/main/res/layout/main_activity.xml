@@ -26,6 +26,16 @@
         app:layout_constraintTop_toBottomOf="@id/no_animation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/animator_set"/>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/animator_set"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:name="dev.katiebarnett.welcometoflip.AnimatorSetFlipFragment"
+        app:layout_constraintTop_toBottomOf="@id/object_animator"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

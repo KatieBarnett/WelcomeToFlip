@@ -64,12 +64,9 @@ class ObjectAnimatorFlipFragment : Fragment(R.layout.object_animator_flip_fragme
                 flipInAnimatorSet.start()
 
                 flipInAnimatorSet.doOnEnd {
-
                     // Update the action deck position 
                     viewModel.nextCardActionDeck()
                     
-                    binding.actionDeck.invalidate()
-
                     // Hide the animation cards
                     binding.flipCardFront.visibility = View.GONE
                     binding.flipCardBack.visibility = View.GONE
