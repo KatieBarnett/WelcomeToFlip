@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        
+        <variable
+            name="viewModel"
+            type="dev.katiebarnett.welcometoflip.MotionLayoutViewModel" />
+
+    </data>
+        
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/parentView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutDescription="@xml/motion_layout_flip_scene"
+        app:currentState="@id/startRightMovement"
+        android:padding="@dimen/spacing">
+
+        <ImageView
+            android:id="@+id/numberDeck"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            tools:src="@drawable/number_6"
+            app:layout_constraintDimensionRatio="@string/card_aspect_ratio"
+            app:loadImage="@{viewModel.numberDeckTop}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/actionDeck"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:id="@+id/actionDeck"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            tools:src="@drawable/action_1"
+            app:layout_constraintDimensionRatio="@string/card_aspect_ratio"
+            app:loadImage="@{viewModel.actionDeckTop}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/numberDeck"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:id="@+id/flipCardBack"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            tools:src="@drawable/number_6"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:scaleType="fitXY"
+            app:loadImage="@{viewModel.flipCardBack}"/>
+
+        <ImageView
+            android:id="@+id/flipCardFront"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            tools:src="@drawable/number_6"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:scaleType="fitXY"
+            app:loadImage="@{viewModel.flipCardFront}"/>
+
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+</layout>

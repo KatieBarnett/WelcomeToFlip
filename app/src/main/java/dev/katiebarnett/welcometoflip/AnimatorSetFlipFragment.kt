@@ -126,14 +126,4 @@ class AnimatorSetFlipFragment : Fragment(R.layout.animator_set_flip_fragment) {
             viewModel.updateFlipCardPosition()
         }
     }
-
-    inline fun View.waitForLayout(crossinline f: () -> Unit) = with(viewTreeObserver) {
-        addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                removeOnGlobalLayoutListener(this)
-                f()
-            }
-        })
-    }
-    
 }

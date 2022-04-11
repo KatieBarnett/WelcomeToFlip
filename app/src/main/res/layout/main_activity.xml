@@ -22,6 +22,7 @@
         android:id="@+id/object_animator"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:visibility="gone"
         android:name="dev.katiebarnett.welcometoflip.ObjectAnimatorFlipFragment"
         app:layout_constraintTop_toBottomOf="@id/no_animation"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,8 +33,31 @@
         android:id="@+id/animator_set"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:visibility="gone"
         android:name="dev.katiebarnett.welcometoflip.AnimatorSetFlipFragment"
         app:layout_constraintTop_toBottomOf="@id/object_animator"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/motion_layout_simple"/>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/motion_layout_simple"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:name="dev.katiebarnett.welcometoflip.MotionLayoutSimpleFlipFragment"
+        app:layout_constraintTop_toBottomOf="@id/animator_set"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/motion_layout"/>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/motion_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        android:name="dev.katiebarnett.welcometoflip.MotionLayoutFlipFragment"
+        app:layout_constraintTop_toBottomOf="@id/motion_layout_simple"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

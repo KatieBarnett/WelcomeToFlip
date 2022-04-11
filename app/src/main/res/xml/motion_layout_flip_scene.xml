@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        android:id="@+id/moveRight"
+        motion:constraintSetStart="@+id/startRightMovement"
+        motion:constraintSetEnd="@+id/endRightMovement"
+        motion:duration="1000">
+    </Transition>
+    
+    <ConstraintSet android:id="@+id/startRightMovement">
+        <Constraint
+            android:id="@+id/flipCardBack"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            motion:layout_constraintTop_toTopOf="@id/numberDeck"
+            motion:layout_constraintStart_toStartOf="@id/numberDeck"
+            motion:layout_constraintEnd_toEndOf="@id/numberDeck"
+            motion:layout_constraintBottom_toBottomOf="@id/numberDeck" />
+        <Constraint
+            android:id="@+id/flipCardFront"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            motion:layout_constraintTop_toTopOf="@id/numberDeck"
+            motion:layout_constraintStart_toStartOf="@id/numberDeck"
+            motion:layout_constraintEnd_toEndOf="@id/numberDeck"
+            motion:layout_constraintBottom_toBottomOf="@id/numberDeck" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/endRightMovement">
+        <Constraint
+            android:id="@+id/flipCardBack"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            motion:layout_constraintTop_toTopOf="@id/actionDeck"
+            motion:layout_constraintStart_toStartOf="@id/actionDeck"
+            motion:layout_constraintEnd_toEndOf="@id/actionDeck"
+            motion:layout_constraintBottom_toBottomOf="@id/actionDeck" />
+        <Constraint
+            android:id="@+id/flipCardFront"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            motion:layout_constraintTop_toTopOf="@id/actionDeck"
+            motion:layout_constraintStart_toStartOf="@id/actionDeck"
+            motion:layout_constraintEnd_toEndOf="@id/actionDeck"
+            motion:layout_constraintBottom_toBottomOf="@id/actionDeck" />
+    </ConstraintSet>
+
+    <Transition
+        android:id="@+id/flipMotion"
+        motion:constraintSetStart="@+id/startFlip"
+        motion:constraintSetEnd="@+id/endFlip"
+        motion:duration="3000">
+        <KeyFrameSet>
+            <KeyPosition
+                motion:keyPositionType="pathRelative"
+                android:layout_width="1dp"
+                motion:framePosition="50"
+                motion:motionTarget="@id/flipCardBack"/>
+            <KeyPosition
+                motion:keyPositionType="pathRelative"
+                android:layout_width="1dp"
+                motion:framePosition="50"
+                motion:motionTarget="@id/flipCardFront"/>
+        </KeyFrameSet>
+    </Transition>
+
+    <ConstraintSet android:id="@+id/startFlip">
+        <Constraint
+            android:id="@+id/flipCardBack"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            motion:layout_constraintTop_toTopOf="@id/actionDeck"
+            motion:layout_constraintStart_toStartOf="@id/actionDeck"
+            motion:layout_constraintEnd_toEndOf="@id/actionDeck"
+            motion:layout_constraintBottom_toBottomOf="@id/actionDeck" />
+        <Constraint
+            android:id="@+id/flipCardFront"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            motion:layout_constraintTop_toTopOf="@id/actionDeck"
+            motion:layout_constraintStart_toStartOf="@id/actionDeck"
+            motion:layout_constraintEnd_toEndOf="@id/actionDeck"
+            motion:layout_constraintBottom_toBottomOf="@id/actionDeck" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/endFlip">
+        <Constraint
+            android:id="@+id/flipCardBack"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            motion:layout_constraintTop_toTopOf="@id/actionDeck"
+            motion:layout_constraintStart_toStartOf="@id/actionDeck"
+            motion:layout_constraintEnd_toEndOf="@id/actionDeck"
+            motion:layout_constraintBottom_toBottomOf="@id/actionDeck" />
+        <Constraint
+            android:id="@+id/flipCardFront"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            motion:layout_constraintTop_toTopOf="@id/actionDeck"
+            motion:layout_constraintStart_toStartOf="@id/actionDeck"
+            motion:layout_constraintEnd_toEndOf="@id/actionDeck"
+            motion:layout_constraintBottom_toBottomOf="@id/actionDeck" />
+    </ConstraintSet>
+
+</MotionScene>
