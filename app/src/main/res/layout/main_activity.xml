@@ -55,20 +55,31 @@
         android:id="@+id/motion_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="visible"
+        android:visibility="gone"
         android:name="dev.katiebarnett.welcometoflip.MotionLayoutFlipFragment"
         app:layout_constraintTop_toBottomOf="@id/motion_layout_simple"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/jetpack_compose"/>
+        app:layout_constraintBottom_toTopOf="@id/jetpack_compose_translate"/>
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/jetpack_compose"
+        android:id="@+id/jetpack_compose_translate"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        android:name="dev.katiebarnett.welcometoflip.JetpackComposeTranslateFragment"
+        app:layout_constraintTop_toBottomOf="@id/motion_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/jetpack_compose_flip"/>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/jetpack_compose_flip"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="visible"
         android:name="dev.katiebarnett.welcometoflip.JetpackComposeFlipFragment"
-        app:layout_constraintTop_toBottomOf="@id/motion_layout"
+        app:layout_constraintTop_toBottomOf="@id/jetpack_compose_translate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
