@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import dev.katiebarnett.welcometoflip.databinding.NoAnimationFlipFragmentBinding
-import dev.katiebarnett.welcometoflip.databinding.ObjectAnimatorFlipFragmentBinding
 
 @AndroidEntryPoint
 class NoAnimationFlipFragment : Fragment(R.layout.no_animation_flip_fragment) {

@@ -8,16 +8,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.animation.doOnEnd
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import coil.load
 import dagger.hilt.android.AndroidEntryPoint
 import dev.katiebarnett.welcometoflip.databinding.AnimatorSetFlipFragmentBinding
-import kotlinx.coroutines.delay
-import okhttp3.internal.wait
 
 
 @AndroidEntryPoint

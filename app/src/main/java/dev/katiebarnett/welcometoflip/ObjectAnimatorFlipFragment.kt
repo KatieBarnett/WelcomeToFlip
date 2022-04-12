@@ -7,11 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import androidx.core.animation.doOnEnd
-import androidx.core.view.doOnAttach
-import androidx.core.view.doOnLayout
-import androidx.core.view.doOnNextLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint

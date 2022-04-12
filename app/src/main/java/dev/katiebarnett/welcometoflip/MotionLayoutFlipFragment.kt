@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import dev.katiebarnett.welcometoflip.databinding.MotionLayoutFlipFragmentBinding
-import dev.katiebarnett.welcometoflip.databinding.MotionLayoutSimpleFlipFragmentBinding
 
 
 @AndroidEntryPoint
