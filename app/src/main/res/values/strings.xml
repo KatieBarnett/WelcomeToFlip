@@ -1,8 +1,11 @@
 <resources>
-    <string name="app_name">WelcomeToFlip</string>
+    <string name="app_name">Welcome To Flip</string>
 
 
     <string name="card_aspect_ratio">H,3072:4080</string>
+
+
+    <string name="game_welcome_to_the_moon">Welcome To The Moon</string>
     
     
 </resources>
