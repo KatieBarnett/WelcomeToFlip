@@ -35,7 +35,8 @@ ext {
             // When using a MDC theme
             "com.google.android.material:compose-theme-adapter:$compose_material_theme_adapter_version",
             // Navigation
-            "androidx.navigation:navigation-compose:$compose_navigation_version"
+            "androidx.navigation:navigation-compose:$compose_navigation_version",
+            "androidx.hilt:hilt-navigation-compose:$hilt_androidx_version"
     ]
 
     librariesKapt = [

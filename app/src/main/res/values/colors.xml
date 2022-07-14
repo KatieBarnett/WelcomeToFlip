@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <color name="background">@color/black</color>
+    <color name="background">@color/white</color>
 
     <color name="primary">@color/purple_dark</color>
+
+
+    <color name="button_background">@color/primary</color>
+    <color name="button_border">@color/black</color>
     
     <color name="action_plant">@color/green</color>
     <color name="action_robot">@color/grey</color>

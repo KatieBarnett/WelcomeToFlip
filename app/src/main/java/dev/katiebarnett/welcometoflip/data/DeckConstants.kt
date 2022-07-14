@@ -13,6 +13,13 @@ sealed class GameType(
 
 object WelcomeToTheMoon: GameType(icon = R.drawable.noun_rocket_4925595, name = R.string.game_welcome_to_the_moon)
 
+fun Int.mapToGameType() : GameType? {
+    return when(this) {
+        WelcomeToTheMoon.name -> WelcomeToTheMoon
+        else -> null
+    }
+}
+
  val welcomeToTheMoonDeck = listOf(
     Card(action = R.drawable.action_robot, number = R.drawable.action_robot),
     Card(R.drawable.action_robot, R.drawable.action_robot),

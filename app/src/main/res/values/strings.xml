@@ -5,6 +5,9 @@
     <string name="card_aspect_ratio">H,3072:4080</string>
 
 
+    <string name="main_instruction">Choose which game to play:</string>
+
+
     <string name="game_welcome_to_the_moon">Welcome To The Moon</string>
     
     
