@@ -26,11 +26,11 @@ import dev.katiebarnett.welcometoflip.data.WelcomeToTheMoon
 @Composable
 fun ChooseGameBody(chooseGameAction: (gameType: GameType) -> Unit, modifier: Modifier = Modifier) {
     val viewModel: MainViewModel = viewModel()
-    GameList(games = viewModel.games, chooseGameAction = chooseGameAction, modifier)
+    GameChoiceList(games = viewModel.games, chooseGameAction = chooseGameAction, modifier)
 }
 
 @Composable
-fun GameList(games: List<GameType>, chooseGameAction: (gameType: GameType) -> Unit, modifier: Modifier = Modifier) {
+fun GameChoiceList(games: List<GameType>, chooseGameAction: (gameType: GameType) -> Unit, modifier: Modifier = Modifier) {
     Column(
         modifier
             .fillMaxSize()
@@ -41,14 +41,14 @@ fun GameList(games: List<GameType>, chooseGameAction: (gameType: GameType) -> Un
             Button(onClick = { chooseGameAction.invoke(it) },
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.button_background))
             ) {
-                Game(it)
+                GameChoice(it)
             }
         }
     }
 }
 
 @Composable
-fun Game(gameType: GameType, modifier: Modifier = Modifier) {
+fun GameChoice(gameType: GameType, modifier: Modifier = Modifier) {
     Column {
         Box(modifier = modifier.padding(dimensionResource(id = R.dimen.button_padding)),
             contentAlignment = Alignment.Center) {
@@ -65,9 +65,9 @@ fun Game(gameType: GameType, modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun GamePreview() {
+fun GameChoicePreview() {
     MdcTheme {
-        Game(WelcomeToTheMoon, Modifier)
+        GameChoice(WelcomeToTheMoon, Modifier)
     }
 }
 
@@ -75,6 +75,6 @@ fun GamePreview() {
 @Composable
 fun GameListPreview() {
     MdcTheme {
-        GameList(listOf(WelcomeToTheMoon), {}, Modifier)
+        GameChoiceList(listOf(WelcomeToTheMoon), {}, Modifier)
     }
 }

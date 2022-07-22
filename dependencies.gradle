@@ -36,7 +36,9 @@ ext {
             "com.google.android.material:compose-theme-adapter:$compose_material_theme_adapter_version",
             // Navigation
             "androidx.navigation:navigation-compose:$compose_navigation_version",
-            "androidx.hilt:hilt-navigation-compose:$hilt_androidx_version"
+            "androidx.hilt:hilt-navigation-compose:$hilt_androidx_version",
+            // Constraint Layout,
+            "androidx.constraintlayout:constraintlayout-compose:$compose_constraint_layout_version"
     ]
 
     librariesKapt = [

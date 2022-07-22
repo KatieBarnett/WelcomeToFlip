@@ -1,5 +1,6 @@
 package dev.katiebarnett.welcometoflip.models
 
-import androidx.annotation.DrawableRes
+import dev.katiebarnett.welcometoflip.data.Action
+import dev.katiebarnett.welcometoflip.data.Number
 
-data class Card (@DrawableRes val action: Int, @DrawableRes val number: Int)
+data class Card (val action: Action, val number: Number)

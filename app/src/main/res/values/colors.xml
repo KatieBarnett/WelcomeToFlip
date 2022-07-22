@@ -6,6 +6,9 @@
     <color name="primary">@color/purple_dark</color>
 
 
+    <color name="card_background">@color/grey_light</color>
+    <color name="card_border">@color/purple_dark</color>
+    
     <color name="button_background">@color/primary</color>
     <color name="button_border">@color/black</color>
     
@@ -23,6 +26,7 @@
     <color name="black">#FF000000</color>
 
     <color name="purple_dark">#6272A4</color>
+    <color name="grey_light">#ffF8F8F2</color>
     
     <color name="green">#ff7AC828</color>
     <color name="grey">#ffD9D9D9</color>

@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
             WelcomeToFlipApp()
         }
     }
-
+    
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun WelcomeToFlipApp() {

@@ -11,6 +11,7 @@ buildscript {
 
     dependencies {
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
+//        classpath "org.owasp:dependency-check-gradle:$dependency_check_version"
     }
 }
 
@@ -20,7 +21,9 @@ plugins {
     id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
     id "com.github.ben-manes.versions" version '0.42.0'
     id 'com.autonomousapps.dependency-analysis' version '1.10.0'
+    id 'org.owasp.dependencycheck' version "$dependency_check_version"
 }
+
 
 dependencyAnalysis {
     issues {
@@ -46,6 +49,15 @@ dependencyAnalysis {
     }
 }
 
+dependencyCheck {
+    format = 'HTML'
+    failOnError = false
+// Will not cause a failed build if there are vulnerabilities
+    failBuildOnCVSS = 11
+// This if using a CI output directory (using Bitrise as an example)
+//    outputDirectory = System.env.BITRISE_DEPLOY_DIR
+}
+
 def isNonStable = { String version ->
     def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { it -> version.toUpperCase().contains(it) }
     def regex = /^[0-9,.v-]+(-r)?$/
@@ -63,8 +75,6 @@ tasks.named("dependencyUpdates").configure {
         }
     }
 }
-
-
 
 task clean(type: Delete) {
     delete rootProject.buildDir

@@ -1,35 +1,54 @@
 package dev.katiebarnett.welcometoflip
 
-//@HiltViewModel
-//class JetpackComposeViewModel @Inject constructor(
-//) : StackViewModel() {
-//
-//
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.katiebarnett.welcometoflip.models.Card
+import javax.inject.Inject
+
+@HiltViewModel
+open class StackViewModel @Inject constructor(
+) : ViewModel() {
+    
+    private lateinit var stack: List<Card>
+    private var position: Int = 0
+    
 //    private val numberDeckTopPosition = MutableLiveData(1)
 //    private val actionDeckTopPosition = MutableLiveData(0)
 //
 //    private val flipCardTopPosition = MutableLiveData(1)
 //    private val flipCardBottomPosition = MutableLiveData(1)
 //
-//    val numberDeckTop = Transformations.map(numberDeckTopPosition) {
-//        stack.getOrNull(it)?.number
-//    }
-//
-//    val actionDeckTop = Transformations.map(actionDeckTopPosition) {
-//        stack.getOrNull(it)?.action
-//    }
-//
-//    val flipCardFront = Transformations.map(flipCardTopPosition) {
-//        stack.getOrNull(it)?.number
-//    }
-//
-//    val flipCardBack = Transformations.map(flipCardBottomPosition) {
-//        stack.getOrNull(it)?.action
-//    }
-//
+    val numberStackTop
+        get() = stack.getOrNull(position)
+    
+    val actionStackTop
+        get() = stack.getOrNull(position - 1)
+
+//    val flipCardFront
+//        get() = stack.getOrNull(position)?.number
+//    
+//    val flipCardBack
+//        get() = stack.getOrNull(position)?.action
+
+    fun setPosition(newPosition: Int) {
+        position = newPosition
+    }
+
+    fun setStack(newStack: List<Card>) {
+        stack = newStack
+    }
+    
+    
+    
+    init {
+        
+        Log.d("TEST", "does this happen every change?")
+    }
+
 //    fun nextCardNumberDeck() {
 //        numberDeckTopPosition.value?.let {
-//            if (it < stack.size) {
+//            if (it < (stack.value?.size ?: 0)) {
 //                numberDeckTopPosition.postValue(it + 1)
 //            }
 //        }
@@ -37,7 +56,7 @@ package dev.katiebarnett.welcometoflip
 //
 //    fun nextCardActionDeck() {
 //        actionDeckTopPosition.value?.let {
-//            if (it < stack.size) {
+//            if (it < (stack.value?.size ?: 0)) {
 //                actionDeckTopPosition.postValue(it + 1)
 //            }
 //        }
@@ -63,4 +82,4 @@ package dev.katiebarnett.welcometoflip
 //        flipCardTopPosition.postValue(numberDeckTopPosition.value)
 //        flipCardBottomPosition.postValue(numberDeckTopPosition.value)
 //    }
-//}
+}
