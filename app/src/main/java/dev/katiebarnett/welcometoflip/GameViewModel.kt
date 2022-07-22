@@ -29,11 +29,14 @@ class GameViewModel @Inject constructor(
     }
     
     fun initialiseGame(gameType: GameType) {
-        viewModelScope.launch {
-            val shuffledDeck = deckRepository.getDeck(gameType).shuffled()
-            val stackSize = ceil((shuffledDeck.size / STACK_COUNT).toDouble()).toInt()
-            // TODO Handle unequal stacks
-            stacks = shuffledDeck.chunked(stackSize)
+        // Only initialise if not already initialised
+        if (!this::stacks.isInitialized) {
+            viewModelScope.launch {
+                val shuffledDeck = deckRepository.getDeck(gameType).shuffled()
+                val stackSize = ceil((shuffledDeck.size / STACK_COUNT).toDouble()).toInt()
+                // TODO Handle unequal stacks
+                stacks = shuffledDeck.chunked(stackSize)
+            }
         }
     }
     

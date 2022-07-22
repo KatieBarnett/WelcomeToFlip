@@ -39,21 +39,17 @@ class MainActivity : ComponentActivity() {
     fun WelcomeToFlipApp() {
         MdcTheme {
             val navController = rememberNavController()
-            val snackbarHostState = remember { SnackbarHostState() }
-            val scope = rememberCoroutineScope()
             Scaffold(
                 topBar = {
                     CenterAlignedTopAppBar(
                         title = { Text(text = stringResource(id = R.string.app_name))}
                     )
-                },
-                snackbarHost = { snackbarHostState }
+                }
             ) { innerPadding ->
                 Box(Modifier.padding(innerPadding)) {
                     NavHost(
                         navController = navController,
-                        startDestination = WelcomeToFlipScreen.ChooseGame.name,
-                        modifier = Modifier.padding(innerPadding)
+                        startDestination = WelcomeToFlipScreen.ChooseGame.name
                     ) {
                         composable(WelcomeToFlipScreen.ChooseGame.name) {
                             ChooseGameBody(chooseGameAction = {
@@ -67,6 +63,7 @@ class MainActivity : ComponentActivity() {
                             ) {
                             it.arguments?.getInt("gameType")?.mapToGameType()?.let { gameType ->
                                 val viewModel = hiltViewModel<GameViewModel>()
+                                viewModel.initialiseGame(gameType)
                                 GameBody(
                                     viewModel = viewModel,
                                     gameType = gameType
@@ -74,7 +71,6 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
-//                    SnackbarScreen(snackbarHostState, Modifier.align(Alignment.BottomCenter))
                 }
             }
         }

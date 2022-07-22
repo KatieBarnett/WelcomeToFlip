@@ -26,7 +26,6 @@ fun GameBody(viewModel: GameViewModel,
              gameType: GameType,
              modifier: Modifier = Modifier
 ) {
-    viewModel.initialiseGame(gameType)
     val position by viewModel.position.observeAsState(1)
     val advancePositionEnabled by viewModel.advancePositionEnabled.observeAsState(true)
     Game(
