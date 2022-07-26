@@ -25,6 +25,9 @@ open class StackViewModel @Inject constructor(
     val actionStackTop
         get() = stack.getOrNull(position - 1)
 
+    val nextNumberCard
+        get() = stack.getOrNull(position + 1)
+
 //    val flipCardFront
 //        get() = stack.getOrNull(position)?.number
 //    
