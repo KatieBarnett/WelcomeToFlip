@@ -6,13 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue // only if using var
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -65,7 +60,7 @@ fun Game(position: Int,
             .padding(dimensionResource(id = R.dimen.spacing))
             .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.spacing))) {
-            Text(stringResource(id = gameType.name), modifier = modifier.weight(1f))
+            Text(stringResource(id = gameType.displayName), modifier = modifier.weight(1f))
             Text(stringResource(id = R.string.deck_position, position, stacks.getStackSize() ?: 0))
         }
         stacks.forEach { stack ->

@@ -55,9 +55,9 @@ fun GameChoice(gameType: GameType, modifier: Modifier = Modifier) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Icon(
                     painter = painterResource(id = gameType.icon),
-                    contentDescription = stringResource(id = gameType.name)
+                    contentDescription = stringResource(id = gameType.displayName)
                 )
-                Text(text = stringResource(gameType.name), modifier.align(alignment = Alignment.CenterHorizontally))
+                Text(text = stringResource(gameType.displayName), modifier.align(alignment = Alignment.CenterHorizontally))
             }
         }
     }

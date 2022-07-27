@@ -9,10 +9,15 @@ import dev.katiebarnett.welcometoflip.models.Card
 
 sealed class GameType(
     @DrawableRes open val icon: Int,
-    @StringRes open val name: Int
+    @StringRes open val displayName: Int,
+    open val name: String
 )
 
-object WelcomeToTheMoon: GameType(icon = R.drawable.noun_rocket_4925595, name = R.string.game_welcome_to_the_moon)
+object WelcomeToTheMoon: GameType(
+    name = "WelcomeToTheMoon",
+    icon = R.drawable.noun_rocket_4925595,
+    displayName = R.string.game_welcome_to_the_moon
+)
 
 sealed class CardFace(
     @DrawableRes open val drawableRes: Int,
@@ -47,7 +52,7 @@ object Number13: Number(R.drawable.number_13)
 object Number14: Number(R.drawable.number_14)
 object Number15: Number(R.drawable.number_15)
 
-fun Int.mapToGameType() : GameType? {
+fun String.mapToGameType() : GameType? {
     return when(this) {
         WelcomeToTheMoon.name -> WelcomeToTheMoon
         else -> null
