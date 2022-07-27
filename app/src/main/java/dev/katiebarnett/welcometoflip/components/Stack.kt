@@ -1,199 +1,168 @@
 package dev.katiebarnett.welcometoflip.components
 
-import androidx.compose.foundation.background
+import android.util.Log
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.animate
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.katiebarnett.welcometoflip.R
 import dev.katiebarnett.welcometoflip.StackViewModel
 import dev.katiebarnett.welcometoflip.data.*
 import dev.katiebarnett.welcometoflip.models.Card
-import kotlin.math.roundToInt
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
-fun Stack(stack: List<Card>, position: Int, modifier: Modifier = Modifier) {
+fun Stack(stack: List<Card>, 
+          position: Int,
+          transitionEnabled: Boolean = false, 
+          modifier: Modifier = Modifier) {
     val viewModel = hiltViewModel<StackViewModel>()
     viewModel.setStack(stack)
     viewModel.setPosition(position)
-    
+
+    Log.d("flipRotation", "New position: $position")
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) { 
         TopCards(
-            viewModel.numberStackTop,
-            viewModel.actionStackTop,
-            viewModel.nextNumberCard
+            numberCardStack = viewModel.numberStackTop,
+            actionCardStack = viewModel.actionStackTop,
+            currentCard = viewModel.currentCard,
+            transitionEnabled = transitionEnabled
         )
     }
 }
 
 @Composable
-private fun TopCards(numberCard: Card?, actionCard: Card?,
-                     nextNumberCard: Card?,
+private fun TopCards(currentCard: Card?,
+                     numberCardStack: Card?, 
+                     actionCardStack: Card?,
+                     transitionEnabled: Boolean = false,
                      modifier: Modifier = Modifier
 ) {
-
-//    val scope = rememberCoroutineScope()
-//
-//    var transitionEnabled by remember { mutableStateOf(false) }
-//
-//    var flipCardOffset by remember { mutableStateOf(0f) }
-//
-//    var cardSize by remember { mutableStateOf(IntSize.Zero) }
-//    var numberDeckPosition by remember { mutableStateOf(Offset.Zero) }
-//    var actionDeckPosition by remember { mutableStateOf(Offset.Zero) }
-//
-//    var flipCardVisibility by remember { mutableStateOf(false) }
-//
-//    var frontCardAlpha by remember { mutableStateOf(1.0f) }
-//    var frontCardRotationY by remember { mutableStateOf(0f) }
-//
-//    var backCardAlpha by remember { mutableStateOf(1.0f) }
-//    var backCardRotationY by remember { mutableStateOf(-180f) }
-
-
-    
-    StackLayout(numberCard = {
-        if (numberCard != null) {
-            CardFace(numberCard.number, numberCard.action)
-        } else {
-            CardPlaceholder()
-        }
-    },
-    actionCard = {
-        if (actionCard != null) {
-            CardFace(actionCard.action, null)
-        } else {
-            CardPlaceholder()
-        }
-    })
-    
-
-//    
-//    Box {
-//        Row(
-//            modifier = Modifier
-//                .padding(dimensionResource(id = R.dimen.spacing))
-//                .fillMaxWidth(),
-//            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.card_spacing))
-//        ) {
-//            
-//            if (numberCard != null) {
-//                CardFace(numberCard.number, numberCard.action, modifier.weight(1f))
-//            } else {
-//                CardPlaceholder(modifier.weight(1f))
-//            }
-//            
-//            if (numberCard != null) {
-//                CardFace(numberCard.number, numberCard.action, modifier.weight(1f))
-//            } else {
-//                CardPlaceholder(modifier.weight(1f))
-//            }
-//
-//            if (actionCard != null) {
-//                CardFace(actionCard.action, null, modifier.weight(1f))
-//            } else {
-//                CardPlaceholder(modifier.weight(1f))
-//            }
-//        }
-//            numberCard?.let {
-//                Image(
-//                    painter = painterResource(numberCard),
-//                    contentDescription = "Number Deck",
-//                    modifier = modifier
-//                        .clickable(
-//                            enabled = true,
-//                            onClick = {
-//                                transitionEnabled = !transitionEnabled
-//                            }
-//                        )
-//                        .onGloballyPositioned { coordinates ->
-//                            cardSize = coordinates.size
-//                            numberDeckPosition = coordinates.positionInParent()
-//                        }
-//                )
-//            }
-//            actionCard?.let {
-//                Image(
-//                    painter = painterResource(actionCard),
-//                    contentDescription = "Action Deck",
-//                    modifier = modifier
-//                    .onGloballyPositioned { coordinates ->
-//                        actionDeckPosition = coordinates.positionInParent()
-//                    }
-//                )
-//            }
-//        }
-//        if (flipCardFront != null && flipCardBack != null) {
-//            AnimatingBox(
-//                rotated = transitionEnabled, cardSize = cardSize,
-//                onRotateComplete = {
-//                    Log.d("HERE", "Rotation complete: $it")
-//                },
-//                modifier = modifier.offset(flipCardOffset.dp)
-//                    .width(cardSize.width.dp)
-//                    .height(cardSize.height.dp),
-//                targetFrontCard = flipCardFront,
-//                targetBackCard = flipCardBack
-//            )
-//        }
-//    }
+    StackLayout(
+        currentCard = currentCard, 
+        numberCardStack = {
+            if (numberCardStack != null) {
+                CardFace(numberCardStack.number, numberCardStack.action)
+            } else {
+                CardPlaceholder()
+            }
+        }, actionCardStack = {
+            if (actionCardStack != null) {
+                CardFace(actionCardStack.action, null)
+            } else {
+                CardPlaceholder()
+            }
+        }, transitionEnabled, modifier)
 }
 
 @Composable
 fun StackLayout(
-    numberCard: @Composable BoxScope.() -> Unit,
-    actionCard: @Composable BoxScope.() -> Unit,
+    currentCard: Card?,
+    numberCardStack: @Composable BoxScope.() -> Unit,
+    actionCardStack: @Composable BoxScope.() -> Unit,
+    transitionEnabled: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val cardSpacing = with(LocalDensity.current) {
         dimensionResource(id = R.dimen.card_spacing).toPx()
     }
 
+    val scope = rememberCoroutineScope()
+    var offset by remember { mutableStateOf(0f) }
+    var flipRotation by remember { mutableStateOf(0f) }
+    
+    val animationSpec = tween<Float>(1000, easing = CubicBezierEasing(0.4f, 0.0f, 0.8f, 0.8f))
+    val animationSpecFlip = tween<Float>(3000, easing = CubicBezierEasing(0.4f, 0.0f, 0.8f, 0.8f))
+
+    LaunchedEffect(key1 = transitionEnabled) {
+        scope.launch {
+            // Core animation
+            coroutineScope {
+                launch {
+                    offset = 0f
+                    flipRotation = 0f
+                    // Translate card to right stack
+                    animate(initialValue = 0f, targetValue = 1f, animationSpec = animationSpec) { value: Float, _: Float ->
+                        offset = value
+                    }
+                    // Do the flip
+                    animate(initialValue = 0f, targetValue = 180f, animationSpec = animationSpecFlip) { value: Float, _: Float ->
+                        flipRotation = value
+                    }
+                }
+            }
+        }
+    }
+    
     Layout(
         modifier = Modifier
             .padding(dimensionResource(id = R.dimen.spacing))
             .fillMaxSize()   ,
         content = {
             Box(modifier = Modifier
-                .layoutId("NumberCard"), content = numberCard)
+                .layoutId("NumberStack"), content = numberCardStack)
             Box(modifier = Modifier
-                .layoutId("ActionCard"), content = actionCard)
+                .layoutId("ActionStack"), content = actionCardStack)
+            
+            currentCard?.let {
+                Box(modifier = Modifier
+                    .layoutId("CurrentCard")
+                    .graphicsLayer {
+                        rotationY = flipRotation
+                        cameraDistance = 8 * density
+                    }
+            , content = {
+                    if (flipRotation < 90f) {
+                        CardFace(currentCard.number, currentCard.action)
+                    } else {
+                        CardFace(currentCard.action, null)
+                    }
+                }
+                )
+            }
         }) { measurables, constraints ->
         
-        val numberCardPlaceable =
-            measurables.first { it.layoutId == "NumberCard" }
-        val actionCardPlaceable =
-            measurables.first { it.layoutId == "ActionCard"} 
+        val currentCardPlaceable =
+            measurables.firstOrNull { it.layoutId == "CurrentCard" }
+        val numberStackPlaceable =
+            measurables.firstOrNull { it.layoutId == "NumberStack" }
+        val actionStackPlaceable =
+            measurables.firstOrNull { it.layoutId == "ActionStack"} 
 
         layout(constraints.maxWidth, constraints.maxHeight) {
             val cardWidth = (constraints.maxWidth / 2 - cardSpacing / 2).toInt()
-            val childConstraints = constraints.copy(
+            val stackConstraints = constraints.copy(
                 minWidth = minOf(constraints.minWidth, cardWidth),
                 maxWidth = cardWidth
             )
-            val numberCardX = 0
-            val actionCardX = numberCardX + cardSpacing + cardWidth
-            numberCardPlaceable.measure(childConstraints).place(0, 0)
-            actionCardPlaceable.measure(childConstraints).place(actionCardX.toInt(), 0)
+
+//            val currentCardConstraints = constraints.copy(
+//                minWidth = minOf(constraints.minWidth, (cardWidth * flipWidth).toInt()),
+//                maxWidth = (cardWidth * flipWidth).toInt()
+//            )
+            
+            val numberStackX = 0
+            val actionStackX = numberStackX + cardSpacing + cardWidth
+            val currentCardX = actionStackX * offset
+
+            numberStackPlaceable?.measure(stackConstraints)?.place(numberStackX, 0)
+            actionStackPlaceable?.measure(stackConstraints)?.place(actionStackX.toInt(), 0)
+            currentCardPlaceable?.measure(stackConstraints)?.place(currentCardX.toInt(), 0)
         }
     }
 }

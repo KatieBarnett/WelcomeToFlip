@@ -20,13 +20,13 @@ open class StackViewModel @Inject constructor(
 //    private val flipCardBottomPosition = MutableLiveData(1)
 //
     val numberStackTop
-        get() = stack.getOrNull(position)
+        get() = stack.getOrNull(position + 1)
     
     val actionStackTop
         get() = stack.getOrNull(position - 1)
 
-    val nextNumberCard
-        get() = stack.getOrNull(position + 1)
+    val currentCard
+        get() = stack.getOrNull(position)
 
 //    val flipCardFront
 //        get() = stack.getOrNull(position)?.number

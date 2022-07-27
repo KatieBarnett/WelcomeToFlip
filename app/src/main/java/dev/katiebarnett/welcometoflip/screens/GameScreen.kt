@@ -9,6 +9,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue // only if using var
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -26,7 +30,7 @@ fun GameBody(viewModel: GameViewModel,
              gameType: GameType,
              modifier: Modifier = Modifier
 ) {
-    val position by viewModel.position.observeAsState(1)
+    val position by viewModel.position.observeAsState(0)
     val advancePositionEnabled by viewModel.advancePositionEnabled.observeAsState(true)
     Game(
         position = position,
@@ -51,6 +55,7 @@ fun Game(position: Int,
          advancePositionEnabled: Boolean,
          reshuffle: () -> Unit,
          modifier: Modifier = Modifier) {
+    var transitionEnabled by remember { mutableStateOf(false) }
     Column(
         modifier
             .fillMaxSize()
@@ -64,7 +69,7 @@ fun Game(position: Int,
             Text(stringResource(id = R.string.deck_position, position, stacks.getStackSize() ?: 0))
         }
         stacks.forEach { stack ->
-            Stack(stack, position, modifier.weight(1f))
+            Stack(stack, position, transitionEnabled, modifier.weight(1f))
         }
         Row( modifier = modifier
             .padding(dimensionResource(id = R.dimen.spacing))
@@ -72,6 +77,7 @@ fun Game(position: Int,
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.button_spacing))) {
             Button(onClick = {
                 advancePosition.invoke()
+                transitionEnabled = !transitionEnabled
             }, enabled = advancePositionEnabled, modifier = modifier.weight(1f)) {
                 Text(stringResource(id = R.string.flip_button))
             }
