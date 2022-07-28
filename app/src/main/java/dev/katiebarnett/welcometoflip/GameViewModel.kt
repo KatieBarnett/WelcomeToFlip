@@ -9,6 +9,7 @@ import dev.katiebarnett.welcometoflip.util.getStackSize
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.ceil
+import kotlin.random.Random
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
@@ -28,11 +29,11 @@ class GameViewModel @Inject constructor(
         (stacks.getStackSize() ?: 0) > it
     }
     
-    fun initialiseGame(gameType: GameType) {
+    fun initialiseGame(gameType: GameType, gameSeed: Long) {
         // Only initialise if not already initialised
         if (!this::stacks.isInitialized) {
             viewModelScope.launch {
-                val shuffledDeck = deckRepository.getDeck(gameType).shuffled()
+                val shuffledDeck = deckRepository.getDeck(gameType).shuffled(Random(gameSeed))
                 val stackSize = ceil((shuffledDeck.size / STACK_COUNT).toDouble()).toInt()
                 // TODO Handle unequal stacks
                 stacks = shuffledDeck.chunked(stackSize)

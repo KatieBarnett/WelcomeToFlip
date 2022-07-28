@@ -28,7 +28,6 @@ fun WelcomeToFlipNavHost(
         composable(route = Game.routeWithArgs, arguments = Game.arguments, deepLinks = Game.deepLinks) {
             it.arguments?.getString(Game.gameTypeArg)?.mapToGameType()?.let { gameType ->
                 val viewModel = hiltViewModel<GameViewModel>()
-                viewModel.initialiseGame(gameType)
                 GameBody(
                     viewModel = viewModel,
                     gameType = gameType
