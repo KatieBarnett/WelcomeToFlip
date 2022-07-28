@@ -20,19 +20,14 @@ import dev.katiebarnett.welcometoflip.R
 import dev.katiebarnett.welcometoflip.StackViewModel
 import dev.katiebarnett.welcometoflip.data.*
 import dev.katiebarnett.welcometoflip.models.Card
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 
 @Composable
 fun Stack(stack: List<Card>, 
           position: Int,
-          transitionEnabled: Boolean = false, 
           modifier: Modifier = Modifier) {
     val viewModel = hiltViewModel<StackViewModel>()
     viewModel.setStack(stack)
     viewModel.setPosition(position)
-
-    Log.d("flipRotation", "New position: $position")
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
@@ -41,7 +36,7 @@ fun Stack(stack: List<Card>,
             numberCardStack = viewModel.numberStackTop,
             actionCardStack = viewModel.actionStackTop,
             currentCard = viewModel.currentCard,
-            transitionEnabled = transitionEnabled
+            transitionTrigger = position
         )
     }
 }
@@ -50,7 +45,7 @@ fun Stack(stack: List<Card>,
 private fun TopCards(currentCard: Card?,
                      numberCardStack: Card?, 
                      actionCardStack: Card?,
-                     transitionEnabled: Boolean = false,
+                     transitionTrigger: Int = 0,
                      modifier: Modifier = Modifier
 ) {
     StackLayout(
@@ -67,7 +62,7 @@ private fun TopCards(currentCard: Card?,
             } else {
                 CardPlaceholder()
             }
-        }, transitionEnabled, modifier)
+        }, transitionTrigger, modifier)
 }
 
 @Composable
@@ -75,70 +70,84 @@ fun StackLayout(
     currentCard: Card?,
     numberCardStack: @Composable BoxScope.() -> Unit,
     actionCardStack: @Composable BoxScope.() -> Unit,
-    transitionEnabled: Boolean = false,
+    transitionTrigger: Int = 0,
     modifier: Modifier = Modifier
 ) {
     val cardSpacing = with(LocalDensity.current) {
         dimensionResource(id = R.dimen.card_spacing).toPx()
     }
 
-    val scope = rememberCoroutineScope()
-    var offset by remember { mutableStateOf(0f) }
-    var flipRotation by remember { mutableStateOf(0f) }
+    var offset by remember(transitionTrigger) { mutableStateOf(0f) }
+    var flipRotation by remember(transitionTrigger) { mutableStateOf(0f) }
+    var animatedCardVisibility by remember(transitionTrigger) { mutableStateOf(true) }
     
     val animationSpec = tween<Float>(1000, easing = CubicBezierEasing(0.4f, 0.0f, 0.8f, 0.8f))
-    val animationSpecFlip = tween<Float>(3000, easing = CubicBezierEasing(0.4f, 0.0f, 0.8f, 0.8f))
+    val animationSpecFlip = tween<Float>(1000, easing = CubicBezierEasing(0.4f, 0.0f, 0.8f, 0.8f))
 
-    LaunchedEffect(key1 = transitionEnabled) {
-        scope.launch {
-            // Core animation
-            coroutineScope {
-                launch {
-                    offset = 0f
-                    flipRotation = 0f
-                    // Translate card to right stack
-                    animate(initialValue = 0f, targetValue = 1f, animationSpec = animationSpec) { value: Float, _: Float ->
-                        offset = value
-                    }
-                    // Do the flip
-                    animate(initialValue = 0f, targetValue = 180f, animationSpec = animationSpecFlip) { value: Float, _: Float ->
-                        flipRotation = value
-                    }
-                }
-            }
+    LaunchedEffect(key1 = transitionTrigger) {
+        // Hide the static card & show the animated card
+        animatedCardVisibility = true
+        // Translate card to right stack
+        animate(initialValue = 0f, targetValue = 1f, animationSpec = animationSpec) { value: Float, _: Float ->
+            offset = value
         }
+        // Do the flip
+        animate(initialValue = 0f, targetValue = 180f, animationSpec = animationSpecFlip) { value: Float, _: Float ->
+            flipRotation = value
+        }
+        // Show the static card & hide the animated card
+        animatedCardVisibility = false
+        // Move the animated card back to the start & flip it
+        offset = 0f
+        flipRotation = 0f
     }
-    
+
     Layout(
-        modifier = Modifier
+        modifier = modifier
             .padding(dimensionResource(id = R.dimen.spacing))
             .fillMaxSize()   ,
         content = {
             Box(modifier = Modifier
                 .layoutId("NumberStack"), content = numberCardStack)
-            Box(modifier = Modifier
-                .layoutId("ActionStack"), content = actionCardStack)
-            
-            currentCard?.let {
-                Box(modifier = Modifier
-                    .layoutId("CurrentCard")
-                    .graphicsLayer {
-                        rotationY = flipRotation
-                        cameraDistance = 8 * density
-                    }
-            , content = {
-                    if (flipRotation < 90f) {
-                        CardFace(currentCard.number, currentCard.action)
-                    } else {
-                        CardFace(currentCard.action, null)
-                    }
-                }
+            if (animatedCardVisibility) {
+                Box(
+                    modifier = Modifier
+                        .layoutId("ActionStack"), content = actionCardStack
                 )
+            } else {
+                currentCard?.let {
+                    Box(modifier = Modifier
+                        .layoutId("ActionStack"), content = {
+                        CardFace(currentCard.action, null)
+                    })
+                }
+            }
+            currentCard?.let {
+                if (animatedCardVisibility) {
+                    Box(modifier = Modifier
+                        .layoutId("CurrentCardAnimated")
+                        .graphicsLayer {
+                            rotationY = flipRotation
+                            cameraDistance = 8 * density
+                        }
+                , content = {
+                        if (flipRotation < 90f) {
+                            CardFace(currentCard.number, currentCard.action)
+                        } else {
+                            // Rotate the action card back again so it does not appear reversed
+                            CardFace(currentCard.action, null, 
+                                modifier = Modifier.graphicsLayer {
+                                rotationY = 180f 
+                                }
+                            )
+                        }
+                    })
+                } 
             }
         }) { measurables, constraints ->
         
-        val currentCardPlaceable =
-            measurables.firstOrNull { it.layoutId == "CurrentCard" }
+        val currentCardAnimatedPlaceable =
+            measurables.firstOrNull { it.layoutId == "CurrentCardAnimated" }
         val numberStackPlaceable =
             measurables.firstOrNull { it.layoutId == "NumberStack" }
         val actionStackPlaceable =
@@ -150,19 +159,14 @@ fun StackLayout(
                 minWidth = minOf(constraints.minWidth, cardWidth),
                 maxWidth = cardWidth
             )
-
-//            val currentCardConstraints = constraints.copy(
-//                minWidth = minOf(constraints.minWidth, (cardWidth * flipWidth).toInt()),
-//                maxWidth = (cardWidth * flipWidth).toInt()
-//            )
             
             val numberStackX = 0
             val actionStackX = numberStackX + cardSpacing + cardWidth
-            val currentCardX = actionStackX * offset
+            val currentCardAnimatedX = actionStackX * offset
 
             numberStackPlaceable?.measure(stackConstraints)?.place(numberStackX, 0)
             actionStackPlaceable?.measure(stackConstraints)?.place(actionStackX.toInt(), 0)
-            currentCardPlaceable?.measure(stackConstraints)?.place(currentCardX.toInt(), 0)
+            currentCardAnimatedPlaceable?.measure(stackConstraints)?.place(currentCardAnimatedX.toInt(), 0)
         }
     }
 }

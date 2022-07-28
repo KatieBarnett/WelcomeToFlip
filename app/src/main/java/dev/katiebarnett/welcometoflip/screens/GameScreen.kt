@@ -6,7 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -50,7 +51,6 @@ fun Game(position: Int,
          advancePositionEnabled: Boolean,
          reshuffle: () -> Unit,
          modifier: Modifier = Modifier) {
-    var transitionEnabled by remember { mutableStateOf(false) }
     Column(
         modifier
             .fillMaxSize()
@@ -64,7 +64,7 @@ fun Game(position: Int,
             Text(stringResource(id = R.string.deck_position, position, stacks.getStackSize() ?: 0))
         }
         stacks.forEach { stack ->
-            Stack(stack, position, transitionEnabled, modifier.weight(1f))
+            Stack(stack, position, modifier.weight(1f))
         }
         Row( modifier = modifier
             .padding(dimensionResource(id = R.dimen.spacing))
@@ -72,7 +72,6 @@ fun Game(position: Int,
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.button_spacing))) {
             Button(onClick = {
                 advancePosition.invoke()
-                transitionEnabled = !transitionEnabled
             }, enabled = advancePositionEnabled, modifier = modifier.weight(1f)) {
                 Text(stringResource(id = R.string.flip_button))
             }
