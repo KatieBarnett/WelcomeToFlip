@@ -79,14 +79,10 @@ fun StackLayout(
 
     var offset by remember(transitionTrigger) { mutableStateOf(0f) }
     var flipRotation by remember(transitionTrigger) { mutableStateOf(0f) }
-    var animatedCardVisibility by remember(transitionTrigger) { mutableStateOf(true) }
-    
     val animationSpec = tween<Float>(1000, easing = CubicBezierEasing(0.4f, 0.0f, 0.8f, 0.8f))
     val animationSpecFlip = tween<Float>(1000, easing = CubicBezierEasing(0.4f, 0.0f, 0.8f, 0.8f))
 
     LaunchedEffect(key1 = transitionTrigger) {
-        // Hide the static card & show the animated card
-        animatedCardVisibility = true
         // Translate card to right stack
         animate(initialValue = 0f, targetValue = 1f, animationSpec = animationSpec) { value: Float, _: Float ->
             offset = value
@@ -95,11 +91,6 @@ fun StackLayout(
         animate(initialValue = 0f, targetValue = 180f, animationSpec = animationSpecFlip) { value: Float, _: Float ->
             flipRotation = value
         }
-        // Show the static card & hide the animated card
-        animatedCardVisibility = false
-        // Move the animated card back to the start & flip it
-        offset = 0f
-        flipRotation = 0f
     }
 
     Layout(
@@ -109,40 +100,27 @@ fun StackLayout(
         content = {
             Box(modifier = Modifier
                 .layoutId("NumberStack"), content = numberCardStack)
-            if (animatedCardVisibility) {
-                Box(
-                    modifier = Modifier
-                        .layoutId("ActionStack"), content = actionCardStack
-                )
-            } else {
-                currentCard?.let {
-                    Box(modifier = Modifier
-                        .layoutId("ActionStack"), content = {
-                        CardFace(currentCard.action, null)
-                    })
-                }
-            }
+            Box(modifier = Modifier
+                    .layoutId("ActionStack"), content = actionCardStack)
             currentCard?.let {
-                if (animatedCardVisibility) {
-                    Box(modifier = Modifier
-                        .layoutId("CurrentCardAnimated")
-                        .graphicsLayer {
-                            rotationY = flipRotation
-                            cameraDistance = 8 * density
-                        }
+                Box(modifier = Modifier
+                    .layoutId("CurrentCardAnimated")
+                    .graphicsLayer {
+                        rotationY = flipRotation
+                        cameraDistance = 8 * density
+                    }
                 , content = {
-                        if (flipRotation < 90f) {
-                            CardFace(currentCard.number, currentCard.action)
-                        } else {
-                            // Rotate the action card back again so it does not appear reversed
-                            CardFace(currentCard.action, null, 
-                                modifier = Modifier.graphicsLayer {
+                    if (flipRotation < 90f) {
+                        CardFace(currentCard.number, currentCard.action)
+                    } else {
+                        // Rotate the action card back again so it does not appear reversed
+                        CardFace(currentCard.action, null, 
+                            modifier = Modifier.graphicsLayer { 
                                 rotationY = 180f 
-                                }
-                            )
-                        }
-                    })
-                } 
+                            }
+                        )
+                    }
+                })
             }
         }) { measurables, constraints ->
         
