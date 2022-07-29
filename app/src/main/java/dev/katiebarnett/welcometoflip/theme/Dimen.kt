@@ -7,7 +7,6 @@ object Dimen {
     val spacing = 8.dp
 
     object Button {
-        val padding = 12.dp
         val spacing = 8.dp
         val iconSize = 24.dp
         val iconSpacing = 8.dp

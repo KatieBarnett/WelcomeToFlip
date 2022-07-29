@@ -2,7 +2,6 @@ package dev.katiebarnett.welcometoflip.data
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import dev.katiebarnett.welcometoflip.R
 import dev.katiebarnett.welcometoflip.models.Card

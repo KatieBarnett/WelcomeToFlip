@@ -1,6 +1,5 @@
 package dev.katiebarnett.welcometoflip.components
 
-import android.util.Log
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.tween
@@ -12,11 +11,9 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import dev.katiebarnett.welcometoflip.R
 import dev.katiebarnett.welcometoflip.StackViewModel
 import dev.katiebarnett.welcometoflip.data.*
 import dev.katiebarnett.welcometoflip.models.Card
