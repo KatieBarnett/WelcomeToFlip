@@ -65,7 +65,7 @@ fun CardFace(cardFace: CardFace, peek: Action? = null, modifier: Modifier = Modi
                 contentDescription = stringResource(id = R.string.action_deck_alt),
                 colorFilter = ColorFilter.tint(peekColor),
                 modifier = Modifier
-                    .size(Dimen.Card.peekSize)
+                    .size(Dimen.Card.Peek.size)
                     .rotate(180f)
                     .constrainAs(peekTop) {
                         top.linkTo(parent.top, margin = Dimen.spacing)
@@ -90,7 +90,7 @@ fun CardFace(cardFace: CardFace, peek: Action? = null, modifier: Modifier = Modi
                 contentDescription = stringResource(id = R.string.action_deck_alt),
                 colorFilter = ColorFilter.tint(peekColor),
                 modifier = Modifier
-                    .size(Dimen.Card.peekSize)
+                    .size(Dimen.Card.Peek.size)
                     .constrainAs(peekBottom) {
                         bottom.linkTo(parent.bottom, margin = Dimen.spacing)
                         end.linkTo(parent.end, margin = Dimen.spacing)
