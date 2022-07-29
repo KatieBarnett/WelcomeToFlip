@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import com.google.android.material.composethemeadapter.MdcTheme
 import dagger.hilt.android.AndroidEntryPoint
+import dev.katiebarnett.welcometoflip.theme.WelcomeToFlipTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun WelcomeToFlipApp() {
-        MdcTheme {
+        WelcomeToFlipTheme {
             val navController = rememberNavController()
             Scaffold(
                 topBar = {

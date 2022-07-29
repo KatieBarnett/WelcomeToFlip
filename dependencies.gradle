@@ -32,8 +32,6 @@ ext {
             // Integration with ViewModels
             "androidx.lifecycle:lifecycle-viewmodel-compose:$compose_viewmodel_version",
             "androidx.compose.runtime:runtime-livedata:$compose_version",
-            // When using a MDC theme
-            "com.google.android.material:compose-theme-adapter:$compose_material_theme_adapter_version",
             // Navigation
             "androidx.navigation:navigation-compose:$compose_navigation_version",
             "androidx.hilt:hilt-navigation-compose:$hilt_androidx_version",

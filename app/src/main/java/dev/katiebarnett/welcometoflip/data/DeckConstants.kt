@@ -1,10 +1,12 @@
 package dev.katiebarnett.welcometoflip.data
 
-import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.graphics.Color
 import dev.katiebarnett.welcometoflip.R
 import dev.katiebarnett.welcometoflip.models.Card
+import dev.katiebarnett.welcometoflip.theme.*
 
 
 sealed class GameType(
@@ -21,20 +23,20 @@ object WelcomeToTheMoon: GameType(
 
 sealed class CardFace(
     @DrawableRes open val drawableRes: Int,
-    @ColorRes open val backgroundRes: Int,
+    open val backgroundColor: Color?,
 )
 
-sealed class Action(drawableRes: Int, backgroundRes: Int): CardFace(drawableRes, backgroundRes)
+sealed class Action(drawableRes: Int, backgroundColor: Color): CardFace(drawableRes, backgroundColor)
 
-object Plant: Action(R.drawable.noun_plant_4982354, R.color.action_plant)
-object Water: Action(R.drawable.noun_water_drop_1506321, R.color.action_water)
-object Lightning: Action(R.drawable.noun_thunder_4978759, R.color.action_lightning)
-object Robot: Action(R.drawable.noun_robot_4971447, R.color.action_robot)
-object Astronaut: Action(R.drawable.noun_astronaut_2801977, R.color.action_astronaut)
-object X: Action(R.drawable.noun_remove_schedule_4359088, R.color.action_x)
+object Plant: Action(R.drawable.noun_plant_4982354, ActionPlant)
+object Water: Action(R.drawable.noun_water_drop_1506321, ActionWater)
+object Lightning: Action(R.drawable.noun_thunder_4978759, ActionLightning)
+object Robot: Action(R.drawable.noun_robot_4971447, ActionRobot)
+object Astronaut: Action(R.drawable.noun_astronaut_2801977, ActionAstronaut)
+object X: Action(R.drawable.noun_remove_schedule_4359088, ActionX)
 
 
-sealed class Number(drawableRes: Int): CardFace(drawableRes, R.color.card_background)
+sealed class Number(drawableRes: Int): CardFace(drawableRes, null) 
 
 object Number1: Number(R.drawable.number_1)
 object Number2: Number(R.drawable.number_2)

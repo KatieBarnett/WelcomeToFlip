@@ -20,6 +20,7 @@ import dev.katiebarnett.welcometoflip.R
 import dev.katiebarnett.welcometoflip.StackViewModel
 import dev.katiebarnett.welcometoflip.data.*
 import dev.katiebarnett.welcometoflip.models.Card
+import dev.katiebarnett.welcometoflip.theme.Dimen
 
 @Composable
 fun Stack(stack: List<Card>, 
@@ -74,7 +75,7 @@ fun StackLayout(
     modifier: Modifier = Modifier
 ) {
     val cardSpacing = with(LocalDensity.current) {
-        dimensionResource(id = R.dimen.card_spacing).toPx()
+        Dimen.Card.spacing.toPx()
     }
 
     var offset by remember(transitionTrigger) { mutableStateOf(0f) }
@@ -95,7 +96,7 @@ fun StackLayout(
 
     Layout(
         modifier = modifier
-            .padding(dimensionResource(id = R.dimen.spacing))
+            .padding(Dimen.spacing)
             .fillMaxSize()   ,
         content = {
             Box(modifier = Modifier
