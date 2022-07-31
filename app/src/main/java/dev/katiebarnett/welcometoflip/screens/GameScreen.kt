@@ -1,9 +1,6 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package dev.katiebarnett.welcometoflip.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -11,17 +8,18 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import dev.katiebarnett.welcometoflip.GameViewModel
 import dev.katiebarnett.welcometoflip.R
 import dev.katiebarnett.welcometoflip.components.Stack
 import dev.katiebarnett.welcometoflip.components.ThemedButton
-import dev.katiebarnett.welcometoflip.data.*
-import dev.katiebarnett.welcometoflip.models.Card
+import dev.katiebarnett.welcometoflip.core.models.*
 import dev.katiebarnett.welcometoflip.theme.Dimen
 import dev.katiebarnett.welcometoflip.theme.WelcomeToFlipTheme
 import dev.katiebarnett.welcometoflip.util.getStackSize
+import dev.katiebarnett.welcometoflip.util.observeLifecycle
 
 @Composable
 fun GameBody(viewModel: GameViewModel,
@@ -31,7 +29,8 @@ fun GameBody(viewModel: GameViewModel,
     val position by viewModel.position.observeAsState(0)
     val advancePositionEnabled by viewModel.advancePositionEnabled.observeAsState(true)
     val gameSeed by rememberSaveable { mutableStateOf(System.currentTimeMillis()) }
-    
+
+    viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
     viewModel.initialiseGame(gameType, gameSeed)
     
     Game(
@@ -50,8 +49,8 @@ fun GameBody(viewModel: GameViewModel,
 }
 
 @Composable
-fun Game(position: Int, 
-         gameType: GameType, 
+fun Game(position: Int,
+         gameType: GameType,
          stacks: List<List<Card>>,
          advancePosition: () -> Unit,
          advancePositionEnabled: Boolean,

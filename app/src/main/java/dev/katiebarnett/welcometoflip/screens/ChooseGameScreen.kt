@@ -14,8 +14,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.katiebarnett.welcometoflip.MainViewModel
 import dev.katiebarnett.welcometoflip.R
 import dev.katiebarnett.welcometoflip.components.ButtonWithIcon
-import dev.katiebarnett.welcometoflip.data.GameType
-import dev.katiebarnett.welcometoflip.data.WelcomeToTheMoon
+import dev.katiebarnett.welcometoflip.core.models.GameType
+import dev.katiebarnett.welcometoflip.core.models.WelcomeToTheMoon
 import dev.katiebarnett.welcometoflip.theme.Dimen
 import dev.katiebarnett.welcometoflip.theme.WelcomeToFlipTheme
 

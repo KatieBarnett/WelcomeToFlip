@@ -70,11 +70,16 @@ android {
     namespace 'dev.katiebarnett.welcometoflip'
 }
 
-dependencies {    
-    implementation libraries
+dependencies {
+    implementation project(":storage")
+    implementation project(':core')
+
+    implementation coreLibs
+    implementation uiLibs
     implementation jetpackComposeLibs
     debugImplementation jetpackComposeLibsDebug
     implementation lifecycleLibs
     
-    kapt librariesKapt
+    kapt coreLibsKapt
 }
+

@@ -6,7 +6,7 @@ ext {
     hilt_version = '2.42'
     hilt_androidx_version = '1.0.0'
     coil_version = '2.1.0'
-    compose_version = '1.2.0-rc02'
+    compose_version = '1.2.0'
     compose_activity_version = '1.5.0'
     compose_constraint_layout_version = '1.0.0'
     compose_compiler_version = '1.2.0'
@@ -17,6 +17,6 @@ ext {
     dependency_check_version = '7.1.1'
     lifecycle_version = '2.5.0'
     livedata_version = '2.5.0'
-    kotlin_version = '1.6.21'
+    kotlin_version = '1.7.0'
     material_version = '1.5.0'
 }

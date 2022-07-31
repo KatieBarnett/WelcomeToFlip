@@ -15,12 +15,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.katiebarnett.welcometoflip.StackViewModel
-import dev.katiebarnett.welcometoflip.data.*
-import dev.katiebarnett.welcometoflip.models.Card
+import dev.katiebarnett.welcometoflip.core.models.*
 import dev.katiebarnett.welcometoflip.theme.Dimen
 
 @Composable
-fun Stack(stack: List<Card>, 
+fun Stack(stack: List<Card>,
           position: Int,
           modifier: Modifier = Modifier) {
     val viewModel = hiltViewModel<StackViewModel>()
@@ -41,7 +40,7 @@ fun Stack(stack: List<Card>,
 
 @Composable
 private fun TopCards(currentCard: Card?,
-                     numberCardStack: Card?, 
+                     numberCardStack: Card?,
                      actionCardStack: Card?,
                      transitionTrigger: Int = 0,
                      modifier: Modifier = Modifier
@@ -150,7 +149,10 @@ fun StackLayout(
 @Preview(showBackground = true)
 @Composable
 fun StackPreview() {
-    TopCards(Card(Astronaut, Number12), Card(Water, Number6), Card(Lightning, Number1), modifier = Modifier.height(400.dp))
+    TopCards(
+        Card(Astronaut, Number12),
+        Card(Water, Number6),
+        Card(Lightning, Number1), modifier = Modifier.height(400.dp))
 }
 
 @Preview(showBackground = true)

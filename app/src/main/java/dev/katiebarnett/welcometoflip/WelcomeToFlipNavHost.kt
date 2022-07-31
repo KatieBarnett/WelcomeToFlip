@@ -6,7 +6,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import dev.katiebarnett.welcometoflip.data.mapToGameType
+import dev.katiebarnett.welcometoflip.core.models.mapToGameType
 import dev.katiebarnett.welcometoflip.screens.ChooseGameBody
 import dev.katiebarnett.welcometoflip.screens.GameBody
 

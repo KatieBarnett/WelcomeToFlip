@@ -10,6 +10,10 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
+import dev.katiebarnett.welcometoflip.core.theme.Black
+import dev.katiebarnett.welcometoflip.core.theme.GreyLight
+import dev.katiebarnett.welcometoflip.core.theme.PurpleDark
+import dev.katiebarnett.welcometoflip.core.theme.White
 
 // TODO: Night mode
 private val DarkColorScheme = darkColorScheme(

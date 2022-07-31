@@ -1,27 +1,14 @@
 <resources>
     <string name="app_name">Welcome To Flip</string>
-
-
-    <string name="card_aspect_ratio">H,3072:4080</string>
-
-
     <string name="main_instruction">Choose which game to play:</string>
-
-
-    <string name="game_welcome_to_the_moon">Welcome To The Moon</string>
-
 
     <string name="flip_button">Flip!</string>
     <string name="reshuffle_button">Reshuffle</string>
 
-
     <string name="deck_position">%1$d/%2$d</string>
-
 
     <string name="number_deck_alt">Number Deck</string>
     <string name="action_deck_alt">Action Deck</string>
-    
+
     <string name="empty">Empty stack</string>
-    
-    
 </resources>

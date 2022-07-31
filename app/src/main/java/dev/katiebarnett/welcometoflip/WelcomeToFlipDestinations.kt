@@ -3,7 +3,7 @@ package dev.katiebarnett.welcometoflip
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import dev.katiebarnett.welcometoflip.data.GameType
+import dev.katiebarnett.welcometoflip.core.models.GameType
 
 sealed class WelcomeToFlipDestination(val route: String)
 

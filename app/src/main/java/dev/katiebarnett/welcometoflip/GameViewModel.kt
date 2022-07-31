@@ -1,10 +1,10 @@
 package dev.katiebarnett.welcometoflip
 
+import android.util.Log
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.katiebarnett.welcometoflip.data.DeckRepository
-import dev.katiebarnett.welcometoflip.data.GameType
-import dev.katiebarnett.welcometoflip.models.Card
+import dev.katiebarnett.welcometoflip.core.models.Card
+import dev.katiebarnett.welcometoflip.core.models.GameType
 import dev.katiebarnett.welcometoflip.util.getStackSize
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -14,7 +14,7 @@ import kotlin.random.Random
 @HiltViewModel
 class GameViewModel @Inject constructor(
     private val deckRepository: DeckRepository
-) : ViewModel() {
+) : ViewModel(), DefaultLifecycleObserver {
     
     companion object {
         private const val STACK_COUNT = 3f
@@ -49,6 +49,10 @@ class GameViewModel @Inject constructor(
         stacks = stacks.map { it.shuffled() }
         _position.postValue(0)
     }
-    
-    
+
+    override fun onPause(owner: LifecycleOwner) {
+        super.onPause(owner)
+        Log.d("LifecycleTest", "view model - onPause")
+    }
+
 }

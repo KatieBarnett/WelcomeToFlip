@@ -1,4 +1,4 @@
-package dev.katiebarnett.welcometoflip.theme
+package dev.katiebarnett.welcometoflip.core.theme
 
 import androidx.compose.ui.graphics.Color
 

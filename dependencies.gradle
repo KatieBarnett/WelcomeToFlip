@@ -1,15 +1,13 @@
 ext {
-    libraries = [
+    coreLibs = [
             // Core
             "androidx.core:core-ktx:$core_ktx_version",
-
-            // Coil
-            "io.coil-kt:coil:$coil_version",
-
             // Hilt
             "com.google.dagger:hilt-android:$hilt_version",
-            
-            // Themeing
+    ]
+    
+    uiLibs = [
+            // Theming
             "com.google.android.material:material:$material_version"
     ]
     
@@ -44,7 +42,12 @@ ext {
             "androidx.compose.ui:ui-tooling:$compose_version"
     ]
 
-    librariesKapt = [
+    dataStoreLibs = [
+            "androidx.datastore:datastore:$datastore_version",
+            "com.google.protobuf:protobuf-javalite:$protobuf_version"
+    ]
+
+    coreLibsKapt = [
             "com.google.dagger:hilt-compiler:$hilt_version"
     ]
 } 

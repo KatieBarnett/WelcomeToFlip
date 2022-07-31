@@ -24,10 +24,10 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import dev.katiebarnett.welcometoflip.R
-import dev.katiebarnett.welcometoflip.data.Action
-import dev.katiebarnett.welcometoflip.data.Astronaut
-import dev.katiebarnett.welcometoflip.data.CardFace
-import dev.katiebarnett.welcometoflip.data.Number12
+import dev.katiebarnett.welcometoflip.core.models.Action
+import dev.katiebarnett.welcometoflip.core.models.Astronaut
+import dev.katiebarnett.welcometoflip.core.models.CardFace
+import dev.katiebarnett.welcometoflip.core.models.Number12
 import dev.katiebarnett.welcometoflip.theme.Dimen
 
 @Composable
