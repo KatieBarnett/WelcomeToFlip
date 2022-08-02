@@ -24,14 +24,16 @@ import dev.katiebarnett.welcometoflip.util.observeLifecycle
 @Composable
 fun GameBody(viewModel: GameViewModel,
              gameType: GameType,
+             seed: Long? = null, 
+             position: Int? = null,
              modifier: Modifier = Modifier
 ) {
-    val position by viewModel.position.observeAsState(0)
+    val position by viewModel.position.observeAsState(position ?: 0)
     val advancePositionEnabled by viewModel.advancePositionEnabled.observeAsState(true)
-    val gameSeed by rememberSaveable { mutableStateOf(System.currentTimeMillis()) }
+    val gameSeed by rememberSaveable { mutableStateOf(seed ?: System.currentTimeMillis()) }
 
     viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
-    viewModel.initialiseGame(gameType, gameSeed)
+    viewModel.initialiseGame(gameType, gameSeed, position)
     
     Game(
         position = position,

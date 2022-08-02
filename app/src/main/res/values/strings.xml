@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">Welcome To Flip</string>
     <string name="main_instruction">Choose which game to play:</string>
+    <string name="saved_instruction">Select from a previously started game:</string>
 
     <string name="flip_button">Flip!</string>
     <string name="reshuffle_button">Reshuffle</string>
+    <string name="load_saved_button">Load saved game</string>
+    <string name="delete_saved_button">Delete saved game</string>
 
     <string name="deck_position">%1$d/%2$d</string>
 
@@ -11,4 +14,8 @@
     <string name="action_deck_alt">Action Deck</string>
 
     <string name="empty">Empty stack</string>
+
+
+    <string name="date_time_format">dd-MM-yyyy h:mma</string>
+    
 </resources>

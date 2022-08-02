@@ -2,10 +2,7 @@ package dev.katiebarnett.welcometoflip.components
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,8 +37,10 @@ fun ButtonWithIcon(@StringRes textRes: Int,
                    enabled: Boolean = true,
                    modifier: Modifier = Modifier) {
     ThemedButton(onClick = onClick, enabled = enabled, modifier) {
-        Row(verticalAlignment = Alignment.CenterVertically, 
-            horizontalArrangement = Arrangement.spacedBy(Dimen.Button.iconSpacing)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Dimen.Button.iconSpacing)
+        ) {
             Icon(
                 painter = painterResource(id = iconRes),
                 contentDescription = stringResource(id = textRes),
@@ -51,7 +50,29 @@ fun ButtonWithIcon(@StringRes textRes: Int,
             Text(stringResource(id = textRes))
         }
     }
-    
+}
+
+@Composable
+fun IconButton(@StringRes altTextRes: Int? = null,
+               @DrawableRes iconRes: Int,
+               onClick: () -> Unit,
+               enabled: Boolean = true,
+               modifier: Modifier = Modifier) {
+    ElevatedButton(
+        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+        onClick = onClick,
+        modifier = modifier.size(Dimen.Button.iconButtonSize),
+        contentPadding = PaddingValues(Dimen.Button.iconButtonContentPadding),
+        enabled= enabled
+    ) {
+        Icon(
+            painter = painterResource(id = iconRes),
+            contentDescription = altTextRes ?.let {
+                stringResource(id = altTextRes)
+            },
+            modifier = Modifier.size(Dimen.Button.iconButtonIconSize)
+        )
+    }
 }
 
 @Preview(showBackground = true)
@@ -71,6 +92,18 @@ fun ButtonWithIconPreview() {
         ButtonWithIcon(
             textRes = R.string.game_welcome_to_the_moon,
             R.drawable.noun_rocket_4925595,
+            onClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun IconButtonPreview() {
+    WelcomeToFlipTheme {
+        IconButton(
+            altTextRes = R.string.game_welcome_to_the_moon,
+            R.drawable.noun_bin_2034046,
             onClick = {}
         )
     }

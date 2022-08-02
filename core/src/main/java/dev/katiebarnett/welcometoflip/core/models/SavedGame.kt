@@ -2,7 +2,7 @@ package dev.katiebarnett.welcometoflip.core.models
 
 data class SavedGame(
     val position: Int,
-    val gameType: String,
+    val gameType: GameType?,
     val seed: Long,
-    val dateModified: Long
+    val lastModified: Long
 )

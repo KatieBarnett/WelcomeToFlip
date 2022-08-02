@@ -14,9 +14,12 @@ ext {
     compose_navigation_version = '2.5.0'
     compose_viewmodel_version = '2.5.0'
     core_ktx_version = '1.8.0'
+    datastore_version = '1.0.0'
     dependency_check_version = '7.1.1'
     lifecycle_version = '2.5.0'
     livedata_version = '2.5.0'
     kotlin_version = '1.7.0'
     material_version = '1.5.0'
+    protobuf_version = '3.18.0'
+    protobuf_plugin_version = '0.8.17'
 }

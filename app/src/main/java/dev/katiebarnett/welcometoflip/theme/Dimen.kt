@@ -5,9 +5,18 @@ import androidx.compose.ui.unit.dp
 object Dimen {
     
     val spacing = 8.dp
+    val spacingDouble = spacing * 2
 
     object Button {
         val spacing = 8.dp
+        val iconSize = 24.dp
+        val iconSpacing = 8.dp
+        val iconButtonSize = 30.dp
+        val iconButtonIconSize = 20.dp
+        val iconButtonContentPadding = 0.dp
+    }
+
+    object SavedGame {
         val iconSize = 24.dp
         val iconSpacing = 8.dp
     }
