@@ -39,8 +39,9 @@ fun WelcomeToFlipNavHost(
                 GameBody(
                     viewModel = viewModel,
                     gameType = gameType,
-                    seed = seed, 
-                    position = position
+                    seed = seed,
+                    initialPosition = position,
+                    onGameEnd = { navController.navigateUp() }
                 )
             }
         }

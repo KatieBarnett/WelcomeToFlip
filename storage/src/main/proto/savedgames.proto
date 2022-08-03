@@ -12,4 +12,5 @@ message Game {
   double seed = 2;
   double lastModified = 3;
   string gameType = 4;
+  int32 stackSize = 5;
 }

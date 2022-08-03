@@ -34,6 +34,6 @@ object Game : WelcomeToFlipDestination("Game") {
     }
 
     fun getRoute(savedGame: SavedGame): String {
-        return "$route/${savedGame?.gameType?.name ?: "gameType"}?$seedArg=${savedGame.seed}&$positionArg=${savedGame.position}"
+        return "$route/${savedGame.gameType?.name ?: "gameType"}?$seedArg=${savedGame.seed}&$positionArg=${savedGame.position}"
     }
 }

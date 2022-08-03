@@ -2,6 +2,7 @@ package dev.katiebarnett.welcometoflip.storage
 
 import dev.katiebarnett.welcometoflip.core.models.GameType
 import dev.katiebarnett.welcometoflip.core.models.SavedGame
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,9 +16,10 @@ class SavedGamesRepository @Inject constructor(
         return savedGamesDataSource.savedGamesFlow
     }
     
-    suspend fun saveGame(gameType: GameType, seed: Long, position: Int) {
+    suspend fun saveGame(gameType: GameType, seed: Long, position: Int, stackSize: Int) {
         savedGamesDataSource.saveGame(SavedGame(
-            position = position, 
+            position = position,
+            stackSize = stackSize,
             gameType = gameType,
             seed = seed,
             lastModified = System.currentTimeMillis()

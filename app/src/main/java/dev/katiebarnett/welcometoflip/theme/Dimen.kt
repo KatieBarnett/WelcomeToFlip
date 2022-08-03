@@ -31,4 +31,8 @@ object Dimen {
             val radius = 10.dp
         }
     }
+
+    object Dialog {
+        val radius = 8.dp
+    }
 }

@@ -116,7 +116,7 @@ fun SavedGame(savedGame: SavedGame,
               deleteGameAction: (savedGame: SavedGame) -> Unit,
               modifier: Modifier = Modifier) {
     Row(verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(Dimen.spacing)) {
+        horizontalArrangement = Arrangement.spacedBy(Dimen.spacing), modifier = modifier) {
         savedGame.gameType?.let {
             Icon(
                 painter = painterResource(id = it.icon),
@@ -125,7 +125,10 @@ fun SavedGame(savedGame: SavedGame,
                     .size(Dimen.SavedGame.iconSize)
             )
         }
-        Text(savedGame.lastModified.displayDateTime(stringResource(id = R.string.date_time_format)))
+        Column {
+            Text(savedGame.lastModified.displayDateTime(stringResource(id = R.string.date_time_format)))
+            Text(stringResource(id = R.string.position_label, savedGame.displayPosition, savedGame.stackSize))
+        }
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
             altTextRes = R.string.delete_saved_button,
@@ -149,7 +152,8 @@ fun SavedGamePreview() {
                 position = 1,
                 seed = 1234567890,
                 gameType = WelcomeToTheMoon,
-                lastModified = System.currentTimeMillis()
+                lastModified = System.currentTimeMillis(),
+                stackSize = 21
             ), {}, {}, Modifier)
     }
 }
@@ -162,13 +166,15 @@ fun ChooseGameBodyPreview() {
             position = 1,
             seed = 1234567890,
             gameType = WelcomeToTheMoon,
-            lastModified = System.currentTimeMillis()
+            lastModified = System.currentTimeMillis(),
+            stackSize = 21
         )
         val savedGame2 = SavedGame(
             position = 90,
             seed = 987654321,
             gameType = WelcomeToTheMoon,
-            lastModified = System.currentTimeMillis()
+            lastModified = System.currentTimeMillis(),
+            stackSize = 21
         )
         ChooseGameBody(
             gameTypes = listOf(WelcomeToTheMoon, WelcomeToTheMoon),
@@ -195,12 +201,14 @@ fun SavedGameListPreview() {
     WelcomeToFlipTheme {
         val savedGame1 = SavedGame(
             position = 1,
+            stackSize = 21,
             seed = 1234567890,
             gameType = WelcomeToTheMoon,
             lastModified = System.currentTimeMillis()
         )
         val savedGame2 = SavedGame(
             position = 90,
+            stackSize = 180,
             seed = 987654321,
             gameType = WelcomeToTheMoon,
             lastModified = System.currentTimeMillis()

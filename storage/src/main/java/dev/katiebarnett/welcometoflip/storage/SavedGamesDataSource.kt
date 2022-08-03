@@ -39,7 +39,8 @@ class SavedGamesDataSource @Inject constructor(
                     position = it.position,
                     gameType = it.gameType.mapToGameType(),
                     seed = it.seed.toLong(),
-                    lastModified = it.lastModified.toLong()
+                    lastModified = it.lastModified.toLong(),
+                    stackSize = it.stackSize
                 ) 
             }.sortedByDescending { it.lastModified }
         }
@@ -79,6 +80,7 @@ class SavedGamesDataSource @Inject constructor(
         gameBuilder.gameType = gameType?.name
         gameBuilder.seed = seed.toDouble()
         gameBuilder.position = position
+        gameBuilder.stackSize = stackSize
         gameBuilder.lastModified = lastModified.toDouble()
         return gameBuilder.build()
     }

@@ -27,9 +27,15 @@ class GameViewModel @Inject constructor(
     
     private val _position = MutableLiveData(0)
     val position: LiveData<Int> = _position
+    
+    private var shouldSaveGameOnPause = true
 
     val advancePositionEnabled = Transformations.map(position) {
-        (stacks.getStackSize() ?: 0) > it
+        (stacks.getStackSize() ?: 0) > it + 1
+    }
+
+    val showEndGame = Transformations.map(advancePositionEnabled) {
+        !it
     }
     
     fun initialiseGame(gameType: GameType, gameSeed: Long, position: Int) {
@@ -51,19 +57,34 @@ class GameViewModel @Inject constructor(
         _position.postValue((_position.value ?: 0) + 1)
     }
 
-    fun reshuffle() {
+    fun reshuffleStacks() {
         stacks = stacks.map { it.shuffled() }
         _position.postValue(0)
     }
-
-    override fun onPause(owner: LifecycleOwner) {
-        super.onPause(owner)
+    
+    fun endGame(onEnd: () -> Unit) {
+        shouldSaveGameOnPause = false
+        viewModelScope.launch {
+            savedGamesRepository.deleteSavedGame(gameSeed)
+            onEnd.invoke()
+        }
+    }
+    
+    fun saveGame() {
         viewModelScope.launch {
             savedGamesRepository.saveGame(
                 gameType = gameType,
                 position = position.value ?: 0,
-                seed = gameSeed
+                seed = gameSeed,
+                stackSize = stacks.getStackSize() ?: 0
             )
+        }
+    }
+
+    override fun onPause(owner: LifecycleOwner) {
+        super.onPause(owner)
+        if (shouldSaveGameOnPause) {
+            saveGame()
         }
     }
     

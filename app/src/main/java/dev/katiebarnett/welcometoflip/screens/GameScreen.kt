@@ -1,16 +1,22 @@
 package dev.katiebarnett.welcometoflip.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.window.Dialog
 import dev.katiebarnett.welcometoflip.GameViewModel
 import dev.katiebarnett.welcometoflip.R
 import dev.katiebarnett.welcometoflip.components.Stack
@@ -25,11 +31,13 @@ import dev.katiebarnett.welcometoflip.util.observeLifecycle
 fun GameBody(viewModel: GameViewModel,
              gameType: GameType,
              seed: Long? = null, 
-             position: Int? = null,
+             initialPosition: Int? = null,
+             onGameEnd: () -> Unit, 
              modifier: Modifier = Modifier
 ) {
-    val position by viewModel.position.observeAsState(position ?: 0)
+    val position by viewModel.position.observeAsState(initialPosition ?: 0)
     val advancePositionEnabled by viewModel.advancePositionEnabled.observeAsState(true)
+    val showEndGame by viewModel.showEndGame.observeAsState(false)
     val gameSeed by rememberSaveable { mutableStateOf(seed ?: System.currentTimeMillis()) }
 
     viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
@@ -43,11 +51,20 @@ fun GameBody(viewModel: GameViewModel,
             viewModel.advancePosition()
         },
         advancePositionEnabled = advancePositionEnabled,
-        reshuffle = { 
-            viewModel.reshuffle()
-        },
         modifier = modifier
     )
+    
+    if (showEndGame) {
+        Log.d("AdvancePosition", "showing end game")
+        EndGameDialog(
+            reshuffleStacks = { 
+                viewModel.reshuffleStacks() 
+            },
+            endGame = {
+                viewModel.endGame(onGameEnd)
+            }
+        )
+    }
 }
 
 @Composable
@@ -56,7 +73,6 @@ fun Game(position: Int,
          stacks: List<List<Card>>,
          advancePosition: () -> Unit,
          advancePositionEnabled: Boolean,
-         reshuffle: () -> Unit,
          modifier: Modifier = Modifier) {
     Column(
         modifier
@@ -68,7 +84,7 @@ fun Game(position: Int,
             .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(Dimen.spacing)) {
             Text(stringResource(id = gameType.displayName), modifier = modifier.weight(1f))
-            Text(stringResource(id = R.string.deck_position, position, stacks.getStackSize() ?: 0))
+            Text(stringResource(id = R.string.deck_position, position + 1, stacks.getStackSize() ?: 0))
         }
         stacks.forEach { stack ->
             Stack(stack, position, modifier.weight(1f))
@@ -82,12 +98,42 @@ fun Game(position: Int,
             }, enabled = advancePositionEnabled, modifier = modifier.weight(1f)) {
                 Text(stringResource(id = R.string.flip_button))
             }
-            ThemedButton(onClick = {
-                reshuffle.invoke()
-            }, modifier = modifier.weight(1f)) {
-                Text(stringResource(id = R.string.reshuffle_button))
+        }
+    }
+}
+
+@Composable
+fun EndGameDialog(reshuffleStacks: () -> Unit, 
+                  endGame: () -> Unit, 
+                  modifier: Modifier = Modifier) {
+    Dialog(onDismissRequest = {  }) {
+        Surface(
+            shape = RoundedCornerShape(Dimen.Dialog.radius),
+            color = MaterialTheme.colorScheme.surface, 
+            modifier = modifier
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(Dimen.spacing),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(Dimen.spacing)
+            ) {
+                Text(stringResource(id = R.string.stack_end_message))
+                ThemedButton(onClick = { reshuffleStacks.invoke() }) {
+                    Text(stringResource(id = R.string.reshuffle_button))
+                }
+                ThemedButton(onClick = { endGame.invoke() }) {
+                    Text(stringResource(id = R.string.end_game_button))
+                }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun EndGameDialogPreview() {
+    WelcomeToFlipTheme {
+        EndGameDialog(reshuffleStacks = {}, endGame = {})
     }
 }
 
@@ -112,6 +158,6 @@ fun GamePreview() {
     )
 
     WelcomeToFlipTheme {
-        Game(0, WelcomeToTheMoon, stacks, {}, true, {}, Modifier)
+        Game(0, WelcomeToTheMoon, stacks, {}, true, Modifier)
     }
 }
