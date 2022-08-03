@@ -2,6 +2,7 @@
     <string name="app_name">Welcome To Flip</string>
     <string name="main_instruction">Choose which game to play:</string>
     <string name="saved_instruction">Select from a previously started game:</string>
+    <string name="navigate_back">Back</string>
 
     <string name="flip_button">Flip!</string>
     <string name="reshuffle_button">Reshuffle</string>

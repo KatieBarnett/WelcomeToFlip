@@ -24,7 +24,7 @@ fun WelcomeToFlipNavHost(
             ChooseGame(
                 chooseGameAction = { 
                     navController.navigate(route = Game.getRoute(it))
-                                   },
+                },
                 loadGameAction = { 
                     navController.navigate(route = Game.getRoute(it)) 
                 }
