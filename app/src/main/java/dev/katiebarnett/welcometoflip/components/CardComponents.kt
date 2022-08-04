@@ -24,14 +24,13 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import dev.katiebarnett.welcometoflip.R
-import dev.katiebarnett.welcometoflip.core.models.Action
 import dev.katiebarnett.welcometoflip.core.models.Astronaut
 import dev.katiebarnett.welcometoflip.core.models.CardFace
 import dev.katiebarnett.welcometoflip.core.models.Number12
 import dev.katiebarnett.welcometoflip.theme.Dimen
 
 @Composable
-fun CardFace(cardFace: CardFace, peek: Action? = null, modifier: Modifier = Modifier) {
+fun CardFaceDisplay(cardFace: CardFace, peek: CardFace? = null, modifier: Modifier = Modifier) {
     
     ConstraintLayout(
         modifier = modifier.fillMaxSize()) {
@@ -100,7 +99,7 @@ fun CardFace(cardFace: CardFace, peek: Action? = null, modifier: Modifier = Modi
 }
 
 @Composable
-fun CardPlaceholder(modifier: Modifier = Modifier) {
+fun CardDisplayPlaceholder(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -115,17 +114,17 @@ fun CardPlaceholder(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun NumberCardPreview() {
-    CardFace(Number12, Astronaut, modifier = Modifier.height(400.dp))
+    CardFaceDisplay(Number12, Astronaut, modifier = Modifier.height(400.dp))
 }
 
 @Preview
 @Composable
 fun ActionCardPreview() {
-    CardFace(Astronaut, modifier = Modifier.height(400.dp))
+    CardFaceDisplay(Astronaut, modifier = Modifier.height(400.dp))
 }
 
 @Preview
 @Composable
-fun CardPlaceholderPreview() {
-    CardPlaceholder(modifier = Modifier.height(400.dp))
+fun CardDisplayPlaceholderPreview() {
+    CardDisplayPlaceholder(modifier = Modifier.height(400.dp))
 }

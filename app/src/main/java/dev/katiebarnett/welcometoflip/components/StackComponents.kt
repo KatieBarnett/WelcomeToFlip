@@ -49,15 +49,15 @@ private fun TopCards(currentCard: Card?,
         currentCard = currentCard, 
         numberCardStack = {
             if (numberCardStack != null) {
-                CardFace(numberCardStack.number, numberCardStack.action)
+                CardFaceDisplay(numberCardStack.number, numberCardStack.action)
             } else {
-                CardPlaceholder()
+                CardDisplayPlaceholder()
             }
         }, actionCardStack = {
             if (actionCardStack != null) {
-                CardFace(actionCardStack.action, null)
+                CardFaceDisplay(actionCardStack.action, null)
             } else {
-                CardPlaceholder()
+                CardDisplayPlaceholder()
             }
         }, transitionTrigger, modifier)
 }
@@ -108,10 +108,10 @@ fun StackLayout(
                     }
                 , content = {
                     if (flipRotation < 90f) {
-                        CardFace(currentCard.number, currentCard.action)
+                        CardFaceDisplay(currentCard.number, currentCard.action)
                     } else {
                         // Rotate the action card back again so it does not appear reversed
-                        CardFace(currentCard.action, null, 
+                        CardFaceDisplay(currentCard.action, null, 
                             modifier = Modifier.graphicsLayer { 
                                 rotationY = 180f 
                             }
