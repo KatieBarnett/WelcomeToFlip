@@ -13,6 +13,7 @@ sealed class GameType(
 fun String.mapToGameType() : GameType? {
     return when(this) {
         WelcomeToTheMoon.name -> WelcomeToTheMoon
+        WelcomeToTheMoonSolo.name -> WelcomeToTheMoonSolo
         else -> null
     }
 }

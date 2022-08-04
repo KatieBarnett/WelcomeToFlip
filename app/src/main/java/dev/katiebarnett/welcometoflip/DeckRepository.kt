@@ -7,6 +7,10 @@ import javax.inject.Singleton
 @Singleton
 class DeckRepository @Inject constructor(
 ) {
+    fun getAvailableGames(): List<GameType> {
+        return listOf(WelcomeToTheMoon, WelcomeToTheMoonSolo)
+    }
+    
     fun getDeck(gameType: GameType): List<Card> {
         return when(gameType) {
             WelcomeToTheMoon -> welcomeToTheMoonDeck

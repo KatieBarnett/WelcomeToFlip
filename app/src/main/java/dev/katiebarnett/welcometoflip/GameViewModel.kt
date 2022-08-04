@@ -12,7 +12,7 @@ import kotlin.math.ceil
 import kotlin.random.Random
 
 @HiltViewModel
-class GameViewModel @Inject constructor(
+open class GameViewModel @Inject constructor(
     private val deckRepository: DeckRepository,
     private val savedGamesRepository: SavedGamesRepository
 ) : ViewModel(), DefaultLifecycleObserver {
@@ -25,7 +25,10 @@ class GameViewModel @Inject constructor(
     private var gameSeed: Long = 0L
     lateinit var stacks: List<List<Card>>
     
-    private val _position = MutableLiveData(0)
+    open val initialPosition
+        get() = 0
+    
+    private val _position = MutableLiveData(initialPosition)
     val position: LiveData<Int> = _position
     
     private var shouldSaveGameOnPause = true
@@ -38,7 +41,7 @@ class GameViewModel @Inject constructor(
         !it
     }
     
-    fun initialiseGame(gameType: GameType, gameSeed: Long, position: Int) {
+    open fun initialiseGame(gameType: GameType, gameSeed: Long, position: Int) {
         // Only initialise if not already initialised
         if (!this::stacks.isInitialized) {
             this.gameType = gameType

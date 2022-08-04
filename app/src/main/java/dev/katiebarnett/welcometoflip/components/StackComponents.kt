@@ -17,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import dev.katiebarnett.welcometoflip.StackViewModel
 import dev.katiebarnett.welcometoflip.core.models.*
 import dev.katiebarnett.welcometoflip.theme.Dimen
+import dev.katiebarnett.welcometoflip.theme.WelcomeToFlipTheme
 
 @Composable
 fun Stack(stack: List<Card>,
@@ -92,8 +93,7 @@ fun StackLayout(
 
     Layout(
         modifier = modifier
-            .padding(Dimen.spacing)
-            .fillMaxSize()   ,
+            .fillMaxSize(),
         content = {
             Box(modifier = Modifier
                 .layoutId("NumberStack"), content = numberCardStack)
@@ -149,20 +149,27 @@ fun StackLayout(
 @Preview(showBackground = true)
 @Composable
 fun StackPreview() {
-    TopCards(
-        Card(Astronaut, Number12),
-        Card(Water, Number6),
-        Card(Lightning, Number1), modifier = Modifier.height(400.dp))
+    WelcomeToFlipTheme {
+        TopCards(
+            Card(Astronaut, Number12),
+            Card(Water, Number6),
+            Card(Lightning, Number1), modifier = Modifier.height(400.dp).padding(Dimen.spacingDouble)
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun StackPreviewWithEmptyAction() {
-    TopCards(Card(Astronaut, Number12), null, null, modifier = Modifier.height(400.dp))
+    WelcomeToFlipTheme {
+        TopCards(Card(Astronaut, Number12), null, null, modifier = Modifier.height(400.dp).padding(Dimen.spacingDouble))
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun StackPreviewWithEmptyNumber() {
-    TopCards(null, Card(Water, Number6), null, modifier = Modifier.height(400.dp))
+    WelcomeToFlipTheme {
+        TopCards(null, Card(Water, Number6), null, modifier = Modifier.height(400.dp).padding(Dimen.spacingDouble))
+    }
 }

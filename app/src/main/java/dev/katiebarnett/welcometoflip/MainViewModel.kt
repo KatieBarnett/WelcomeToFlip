@@ -11,10 +11,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    private val deckRepository: DeckRepository,
     private val savedGamesRepository: SavedGamesRepository
 ) : ViewModel() {
 
-    val gameTypes = listOf(WelcomeToTheMoon)
+    val gameTypes = deckRepository.getAvailableGames()
     
     val savedGames = savedGamesRepository.getSavedGames()
     

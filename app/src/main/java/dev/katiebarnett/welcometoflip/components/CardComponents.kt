@@ -1,18 +1,14 @@
 package dev.katiebarnett.welcometoflip.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
@@ -24,16 +20,22 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import dev.katiebarnett.welcometoflip.R
+import dev.katiebarnett.welcometoflip.core.models.AstraA
 import dev.katiebarnett.welcometoflip.core.models.Astronaut
 import dev.katiebarnett.welcometoflip.core.models.CardFace
 import dev.katiebarnett.welcometoflip.core.models.Number12
 import dev.katiebarnett.welcometoflip.theme.Dimen
+import dev.katiebarnett.welcometoflip.theme.WelcomeToFlipTheme
 
 @Composable
-fun CardFaceDisplay(cardFace: CardFace, peek: CardFace? = null, modifier: Modifier = Modifier) {
-    
+fun CardFaceDisplay(
+    cardFace: CardFace,
+    peek: CardFace? = null,
+    modifier: Modifier = Modifier
+) {
     ConstraintLayout(
-        modifier = modifier.fillMaxSize()) {
+        modifier = modifier.fillMaxSize()
+    ) {
         val (peekTop, peekBottom, image, background) = createRefs()
         
         // TODO fix alt text
@@ -100,31 +102,45 @@ fun CardFaceDisplay(cardFace: CardFace, peek: CardFace? = null, modifier: Modifi
 
 @Composable
 fun CardDisplayPlaceholder(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .clip(RoundedCornerShape(Dimen.Card.radius))
-            .background(MaterialTheme.colorScheme.surface),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = stringResource(id = R.string.empty))
-    }
+//    Box(
+//        modifier = modifier
+//            .fillMaxSize()
+//            .clip(RoundedCornerShape(Dimen.Card.radius))
+//            .background(MaterialTheme.colorScheme.surface),
+//        contentAlignment = Alignment.Center
+//    ) {
+//        Text(text = stringResource(id = R.string.empty))
+//    }
 }
 
 @Preview
 @Composable
 fun NumberCardPreview() {
-    CardFaceDisplay(Number12, Astronaut, modifier = Modifier.height(400.dp))
+    WelcomeToFlipTheme {
+        CardFaceDisplay(Number12, Astronaut, modifier = Modifier.height(400.dp))
+    }
 }
 
 @Preview
 @Composable
 fun ActionCardPreview() {
-    CardFaceDisplay(Astronaut, modifier = Modifier.height(400.dp))
+    WelcomeToFlipTheme {
+        CardFaceDisplay(Astronaut, modifier = Modifier.height(400.dp))
+    }
+}
+
+@Preview
+@Composable
+fun LetterCardPreview() {
+    WelcomeToFlipTheme {
+        CardFaceDisplay(AstraA, modifier = Modifier.height(400.dp))
+    }
 }
 
 @Preview
 @Composable
 fun CardDisplayPlaceholderPreview() {
-    CardDisplayPlaceholder(modifier = Modifier.height(400.dp))
+    WelcomeToFlipTheme {
+        CardDisplayPlaceholder(modifier = Modifier.height(400.dp))
+    }
 }

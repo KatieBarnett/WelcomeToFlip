@@ -8,7 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import dev.katiebarnett.welcometoflip.core.models.mapToGameType
 import dev.katiebarnett.welcometoflip.screens.ChooseGame
-import dev.katiebarnett.welcometoflip.screens.GameBody
+import dev.katiebarnett.welcometoflip.screens.RegularGameBody
+import dev.katiebarnett.welcometoflip.screens.SoloGameBody
 
 @Composable
 fun WelcomeToFlipNavHost(
@@ -35,14 +36,23 @@ fun WelcomeToFlipNavHost(
             it.arguments?.getString(Game.gameTypeArg)?.mapToGameType()?.let { gameType ->
                 val seed = it.arguments?.getString(Game.seedArg)?.toLong()
                 val position = it.arguments?.getString(Game.positionArg)?.toInt()
-                val viewModel = hiltViewModel<GameViewModel>()
-                GameBody(
-                    viewModel = viewModel,
-                    gameType = gameType,
-                    seed = seed,
-                    initialPosition = position,
-                    onGameEnd = { navController.navigateUp() }
-                )
+                if (gameType.solo) {
+                    SoloGameBody(
+                        viewModel = hiltViewModel(),
+                        gameType = gameType,
+                        seed = seed,
+                        initialPosition = position,
+                        onGameEnd = { navController.navigateUp() }
+                    )
+                } else {
+                    RegularGameBody(
+                        viewModel = hiltViewModel(),
+                        gameType = gameType,
+                        seed = seed,
+                        initialPosition = position,
+                        onGameEnd = { navController.navigateUp() }
+                    )
+                }
             }
         }
     }
