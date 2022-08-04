@@ -1,24 +1,21 @@
 package dev.katiebarnett.welcometoflip.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.window.Dialog
 import dev.katiebarnett.welcometoflip.GameViewModel
 import dev.katiebarnett.welcometoflip.R
+import dev.katiebarnett.welcometoflip.components.ModalTransitionDialog
 import dev.katiebarnett.welcometoflip.components.Stack
 import dev.katiebarnett.welcometoflip.components.ThemedButton
 import dev.katiebarnett.welcometoflip.core.models.*
@@ -37,8 +34,13 @@ fun GameBody(viewModel: GameViewModel,
 ) {
     val position by viewModel.position.observeAsState(initialPosition ?: 0)
     val advancePositionEnabled by viewModel.advancePositionEnabled.observeAsState(true)
-    val showEndGame by viewModel.showEndGame.observeAsState(false)
+    val isEndGame by viewModel.isEndGame.observeAsState(false)
     val gameSeed by rememberSaveable { mutableStateOf(seed ?: System.currentTimeMillis()) }
+
+    var showEndGameDialog by remember { mutableStateOf(false) }
+    if (isEndGame && showEndGameDialog == false) {
+        showEndGameDialog = true
+    }
 
     viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
     viewModel.initialiseGame(gameType, gameSeed, position)
@@ -54,14 +56,16 @@ fun GameBody(viewModel: GameViewModel,
         modifier = modifier
     )
     
-    if (showEndGame) {
-        Log.d("AdvancePosition", "showing end game")
+    if (showEndGameDialog) {
         EndGameDialog(
-            reshuffleStacks = { 
-                viewModel.reshuffleStacks() 
+            reshuffleStacks = {
+                viewModel.reshuffleStacks()
             },
             endGame = {
                 viewModel.endGame(onGameEnd)
+            },
+            onDismissRequest = {
+                showEndGameDialog = false
             }
         )
     }
@@ -103,14 +107,15 @@ fun Game(position: Int,
 }
 
 @Composable
-fun EndGameDialog(reshuffleStacks: () -> Unit, 
-                  endGame: () -> Unit, 
-                  modifier: Modifier = Modifier) {
-    Dialog(onDismissRequest = {  }) {
+private fun EndGameDialog(reshuffleStacks: () -> Unit,
+                          endGame: () -> Unit,
+                          onDismissRequest: () -> Unit
+) {
+    ModalTransitionDialog(onDismissRequest = onDismissRequest) { modalTransitionDialogHelper ->
         Surface(
             shape = RoundedCornerShape(Dimen.Dialog.radius),
-            color = MaterialTheme.colorScheme.surface, 
-            modifier = modifier
+            color = MaterialTheme.colorScheme.surface,
+            modifier = Modifier
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(Dimen.spacing),
@@ -118,10 +123,15 @@ fun EndGameDialog(reshuffleStacks: () -> Unit,
                 modifier = Modifier.padding(Dimen.spacing)
             ) {
                 Text(stringResource(id = R.string.stack_end_message))
-                ThemedButton(onClick = { reshuffleStacks.invoke() }) {
+                ThemedButton(onClick = { 
+                    reshuffleStacks.invoke()
+                    modalTransitionDialogHelper::triggerAnimatedClose.invoke()
+                }) {
                     Text(stringResource(id = R.string.reshuffle_button))
                 }
-                ThemedButton(onClick = { endGame.invoke() }) {
+                ThemedButton(onClick = { 
+                    modalTransitionDialogHelper::triggerAnimatedClose.invoke()
+                    endGame.invoke() }) {
                     Text(stringResource(id = R.string.end_game_button))
                 }
             }
@@ -133,7 +143,7 @@ fun EndGameDialog(reshuffleStacks: () -> Unit,
 @Composable
 fun EndGameDialogPreview() {
     WelcomeToFlipTheme {
-        EndGameDialog(reshuffleStacks = {}, endGame = {})
+        EndGameDialog(reshuffleStacks = {}, endGame = {}, onDismissRequest = {})
     }
 }
 

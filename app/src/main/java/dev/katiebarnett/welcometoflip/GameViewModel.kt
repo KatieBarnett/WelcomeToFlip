@@ -34,7 +34,7 @@ class GameViewModel @Inject constructor(
         (stacks.getStackSize() ?: 0) > it + 1
     }
 
-    val showEndGame = Transformations.map(advancePositionEnabled) {
+    val isEndGame = Transformations.map(advancePositionEnabled) {
         !it
     }
     
