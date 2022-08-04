@@ -2,12 +2,21 @@ package dev.katiebarnett.welcometoflip.core.models
 
 import dev.katiebarnett.welcometoflip.core.R
 import dev.katiebarnett.welcometoflip.core.theme.*
+import kotlin.Number
 
 
 object WelcomeToTheMoon: GameType(
     name = "WelcomeToTheMoon",
     icon = R.drawable.noun_rocket_4925595,
-    displayName = R.string.game_welcome_to_the_moon
+    displayName = R.string.game_welcome_to_the_moon,
+    solo = false
+)
+
+object WelcomeToTheMoonSolo: GameType(
+    name = "WelcomeToTheMoonSolo",
+    icon = R.drawable.noun_rocket_4925595,
+    displayName = R.string.game_welcome_to_the_moon_solo,
+    solo = true
 )
 
 object Plant: Action(R.drawable.noun_plant_4982354, ActionPlant)
@@ -16,6 +25,10 @@ object Lightning: Action(R.drawable.noun_thunder_4978759, ActionLightning)
 object Robot: Action(R.drawable.noun_robot_4971447, ActionRobot)
 object Astronaut: Action(R.drawable.noun_astronaut_2801977, ActionAstronaut)
 object X: Action(R.drawable.noun_remove_schedule_4359088, ActionX)
+
+object AstraA: Letter(R.drawable.letter_a, DuskyPink)
+object AstraB: Letter(R.drawable.letter_b, DuskyPurple)
+object AstraC: Letter(R.drawable.letter_c, DuskyYellow)
 
 val welcomeToTheMoonDeck = listOf(
     Card(Robot, Number1),
@@ -95,4 +108,10 @@ val welcomeToTheMoonDeck = listOf(
 
     Card(Lightning, Number15),
     Card(Robot, Number15)
+)
+
+val welcomeToTheMoonSoloDeck = listOf(
+    Card(AstraA, AstraA),
+    Card(AstraB, AstraB),
+    Card(AstraC, AstraC)
 )

@@ -13,6 +13,9 @@ val Purple = Color(0xff8067C4)
 val Blue = Color(0xff51C3FC)
 val Orange = Color(0xffFABE04)
 val Pink = Color(0xffF01776)
+val DuskyPink = Color(0xffD3918C)
+val DuskyPurple = Color(0xff986E85)
+val DuskyYellow = Color(0xffE0C9A8)
 
 // Semantic colours
 val ActionPlant = Green
@@ -21,3 +24,7 @@ val ActionLightning = Purple
 val ActionWater = Blue
 val ActionAstronaut = Orange
 val ActionX = Pink
+
+val AstraA = DuskyPink
+val AstraB = DuskyPurple
+val AstraC = DuskyYellow

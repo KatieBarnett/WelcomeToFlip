@@ -13,7 +13,12 @@ sealed class Action(
     backgroundColor: Color
 ): CardFace(drawableRes, backgroundColor)
 
-sealed class Number(drawableRes: Int): CardFace(drawableRes, null) 
+sealed class Number(drawableRes: Int): CardFace(drawableRes, null)
+
+sealed class Letter(
+    drawableRes: Int,
+    backgroundColor: Color
+): CardFace(drawableRes, backgroundColor)
 
 
 
