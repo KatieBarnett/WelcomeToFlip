@@ -22,7 +22,7 @@ open class GameViewModel @Inject constructor(
     }
 
     lateinit var gameType: GameType
-    private var gameSeed: Long = 0L
+    protected var gameSeed: Long = 0L
     lateinit var stacks: List<List<Card>>
     
     open val initialPosition

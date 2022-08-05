@@ -98,7 +98,7 @@ fun StackLayout(
             Box(modifier = Modifier
                 .layoutId("NumberStack"), content = numberCardStack)
             Box(modifier = Modifier
-                    .layoutId("ActionStack"), content = actionCardStack)
+                .layoutId("ActionStack"), content = actionCardStack)
             currentCard?.let {
                 Box(modifier = Modifier
                     .layoutId("CurrentCardAnimated")
@@ -146,14 +146,43 @@ fun StackLayout(
     }
 }
 
+@Composable
+fun BasicStackLayout(
+    cardFace: CardFace,
+    peek: CardFace? = null,
+    modifier: Modifier = Modifier
+) {
+    Row(horizontalArrangement = Arrangement.spacedBy(Dimen.Card.spacing),
+        modifier = modifier) {
+        CardFaceDisplay(cardFace, peek, modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(1f))
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun StackPreview() {
     WelcomeToFlipTheme {
         TopCards(
-            Card(Astronaut, Number12),
-            Card(Water, Number6),
-            Card(Lightning, Number1), modifier = Modifier.height(400.dp).padding(Dimen.spacingDouble)
+            currentCard = Card(Astronaut, Number12),
+            numberCardStack = Card(Water, Number6),
+            actionCardStack = Card(Lightning, Number1), 
+            modifier = Modifier
+                .height(400.dp)
+                .padding(Dimen.spacingDouble)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BasicStackLayoutPreview() {
+    WelcomeToFlipTheme {
+        BasicStackLayout(
+            cardFace = Astronaut,
+            modifier = Modifier
+                .height(400.dp)
+                .padding(Dimen.spacingDouble)
         )
     }
 }
@@ -162,7 +191,9 @@ fun StackPreview() {
 @Composable
 fun StackPreviewWithEmptyAction() {
     WelcomeToFlipTheme {
-        TopCards(Card(Astronaut, Number12), null, null, modifier = Modifier.height(400.dp).padding(Dimen.spacingDouble))
+        TopCards(Card(Astronaut, Number12), null, null, modifier = Modifier
+            .height(400.dp)
+            .padding(Dimen.spacingDouble))
     }
 }
 
@@ -170,6 +201,8 @@ fun StackPreviewWithEmptyAction() {
 @Composable
 fun StackPreviewWithEmptyNumber() {
     WelcomeToFlipTheme {
-        TopCards(null, Card(Water, Number6), null, modifier = Modifier.height(400.dp).padding(Dimen.spacingDouble))
+        TopCards(null, Card(Water, Number6), null, modifier = Modifier
+            .height(400.dp)
+            .padding(Dimen.spacingDouble))
     }
 }

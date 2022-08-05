@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.katiebarnett.welcometoflip.core.models.SavedGame
-import dev.katiebarnett.welcometoflip.core.models.WelcomeToTheMoon
 import dev.katiebarnett.welcometoflip.storage.SavedGamesRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject

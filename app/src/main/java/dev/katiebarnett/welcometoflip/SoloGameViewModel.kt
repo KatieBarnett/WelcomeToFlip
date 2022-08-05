@@ -9,6 +9,7 @@ import dev.katiebarnett.welcometoflip.core.models.GameType
 import dev.katiebarnett.welcometoflip.storage.SavedGamesRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class SoloGameViewModel @Inject constructor(
@@ -27,17 +28,38 @@ class SoloGameViewModel @Inject constructor(
     override val initialPosition: Int
         get() = -1
     
+    lateinit var soloPile: List<Card>
+    
     lateinit var soloStack: List<Card>
     
     override fun initialiseGame(gameType: GameType, gameSeed: Long, position: Int) {
         super.initialiseGame(gameType, gameSeed, position)
-
-        if (!this::soloStack.isInitialized && phase.value == SoloGamePhase.SETUP) {
+        if (!this::soloPile.isInitialized) {
             viewModelScope.launch {
-                soloStack = deckRepository.getSoloDeck(gameType)
+                soloPile = deckRepository.getSoloDeck(gameType)
             }
         }
-        
+        if (position != initialPosition) {
+            setupSoloStack()
+        }
+    }
+    
+    fun setupSoloStack() {
+        viewModelScope.launch {
+            val bottomStack = stacks.last().toMutableList()
+            bottomStack.addAll(soloPile)
+            val combinedStack = mutableListOf<Card>()
+            stacks.forEachIndexed { index, stack ->
+                combinedStack.addAll(
+                    if (index != stacks.size - 1) {
+                        stack
+                    } else {
+                        bottomStack.shuffled(Random(gameSeed)).toList()
+                    }
+                )
+            }
+            soloStack = combinedStack.toList()
+        }
     }
 }
 

@@ -1,36 +1,36 @@
 package dev.katiebarnett.welcometoflip.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.animate
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.zIndex
 import dev.katiebarnett.welcometoflip.SoloGamePhase
 import dev.katiebarnett.welcometoflip.SoloGameViewModel
-import dev.katiebarnett.welcometoflip.components.CardFaceDisplay
-import dev.katiebarnett.welcometoflip.components.EndGameDialog
-import dev.katiebarnett.welcometoflip.components.GameContainer
-import dev.katiebarnett.welcometoflip.components.Stack
+import dev.katiebarnett.welcometoflip.components.*
 import dev.katiebarnett.welcometoflip.core.models.*
 import dev.katiebarnett.welcometoflip.theme.Dimen
 import dev.katiebarnett.welcometoflip.theme.WelcomeToFlipTheme
 import dev.katiebarnett.welcometoflip.util.getStackSize
 import dev.katiebarnett.welcometoflip.util.observeLifecycle
 
-internal const val PILE_ROTATION_AMOUNT = 5f // degrees
 
 @Composable
-fun SoloGameBody(viewModel: SoloGameViewModel,
-                    gameType: GameType,
-                    seed: Long? = null,
-                    initialPosition: Int? = null,
-                    onGameEnd: () -> Unit,
-                    modifier: Modifier = Modifier
+fun SoloGameBody(viewModel: SoloGameViewModel, 
+                 gameType: GameType,
+                 seed: Long? = null,
+                 initialPosition: Int? = null,
+                 onGameEnd: () -> Unit,
+                 modifier: Modifier = Modifier
 ) {
     val position by viewModel.position.observeAsState(initialPosition ?: viewModel.initialPosition)
     val advancePositionEnabled by viewModel.advancePositionEnabled.observeAsState(true)
@@ -57,9 +57,14 @@ fun SoloGameBody(viewModel: SoloGameViewModel,
         advancePositionEnabled = advancePositionEnabled,
         content = { contentModifier ->
             when (phase) {
-                SoloGamePhase.SETUP -> RegularGame(
+                SoloGamePhase.SETUP -> SoloGameSetup(
                     position = position,
                     stacks = viewModel.stacks,
+                    soloPile = viewModel.soloPile,
+                    onAnimationComplete = {
+                        viewModel.setupSoloStack()
+                        viewModel.advancePosition()
+                    },
                     modifier = contentModifier
                 )
                 SoloGamePhase.PLAY -> SoloGame(
@@ -86,112 +91,82 @@ fun SoloGameBody(viewModel: SoloGameViewModel,
         )
     }
 }
+
 @Composable
 fun SoloGameSetup(position: Int,
                   stacks: List<List<Card>>,
-                  soloStack: List<Card>,
+                  soloPile: List<Card>,
+                  onAnimationComplete: () -> Unit,
                   modifier: Modifier = Modifier) {
 
-//    val dbAnimateAsState: Dp by animateDpAsState(
-//        targetValue = switch(enabled),
-//        animationSpec = animationSpec()
-//    )
-//    
-    Box {
-        Column(verticalArrangement = Arrangement.spacedBy(Dimen.Button.spacing),
-            modifier = modifier) {
-            stacks.forEachIndexed { index, stack ->
-                Box(Modifier.weight(1f)) {
+    val offsetPercents = stacks.map { remember { mutableStateOf(1f) }}
+    
+    val stackSpacing = with(LocalDensity.current) {
+        Dimen.spacing.toPx()
+    }
 
-                    var cardHeight by rememberSaveable { mutableStateOf("") }
-                    Stack(
-                        stack = stack,
-                        position = position,
-                        modifier = Modifier
-                    )
+    val animationSpec = tween<Float>(1000, easing = CubicBezierEasing(0.4f, 0.0f, 0.8f, 0.8f))
+
+    var combineAnimationTrigger by remember { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = combineAnimationTrigger) {
+        if (combineAnimationTrigger) {
+            stacks.forEachIndexed { index, _ ->
+                animate(
+                    initialValue = 1f,
+                    targetValue = 0f,
+                    animationSpec = animationSpec
+                ) { value: Float, _: Float ->
+                    offsetPercents[index].value = value
+                }
+            }
+            onAnimationComplete.invoke()
+        }
+    }
+
+    Layout(modifier = modifier.fillMaxSize(),
+        content = {
+            stacks.forEachIndexed { index, stack ->
+                Box(modifier = Modifier
+                    .zIndex((stacks.size - index).toFloat())
+                    .layoutId("Stack")) {
                     if (index == stacks.size - 1) {
-                        soloStack.reversed().forEachIndexed { index, card ->
-                            val stackIndex = soloStack.size - 1 - index
-                            CardFaceDisplay(
-                                cardFace = card.number,
-                                modifier = Modifier
-                                    .rotate(stackIndex * PILE_ROTATION_AMOUNT)
-                            )
-                        }
+                        PileInsertionLayout(soloPile, onAnimationComplete = {
+                            combineAnimationTrigger = true
+                        })
                     }
+                    BasicStackLayout(stack.first().action)
                 }
             }
         }
+    ) { measurables, constraints ->
+        val stackPlaceables = measurables.filter { it.layoutId == "Stack" }
+
+        layout(constraints.maxWidth, constraints.maxHeight) {
+            val stackHeight = (constraints.maxHeight / stacks.size - (stackSpacing / (stacks.size - 1))).toInt()
+            val stackConstraints = constraints.copy(
+                minHeight = minOf(constraints.minHeight, stackHeight),
+                maxHeight = minOf(constraints.maxHeight, stackHeight)
+            )
+
+            val initialYs = stackPlaceables.mapIndexed { index, _ -> 
+                stackHeight * index + stackSpacing * index
+            }
+
+            stackPlaceables.forEachIndexed { index, placeable ->
+                placeable.measure(stackConstraints).place(0, (initialYs[index] * offsetPercents[index].value).toInt())
+            }
+        }
+
     }
 }
-
-//@Composable
-//fun SoloGameSetup(position: Int,
-//                  stacks: List<List<Card>>,
-//                  soloStack: List<Card>, 
-//                  modifier: Modifier = Modifier) {
-//
-////    val dbAnimateAsState: Dp by animateDpAsState(
-////        targetValue = switch(enabled),
-////        animationSpec = animationSpec()
-////    )
-////    
-//    Box {
-//        Column(modifier = modifier) {
-//            stacks.forEachIndexed { index, stack ->
-//                Layout(
-//                    content = {
-//                        Stack(stack = stack, 
-//                            position = position,
-//                            modifier = modifier
-//                                .weight(1f)
-//                                .layoutId("Stack")
-//                        )
-//                        if (index == stacks.size - 1) {
-//                            soloStack.reversed().forEachIndexed { index, card ->
-//                                val stackIndex = soloStack.size - 1 - index
-//                                CardFaceDisplay(
-//                                    cardFace = card.number,
-//                                    modifier = Modifier
-//                                        .rotate(stackIndex * PILE_ROTATION_AMOUNT)
-//                                        .layoutId("PileCard")
-//                                )
-//                            }
-//                        }
-//                    }) { measurables, constraints ->
-//                    val stackPlaceable =
-//                        measurables.firstOrNull { it.layoutId == "CurrentCardAnimated" }
-//                    val pilePlaceables =
-//                        measurables.filter { it.layoutId == "PileCard" }
-//
-//                    layout(constraints.maxWidth, constraints.maxHeight) {
-//                        val cardWidth = (constraints.maxWidth / 2 - cardSpacing / 2).toInt()
-//                        val pileConstraints = constraints.copy(
-//                            minWidth = stackPlaceable
-//                            maxWidth = cardWidth
-//                        )
-//
-//                        val numberStackX = 0
-//                        val actionStackX = numberStackX + cardSpacing + cardWidth
-//                        val currentCardAnimatedX = actionStackX * offset
-//
-//                        numberStackPlaceable?.measure(stackConstraints)?.place(numberStackX, 0)
-//                        actionStackPlaceable?.measure(stackConstraints)?.place(actionStackX.toInt(), 0)
-//                        currentCardAnimatedPlaceable?.measure(stackConstraints)?.place(currentCardAnimatedX.toInt(), 0)
-//                    }
-//            }
-//            }
-//        }
-////        Pile(pile = soloStack)
-//    }
-//}
 
 @Composable
 fun SoloGame(position: Int,
                 stacks: List<List<Card>>,
                 modifier: Modifier = Modifier) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(Dimen.Button.spacing),
+        verticalArrangement = Arrangement.spacedBy(Dimen.spacing),
         modifier = modifier) {
         stacks.forEach { stack ->
             Stack(stack, position, modifier.weight(1f))
@@ -219,14 +194,14 @@ fun SoloGameSetupPreview() {
         )
     )
     
-    val soloStack = listOf(
+    val soloPile = listOf(
         Card(AstraA, AstraA),
         Card(AstraB, AstraB),
         Card(AstraC, AstraC)
     )
 
     WelcomeToFlipTheme {
-        SoloGameSetup(0, stacks, soloStack, Modifier)
+        SoloGameSetup(0, stacks, soloPile, {}, Modifier)
     }
 }
 
