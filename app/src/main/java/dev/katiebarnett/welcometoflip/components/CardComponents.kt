@@ -2,9 +2,7 @@ package dev.katiebarnett.welcometoflip.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -64,11 +62,12 @@ fun CardFaceDisplay(
                 contentDescription = stringResource(id = R.string.action_deck_alt),
                 colorFilter = ColorFilter.tint(peekColor),
                 modifier = Modifier
-                    .size(Dimen.Card.Peek.size)
+                    .fillMaxHeight(0.25f)
+                    .aspectRatio(1f)
                     .rotate(180f)
                     .constrainAs(peekTop) {
-                        top.linkTo(parent.top, margin = Dimen.spacing)
-                        start.linkTo(parent.start, margin = Dimen.spacing)
+                        top.linkTo(background.top, margin = Dimen.spacing)
+                        start.linkTo(background.start, margin = Dimen.spacing)
                     }
             )
         }
@@ -76,6 +75,8 @@ fun CardFaceDisplay(
             painter = painterResource(cardFace.drawableRes),
             contentDescription = stringResource(id = R.string.action_deck_alt),
             modifier = Modifier
+                .fillMaxHeight(0.5f)
+                .fillMaxWidth(0.6f)
                 .constrainAs(image) {
                     top.linkTo(background.top)
                     bottom.linkTo(background.bottom)
@@ -89,10 +90,11 @@ fun CardFaceDisplay(
                 contentDescription = stringResource(id = R.string.action_deck_alt),
                 colorFilter = ColorFilter.tint(peekColor),
                 modifier = Modifier
-                    .size(Dimen.Card.Peek.size)
+                    .fillMaxHeight(0.25f)
+                    .aspectRatio(1f)
                     .constrainAs(peekBottom) {
-                        bottom.linkTo(parent.bottom, margin = Dimen.spacing)
-                        end.linkTo(parent.end, margin = Dimen.spacing)
+                        bottom.linkTo(background.bottom, margin = Dimen.spacing)
+                        end.linkTo(background.end, margin = Dimen.spacing)
                     }
 
             )
@@ -117,7 +119,7 @@ fun CardDisplayPlaceholder(modifier: Modifier = Modifier) {
 @Composable
 fun NumberCardPreview() {
     WelcomeToFlipTheme {
-        CardFaceDisplay(Number12, Astronaut, modifier = Modifier.height(400.dp))
+        CardFaceDisplay(Number12, Astronaut, modifier = Modifier.height(400.dp).width(300.dp))
     }
 }
 
@@ -125,7 +127,7 @@ fun NumberCardPreview() {
 @Composable
 fun ActionCardPreview() {
     WelcomeToFlipTheme {
-        CardFaceDisplay(Astronaut, modifier = Modifier.height(400.dp))
+        CardFaceDisplay(Astronaut, modifier = Modifier.height(400.dp).width(300.dp))
     }
 }
 
@@ -133,7 +135,7 @@ fun ActionCardPreview() {
 @Composable
 fun LetterCardPreview() {
     WelcomeToFlipTheme {
-        CardFaceDisplay(AstraA, modifier = Modifier.height(400.dp))
+        CardFaceDisplay(AstraA, modifier = Modifier.height(400.dp).width(300.dp))
     }
 }
 
@@ -141,6 +143,6 @@ fun LetterCardPreview() {
 @Composable
 fun CardDisplayPlaceholderPreview() {
     WelcomeToFlipTheme {
-        CardDisplayPlaceholder(modifier = Modifier.height(400.dp))
+        CardDisplayPlaceholder(modifier = Modifier.height(400.dp).width(300.dp))
     }
 }

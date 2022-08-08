@@ -25,11 +25,6 @@ object Dimen {
         val radius = 8.dp
         val border = 2.dp
         val spacing = 8.dp
-        
-        object Peek {
-            val size = 50.dp
-            val radius = 10.dp
-        }
     }
 
     object Dialog {
