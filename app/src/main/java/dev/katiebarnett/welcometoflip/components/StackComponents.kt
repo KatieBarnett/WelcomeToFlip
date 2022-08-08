@@ -129,7 +129,7 @@ fun StackLayout(
             measurables.firstOrNull { it.layoutId == "ActionStack"} 
 
         layout(constraints.maxWidth, constraints.maxHeight) {
-            val cardWidth = (constraints.maxWidth / 2 - cardSpacing / 2).toInt()
+            val cardWidth = ((constraints.maxWidth - cardSpacing) / 2).toInt()
             val stackConstraints = constraints.copy(
                 minWidth = minOf(constraints.minWidth, cardWidth),
                 maxWidth = cardWidth

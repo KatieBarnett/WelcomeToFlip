@@ -30,4 +30,10 @@ object Dimen {
     object Dialog {
         val radius = 8.dp
     }
+
+    object Solo {
+        object InstructionText {
+            val paddingBottom = 4.dp
+        }
+    }
 }
