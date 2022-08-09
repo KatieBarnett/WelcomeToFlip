@@ -26,7 +26,7 @@ fun GameContainer(displayPosition: Int,
                   content: @Composable (modifier: Modifier) -> Unit,
                   modifier: Modifier = Modifier) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(Dimen.Button.spacing),
+        verticalArrangement = Arrangement.spacedBy(Dimen.spacing),
         modifier = modifier
             .fillMaxSize()
             .padding(Dimen.spacing)

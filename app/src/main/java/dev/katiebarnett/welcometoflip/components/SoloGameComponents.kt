@@ -1,17 +1,22 @@
 package dev.katiebarnett.welcometoflip.components
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -147,6 +152,149 @@ fun SoloSlotLayout(
     }
 }
 
+@Composable
+fun SoloAstraLayout(
+    astraCards: Map<Action, Int>,
+    effectCards: List<Letter>,
+    modifier: Modifier = Modifier
+) {
+    val astraCardChunks = astraCards.toList().chunked(2)
+    Column(verticalArrangement = Arrangement.spacedBy(Dimen.spacing), modifier = modifier) {
+        for (i in 0..maxOf(astraCardChunks.size, effectCards.size)) {
+            Row {
+                SoloAstraItem(astraCardChunks.getOrNull(i)?.getOrNull(0), modifier = Modifier.weight(2f))
+                SoloAstraItem(astraCardChunks.getOrNull(i)?.getOrNull(1), modifier = Modifier.weight(2f))
+                SoloEffectItem(effectCards.getOrNull(i), modifier = Modifier.weight(1f))
+            }
+        }
+    }
+    
+    
+}
+
+@Composable
+fun SoloAstraItem(
+    item: Pair<Action, Int>?,
+    modifier: Modifier = Modifier
+) {
+    if (item != null) {
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .weight(1f, fill = false)
+                    .aspectRatio(1f)
+            ) {
+                Surface(
+                    color = item.first.backgroundColor ?: MaterialTheme.colorScheme.surface,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(Dimen.Card.radius))
+                        .border(
+                            width = Dimen.Card.border,
+                            color = MaterialTheme.colorScheme.outline,
+                            shape = RoundedCornerShape(Dimen.Card.radius)
+                        )
+                ) {}
+                Image(
+                    painter = painterResource(item.first.drawableRes),
+                    contentDescription = stringResource(id = R.string.action_deck_alt),
+                    modifier = Modifier
+                        .fillMaxSize(0.8f)
+                )
+            }
+            // TODO auto resizing text
+            Text(
+                text = item.second.toString(),
+                fontSize = Dimen.Solo.AstraCardsText.textSize,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(Dimen.spacingHalf)
+            )
+        }
+    } else {
+        Spacer(modifier = modifier)
+    }
+}
+
+@Composable
+fun SoloEffectItem(
+    item: Letter?,
+    modifier: Modifier = Modifier
+) {
+    if (item != null) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = modifier
+                .aspectRatio(1f)
+        ) {
+            Surface(
+                color = item.backgroundColor ?: MaterialTheme.colorScheme.surface,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(Dimen.Card.radius))
+                    .border(
+                        width = Dimen.Card.border,
+                        color = MaterialTheme.colorScheme.outline,
+                        shape = RoundedCornerShape(Dimen.Card.radius)
+                    )
+            ) {}
+            Image(
+                painter = painterResource(item.drawableRes),
+                contentDescription = stringResource(id = R.string.action_deck_alt),
+                modifier = Modifier
+                    .fillMaxSize(0.8f)
+            )
+        }
+    } else {
+        Spacer(modifier = modifier)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SoloEffectItemPreview() {
+    WelcomeToFlipTheme {
+        SoloEffectItem(
+            AstraB,
+            modifier = Modifier
+                .height(100.dp)
+                .padding(Dimen.spacing))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SoloAstraItemPreview() {
+    WelcomeToFlipTheme {
+        SoloAstraItem(
+            Plant to 88,
+            modifier = Modifier
+                .height(100.dp)
+                .padding(Dimen.spacing))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SoloAstraLayoutPreview() {
+    WelcomeToFlipTheme {
+        SoloAstraLayout(
+            astraCards = mapOf(
+                Plant to 0,
+                Water to 1,
+                Lightning to 2,
+                Robot to 3,
+                Astronaut to 4,
+                X to 5),
+            effectCards = listOf(AstraA, AstraB, AstraC),
+            modifier = Modifier
+                .height(400.dp)
+                .padding(Dimen.spacing))
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun SoloSlotLayoutPreview() {
@@ -159,7 +307,18 @@ fun SoloSlotLayoutPreview() {
                 Card(action = Plant, number = Number2),
                 Card(action = Water, number = Number3)), 
             astraCards = {
-                Surface(color = Color.Gray, modifier = it) {}
+                SoloAstraLayout(
+                    astraCards = mapOf(
+                        Plant to 0,
+                        Water to 1,
+                        Lightning to 2,
+                        Robot to 3,
+                        Astronaut to 4,
+                        X to 5),
+                    effectCards = listOf(AstraA, AstraB, AstraC),
+                    modifier = it
+                        .height(400.dp)
+                        .padding(Dimen.spacing))
             },
             modifier = Modifier
                 .height(1200.dp)

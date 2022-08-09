@@ -1,11 +1,13 @@
 package dev.katiebarnett.welcometoflip.theme
 
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 object Dimen {
-    
+
     val spacing = 8.dp
     val spacingDouble = spacing * 2
+    val spacingHalf = spacing / 2
 
     object Button {
         val spacing = 8.dp
@@ -34,6 +36,9 @@ object Dimen {
     object Solo {
         object InstructionText {
             val paddingBottom = 4.dp
+        }
+        object AstraCardsText {
+            val textSize = 36.sp
         }
     }
 }
