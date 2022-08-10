@@ -43,8 +43,8 @@ class SoloGameViewModel @Inject constructor(
     private val effectCardsDrawn = mutableListOf<Letter>()
     
     val currentState = MutableLiveData(SoloState())
-    val activeCardAvailable = Transformations.map(currentState) {
-        it.activeCardsAvailable > 1
+    val activeCardToAstra = Transformations.map(currentState) {
+        null//.it.activeCardsAvailable
     }
     
     override fun initialiseGame(gameType: GameType, gameSeed: Long, position: Int) {
@@ -97,7 +97,8 @@ class SoloGameViewModel @Inject constructor(
                 astraCards = astraCards,
                 effectCards = effectCardsDrawn,
                 totalPosition = stackGroups.size,
-                activeCardsAvailable = ACTIVE_CARD_COUNT
+                cardsDiscarded = listOf()
+//                activeCardsAvailable = null //ACTIVE_CARD_COUNT
             )
         )
         return newPosition
@@ -107,9 +108,26 @@ class SoloGameViewModel @Inject constructor(
         currentState.value?.let { state ->
             state.activeCards.getOrNull(index)?.let { discardedCard ->
                 discardStack.add(discardedCard)
-                currentState.postValue(state.copy(activeCardsAvailable = state.activeCardsAvailable - 1))
+                currentState.postValue(state.copy(cardsDiscarded = state.cardsDiscarded.plus(index)))
             }
         }
+    }
+    
+    fun checkRemainingActiveCards() {
+        currentState.value?.let { state ->
+            if (state.cardsDiscarded.size == state.activeCards.size - 1) {
+                currentState.postValue(state.copy(cardDiscardedToAstra = state.activeCards.getIndexOfCardNotInList(state.cardsDiscarded)))
+            }
+        }
+    }
+    
+    fun List<Any>.getIndexOfCardNotInList(checkList: List<Int>): Int? {
+        forEachIndexed { index, _ -> 
+            if (!checkList.contains(index)) {
+                return index
+            }
+        }
+        return null
     }
 }
 
@@ -124,5 +142,7 @@ data class SoloState(
     val astraCards: Map<Action, Int> = mapOf(),
     val effectCards: List<Letter> = listOf(),
     val totalPosition: Int = 0,
-    val activeCardsAvailable: Int = 0
+
+    val cardsDiscarded: List<Int> = listOf(),
+    val cardDiscardedToAstra: Int? = null
 )

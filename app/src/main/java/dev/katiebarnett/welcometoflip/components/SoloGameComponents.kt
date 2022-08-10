@@ -2,6 +2,7 @@ package dev.katiebarnett.welcometoflip.components
 
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.animate
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import dev.katiebarnett.welcometoflip.R
 import dev.katiebarnett.welcometoflip.core.models.*
 import dev.katiebarnett.welcometoflip.theme.Dimen
@@ -133,44 +135,20 @@ fun SoloSlotLayout(
     activeCards: List<Card>, // Mostly numbers
     astraCards: @Composable (modifier: Modifier) -> Unit,
     activeCardChoice: (Int) -> Unit,
-    activeCardAvailable: Boolean = true,
+    activeCardsDiscarded: List<Int>,
+    activeCardToAstra: Int? = null,
+    activeCardDiscardAnimationComplete: () -> Unit,
     astraCardAnimationComplete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val instructionTextModifier = Modifier.height(Dimen.Solo.InstructionText.lineHeight)
 
-    val animationSpec = tween<Float>(1000, easing = CubicBezierEasing(0.4f, 0.0f, 0.8f, 0.8f))
+    val animationSpec = tween<Dp>(1000, easing = CubicBezierEasing(0.4f, 0.0f, 0.8f, 0.8f))
     val animationSpecFlip = tween<Float>(1000, easing = CubicBezierEasing(0.4f, 0.0f, 0.8f, 0.8f))
 
-    var offset by remember(activeCardAvailable) { mutableStateOf(0f) }
-    var flipRotation by remember(activeCardAvailable) { mutableStateOf(0f) }
+    var offset by remember(activeCardToAstra) { mutableStateOf(0f) }
+    var flipRotation by remember(activeCardToAstra) { mutableStateOf(0f) }
     
-    // Wrap up animation
-    LaunchedEffect(key1 = activeCardAvailable) {
-        coroutineScope {
-            launch {
-                // Translate card to astra area
-                animate(
-                    initialValue = 0f,
-                    targetValue = 1f,
-                    animationSpec = animationSpec
-                ) { value: Float, _: Float ->
-                    offset = value
-                }
-            }
-            launch {
-                // Do the flip
-                animate(
-                    initialValue = 0f,
-                    targetValue = 180f,
-                    animationSpec = animationSpecFlip
-                ) { value: Float, _: Float ->
-                    flipRotation = value
-                }
-            }
-            astraCardAnimationComplete.invoke()
-        }
-    }
     
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
         val initialLayoutCoords = getLayoutCoords(
@@ -181,38 +159,109 @@ fun SoloSlotLayout(
             activeCardCount = activeCards.size
         )
 
-        val cardModifier = Modifier.width(initialLayoutCoords.cardWidth).height(initialLayoutCoords.cardHeight)
+        val cardModifier = Modifier
+            .width(initialLayoutCoords.cardWidth)
+            .height(initialLayoutCoords.cardHeight)
+
+
+        // Wrap up animation
+//        LaunchedEffect(key1 = activeCardToAstra) {
+//            activeCardToAstra?.let { cardIndex ->
+//                coroutineScope {
+//                    launch {
+//                        // Translate card to astra area
+//                        ani
+//                        animate(initialValue = initialLayoutCoords.activeCards[cardIndex].x, targetValue = initialLayoutCoords.astraCard.x, animationSpec = animationSpec
+//                        ) { value: Float, _: Float ->
+//                            offset = value
+//                        }
+//                    }
+//                    launch {
+//                        // Translate card to astra area
+//                        animate(initialValue = 0f, targetValue = 1f, animationSpec = animationSpec
+//                        ) { value: Float, _: Float ->
+//                            offset = value
+//                        }
+//                    }
+//                    launch {
+//                        // Do the flip
+//                        animate(
+//                            initialValue = 0f, targetValue = 180f, animationSpec = animationSpecFlip
+//                        ) { value: Float, _: Float ->
+//                            flipRotation = value
+//                        }
+//                    }
+//                    astraCardAnimationComplete.invoke()
+//                }
+//            }
+//        }
         
         Text(stringResource(id = R.string.solo_draw_stack), 
-            modifier = instructionTextModifier.offset(initialLayoutCoords.drawText).width(initialLayoutCoords.drawDiscardTextWidth))
+            modifier = instructionTextModifier
+                .offset(initialLayoutCoords.drawText)
+                .width(initialLayoutCoords.drawDiscardTextWidth))
         Text(stringResource(id = R.string.solo_discard_stack),
             textAlign = TextAlign.End,
-            modifier = instructionTextModifier.offset(initialLayoutCoords.discardText).width(initialLayoutCoords.drawDiscardTextWidth))
+            modifier = instructionTextModifier
+                .offset(initialLayoutCoords.discardText)
+                .width(initialLayoutCoords.drawDiscardTextWidth))
         Text(stringResource(id = R.string.solo_action_instruction), 
             modifier = instructionTextModifier.offset(initialLayoutCoords.actionText))
         Text(stringResource(id = R.string.solo_astra), 
             modifier = instructionTextModifier.offset(initialLayoutCoords.astraText))
+
+        astraCards(modifier = Modifier
+            .offset(initialLayoutCoords.astraSection)
+            .height(initialLayoutCoords.astraHeight))
         
         if (drawStack?.action != null) {
             CardFaceDisplay(drawStack.action, null, modifier = cardModifier.offset(initialLayoutCoords.drawStack))
         } else {
-            Spacer(modifier = cardModifier.layoutId("DrawStack").offset(initialLayoutCoords.drawStack))
+            Spacer(modifier = cardModifier
+                .layoutId("DrawStack")
+                .offset(initialLayoutCoords.drawStack))
         }
         if (discardStack?.action != null) {
             CardFaceDisplay(discardStack.number, discardStack.action, modifier = cardModifier.offset(initialLayoutCoords.discardStack))
         } else {
-            Spacer(modifier = cardModifier.layoutId("DiscardStack").offset(initialLayoutCoords.discardStack))
+            Spacer(modifier = cardModifier
+                .layoutId("DiscardStack")
+                .offset(initialLayoutCoords.discardStack))
         }
         
         activeCards.forEachIndexed { index, card ->
+
+            val animatedDpX: Dp by animateDpAsState(
+                targetValue = if (activeCardsDiscarded.contains(index)) {
+                    initialLayoutCoords.discardStack.x
+                } else if (activeCardToAstra == index) {
+                    initialLayoutCoords.astraCard.x
+                } else {
+                    initialLayoutCoords.activeCards[index].x
+                }, animationSpec = animationSpec, finishedListener = {
+                    activeCardDiscardAnimationComplete.invoke()
+                }
+            )
+
+            val animatedDpY: Dp by animateDpAsState(
+                targetValue = if (activeCardsDiscarded.contains(index)) {
+                    initialLayoutCoords.discardStack.y
+                } else if (activeCardToAstra == index) {
+                    initialLayoutCoords.astraCard.y
+                } else {
+                    initialLayoutCoords.activeCards[index].y
+                }, animationSpec = animationSpec
+            )
+            
             CardFaceDisplay(card.number, card.action,
                 modifier = cardModifier
-                    .clickable(enabled = true, onClick = { activeCardChoice.invoke(index) })
-                    .offset(initialLayoutCoords.activeCards[index])
+                    .offset(x = animatedDpX, y = animatedDpY)
+                    .zIndex(maxOf(activeCardsDiscarded.indexOf(index) + 1f, 0f))
+                    .clickable(enabled = true, onClick = { 
+                        activeCardChoice.invoke(index)
+                    })
             )
         }
-
-        astraCards(modifier = Modifier.offset(initialLayoutCoords.astraSection).height(initialLayoutCoords.astraHeight))
     }
 }
 
@@ -387,6 +436,8 @@ fun SoloSlotLayoutPreview() {
                 .width(720.dp)
                 .padding(Dimen.spacingDouble),
             activeCardChoice = { },
+            activeCardsDiscarded = listOf(),
+            activeCardDiscardAnimationComplete = {},
             astraCardAnimationComplete = {} 
         )
     }

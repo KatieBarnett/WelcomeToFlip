@@ -44,7 +44,7 @@ fun SoloGameBody(viewModel: SoloGameViewModel,
 
     val phase by viewModel.phase.observeAsState(SoloGamePhase.SETUP)
     val currentState by viewModel.currentState.observeAsState(SoloState())
-    val activeCardAvailable by viewModel.activeCardAvailable.observeAsState(true)
+    val activeCardToAstra by viewModel.activeCardToAstra.observeAsState(null)
 
     viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
     viewModel.initialiseGame(gameType, gameSeed, position)
@@ -70,7 +70,11 @@ fun SoloGameBody(viewModel: SoloGameViewModel,
                     activeCardChoice = {
                         viewModel.handleActiveCardClick(it)
                     },
-                    activeCardAvailable = activeCardAvailable,
+                    activeCardsDiscarded = currentState.cardsDiscarded,
+                    activeCardDiscardAnimationComplete = {
+                        viewModel.checkRemainingActiveCards()
+                    },
+                    activeCardToAstra = currentState.cardDiscardedToAstra,
                     modifier = contentModifier,
                     astraCardAnimationComplete = {}
                 )
@@ -165,8 +169,10 @@ fun SoloGameSetup(stacks: List<List<Card>>,
 @Composable
 fun SoloGame(state: SoloState,
              activeCardChoice: (Int) -> Unit,
-             activeCardAvailable: Boolean,
+             activeCardToAstra: Int?,
+             activeCardsDiscarded: List<Int>,
              astraCardAnimationComplete: () -> Unit,
+             activeCardDiscardAnimationComplete: () -> Unit,
              modifier: Modifier = Modifier) {
 
     SoloSlotLayout(
@@ -180,8 +186,10 @@ fun SoloGame(state: SoloState,
                 modifier = it)
         },
         activeCardChoice = activeCardChoice,
-        activeCardAvailable = activeCardAvailable,
+        activeCardToAstra = activeCardToAstra,
+        activeCardsDiscarded = activeCardsDiscarded,
         astraCardAnimationComplete = astraCardAnimationComplete,
+        activeCardDiscardAnimationComplete = activeCardDiscardAnimationComplete,
         modifier = modifier
     )
 }
