@@ -1,11 +1,14 @@
 package dev.katiebarnett.welcometoflip
 
 import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.katiebarnett.welcometoflip.core.models.Action
 import dev.katiebarnett.welcometoflip.core.models.Card
 import dev.katiebarnett.welcometoflip.core.models.GameType
+import dev.katiebarnett.welcometoflip.core.models.Letter
 import dev.katiebarnett.welcometoflip.storage.SavedGamesRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,6 +20,10 @@ class SoloGameViewModel @Inject constructor(
     private val savedGamesRepository: SavedGamesRepository
 ) : GameViewModel(deckRepository, savedGamesRepository), DefaultLifecycleObserver {
 
+    companion object {
+        private const val ACTIVE_CARD_COUNT = 3
+    }
+    
     val phase = Transformations.map(position) {
         if (it < 0) {
             SoloGamePhase.SETUP
@@ -28,26 +35,35 @@ class SoloGameViewModel @Inject constructor(
     override val initialPosition: Int
         get() = -1
     
-    lateinit var soloPile: List<Card>
+    lateinit var soloEffectCards: List<Card>
     
-    lateinit var soloStack: List<Card>
+    private val soloStack = mutableListOf<Card>()
+    private val discardStack = mutableListOf<Card>()
+    private val astraCards = mutableMapOf<Action, Int>()
+    private val effectCardsDrawn = mutableListOf<Letter>()
+    
+    val currentState = MutableLiveData(SoloState())
+    val activeCardAvailable = Transformations.map(currentState) {
+        it.activeCardsAvailable > 1
+    }
     
     override fun initialiseGame(gameType: GameType, gameSeed: Long, position: Int) {
         super.initialiseGame(gameType, gameSeed, position)
-        if (!this::soloPile.isInitialized) {
+        if (!this::soloEffectCards.isInitialized) {
             viewModelScope.launch {
-                soloPile = deckRepository.getSoloDeck(gameType)
+                soloEffectCards = deckRepository.getSoloEffectCards(gameType)
             }
         }
         if (position != initialPosition) {
-            setupSoloStack()
+            setupSoloDrawStack()
+            setupAstraCards()
         }
     }
     
-    fun setupSoloStack() {
+    fun setupSoloDrawStack() {
         viewModelScope.launch {
             val bottomStack = stacks.last().toMutableList()
-            bottomStack.addAll(soloPile)
+            bottomStack.addAll(soloEffectCards)
             val combinedStack = mutableListOf<Card>()
             stacks.forEachIndexed { index, stack ->
                 combinedStack.addAll(
@@ -58,7 +74,41 @@ class SoloGameViewModel @Inject constructor(
                     }
                 )
             }
-            soloStack = combinedStack.toList()
+            soloStack.clear()
+            soloStack.addAll(combinedStack)
+        }
+    }
+    
+    fun setupAstraCards() {
+        astraCards.clear()
+        deckRepository.getAvailableActions(gameType).forEach {
+            astraCards[it] = 0
+        }
+    }
+
+    override fun advancePosition(): Int {
+        val newPosition = super.advancePosition()
+        val stackGroups = soloStack.chunked(ACTIVE_CARD_COUNT)
+        currentState.postValue(
+            SoloState(
+                drawStackTopCard = stackGroups.getOrNull(newPosition + 1)?.firstOrNull(),
+                discardStackTopCard = discardStack.lastOrNull(),
+                activeCards = stackGroups.getOrNull(newPosition) ?: listOf(),
+                astraCards = astraCards,
+                effectCards = effectCardsDrawn,
+                totalPosition = stackGroups.size,
+                activeCardsAvailable = ACTIVE_CARD_COUNT
+            )
+        )
+        return newPosition
+    }
+    
+    fun handleActiveCardClick(index: Int) {
+        currentState.value?.let { state ->
+            state.activeCards.getOrNull(index)?.let { discardedCard ->
+                discardStack.add(discardedCard)
+                currentState.postValue(state.copy(activeCardsAvailable = state.activeCardsAvailable - 1))
+            }
         }
     }
 }
@@ -66,3 +116,13 @@ class SoloGameViewModel @Inject constructor(
 enum class SoloGamePhase {
     SETUP, PLAY
 }
+
+data class SoloState(
+    val drawStackTopCard: Card? = null,
+    val discardStackTopCard: Card? = null,
+    val activeCards: List<Card> = listOf(),
+    val astraCards: Map<Action, Int> = mapOf(),
+    val effectCards: List<Letter> = listOf(),
+    val totalPosition: Int = 0,
+    val activeCardsAvailable: Int = 0
+)

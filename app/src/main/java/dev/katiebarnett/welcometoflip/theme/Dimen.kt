@@ -35,7 +35,7 @@ object Dimen {
 
     object Solo {
         object InstructionText {
-            val paddingBottom = 4.dp
+            val lineHeight = 24.dp
         }
         object AstraCardsText {
             val textSize = 36.sp

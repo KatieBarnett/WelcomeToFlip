@@ -13,15 +13,20 @@ class DeckRepository @Inject constructor(
     
     fun getDeck(gameType: GameType): List<Card> {
         return when(gameType) {
-            WelcomeToTheMoon -> welcomeToTheMoonDeck
-            WelcomeToTheMoonSolo -> welcomeToTheMoonDeck
+            WelcomeToTheMoon, WelcomeToTheMoonSolo -> welcomeToTheMoonDeck
         }
     }
     
-    fun getSoloDeck(gameType: GameType): List<Card> {
+    fun getSoloEffectCards(gameType: GameType): List<Card> {
         return when(gameType) {
             WelcomeToTheMoon -> listOf()
-            WelcomeToTheMoonSolo -> welcomeToTheMoonSoloDeck
+            WelcomeToTheMoonSolo -> welcomeToTheMoonSoloEffectCards
+        }
+    }
+    
+    fun getAvailableActions(gameType: GameType): List<Action> {
+        return when(gameType) {
+            WelcomeToTheMoon, WelcomeToTheMoonSolo -> welcomeToTheMoonAvailableActions
         }
     }
 }

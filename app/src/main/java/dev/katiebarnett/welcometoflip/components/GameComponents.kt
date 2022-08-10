@@ -52,6 +52,29 @@ fun GameContainer(displayPosition: Int,
 }
 
 @Composable
+fun SoloGameContainer(displayPosition: Int,
+                  displayEndPosition: Int,
+                  gameType: GameType,
+                  content: @Composable (modifier: Modifier) -> Unit,
+                  modifier: Modifier = Modifier) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(Dimen.spacing),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(Dimen.spacing)
+    ) {
+        Row(modifier = Modifier
+            .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(Dimen.spacing)) {
+            Text(stringResource(id = gameType.displayName), modifier = modifier.weight(1f))
+            Text(stringResource(id = R.string.deck_position, displayPosition, displayEndPosition))
+        }
+        content(modifier = Modifier
+            .weight(1f))
+    }
+}
+
+@Composable
 fun EndGameDialog(reshuffleStacks: () -> Unit,
                   endGame: () -> Unit,
                   onDismissRequest: () -> Unit

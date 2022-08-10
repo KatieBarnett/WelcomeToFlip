@@ -18,7 +18,7 @@ open class GameViewModel @Inject constructor(
 ) : ViewModel(), DefaultLifecycleObserver {
     
     companion object {
-        private const val STACK_COUNT = 3f
+        private const val STACK_COUNT = 3
     }
 
     lateinit var gameType: GameType
@@ -49,15 +49,17 @@ open class GameViewModel @Inject constructor(
             this._position.postValue(position)
             viewModelScope.launch {
                 val shuffledDeck = deckRepository.getDeck(gameType).shuffled(Random(gameSeed))
-                val stackSize = ceil((shuffledDeck.size / STACK_COUNT).toDouble()).toInt()
+                val stackSize = ceil((shuffledDeck.size.toFloat() / STACK_COUNT).toDouble()).toInt()
                 // TODO Handle unequal stacks
                 stacks = shuffledDeck.chunked(stackSize)
             }
         }
     }
     
-    fun advancePosition() {
-        _position.postValue((_position.value ?: 0) + 1)
+    open fun advancePosition(): Int {
+        val newPosition = (_position.value ?: 0) + 1
+        _position.postValue(newPosition)
+        return newPosition
     }
 
     fun reshuffleStacks() {

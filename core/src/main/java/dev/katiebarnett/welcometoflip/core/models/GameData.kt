@@ -110,8 +110,12 @@ val welcomeToTheMoonDeck = listOf(
     Card(Robot, Number15)
 )
 
-val welcomeToTheMoonSoloDeck = listOf(
+val welcomeToTheMoonSoloEffectCards = listOf(
     Card(AstraA, AstraA),
     Card(AstraB, AstraB),
     Card(AstraC, AstraC)
+)
+
+val welcomeToTheMoonAvailableActions = listOf(
+    Plant, Water, Lightning, Robot, Astronaut, X
 )

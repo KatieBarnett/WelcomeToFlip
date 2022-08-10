@@ -16,11 +16,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
 import dev.katiebarnett.welcometoflip.SoloGamePhase
 import dev.katiebarnett.welcometoflip.SoloGameViewModel
+import dev.katiebarnett.welcometoflip.SoloState
 import dev.katiebarnett.welcometoflip.components.*
 import dev.katiebarnett.welcometoflip.core.models.*
 import dev.katiebarnett.welcometoflip.theme.Dimen
 import dev.katiebarnett.welcometoflip.theme.WelcomeToFlipTheme
-import dev.katiebarnett.welcometoflip.util.getStackSize
 import dev.katiebarnett.welcometoflip.util.observeLifecycle
 
 
@@ -43,34 +43,36 @@ fun SoloGameBody(viewModel: SoloGameViewModel,
     }
 
     val phase by viewModel.phase.observeAsState(SoloGamePhase.SETUP)
+    val currentState by viewModel.currentState.observeAsState(SoloState())
+    val activeCardAvailable by viewModel.activeCardAvailable.observeAsState(true)
 
     viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
     viewModel.initialiseGame(gameType, gameSeed, position)
 
-    GameContainer(
+    SoloGameContainer(
         displayPosition = position + 1,
-        displayEndPosition = viewModel.stacks.getStackSize() ?: 0,
+        displayEndPosition = currentState.totalPosition, 
         gameType = gameType,
-        advancePosition = {
-            viewModel.advancePosition()
-        },
-        advancePositionEnabled = advancePositionEnabled,
         content = { contentModifier ->
             when (phase) {
                 SoloGamePhase.SETUP -> SoloGameSetup(
-                    position = position,
                     stacks = viewModel.stacks,
-                    soloPile = viewModel.soloPile,
+                    soloPile = viewModel.soloEffectCards,
                     onAnimationComplete = {
-                        viewModel.setupSoloStack()
+                        viewModel.setupSoloDrawStack()
+                        viewModel.setupAstraCards()
                         viewModel.advancePosition()
                     },
                     modifier = contentModifier
                 )
                 SoloGamePhase.PLAY -> SoloGame(
-                    position = position,
-                    stacks = viewModel.stacks,
-                    modifier = contentModifier
+                    state = currentState,
+                    activeCardChoice = {
+                        viewModel.handleActiveCardClick(it)
+                    },
+                    activeCardAvailable = activeCardAvailable,
+                    modifier = contentModifier,
+                    astraCardAnimationComplete = {}
                 )
             }
         },
@@ -93,8 +95,7 @@ fun SoloGameBody(viewModel: SoloGameViewModel,
 }
 
 @Composable
-fun SoloGameSetup(position: Int,
-                  stacks: List<List<Card>>,
+fun SoloGameSetup(stacks: List<List<Card>>,
                   soloPile: List<Card>,
                   onAnimationComplete: () -> Unit,
                   modifier: Modifier = Modifier) {
@@ -162,16 +163,27 @@ fun SoloGameSetup(position: Int,
 }
 
 @Composable
-fun SoloGame(position: Int,
-                stacks: List<List<Card>>,
-                modifier: Modifier = Modifier) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(Dimen.spacing),
-        modifier = modifier) {
-        stacks.forEach { stack ->
-            Stack(stack, position, modifier.weight(1f))
-        }
-    }
+fun SoloGame(state: SoloState,
+             activeCardChoice: (Int) -> Unit,
+             activeCardAvailable: Boolean,
+             astraCardAnimationComplete: () -> Unit,
+             modifier: Modifier = Modifier) {
+
+    SoloSlotLayout(
+        drawStack = state.drawStackTopCard,
+        discardStack = state.discardStackTopCard,
+        activeCards = state.activeCards,
+        astraCards = {
+            SoloAstraLayout(
+                astraCards = state.astraCards,
+                effectCards = state.effectCards,
+                modifier = it)
+        },
+        activeCardChoice = activeCardChoice,
+        activeCardAvailable = activeCardAvailable,
+        astraCardAnimationComplete = astraCardAnimationComplete,
+        modifier = modifier
+    )
 }
 
 @Preview(showBackground = true)
@@ -201,7 +213,7 @@ fun SoloGameSetupPreview() {
     )
 
     WelcomeToFlipTheme {
-        SoloGameSetup(0, stacks, soloPile, {}, Modifier)
+        SoloGameSetup(stacks, soloPile, {}, Modifier)
     }
 }
 
@@ -225,7 +237,23 @@ fun SoloGamePreview() {
         )
     )
 
-    WelcomeToFlipTheme {
-        SoloGame(0, stacks, Modifier)
-    }
+//    WelcomeToFlipTheme {
+//        SoloGame(SoloState(
+//            drawStackTopCard = Card(action = Astronaut, number = Number12),
+//            discardStackTopCard = Card(action = Lightning, number = Number10),
+//            activeCards = listOf(
+//                Card(action = X, number = Number1),
+//                Card(action = Plant, number = Number2),
+//                Card(action = Water, number = Number3)),
+//            astraCards = mapOf(
+//                Plant to 0,
+//                Water to 1,
+//                Lightning to 2,
+//                Robot to 3,
+//                Astronaut to 4,
+//                X to 5),
+//            effectCards = listOf(AstraA, AstraB, AstraC)
+//        ),
+//            astraCardAnimationComplete = {})
+//    }
 }
