@@ -21,7 +21,7 @@
     
     <string name="position_label">Position: %1$d/%2$d</string>
     
-    <string name="stack_end_message">You have reached the bottom of the stacks, do you want to reshuffle the stacks and continue or end the game?</string>
+    <string name="stack_end_message">You have reached the bottom of the stacks, do you want to reshuffle the stacks and continue, or end the game?</string>
     
     <string name="solo_draw_stack">Draw stack</string>
     <string name="solo_discard_stack">Discard stack</string>
