@@ -64,9 +64,7 @@ android {
         dataBinding true
         compose true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion compose_version
-    }
+    
     namespace 'dev.katiebarnett.welcometoflip'
 }
 

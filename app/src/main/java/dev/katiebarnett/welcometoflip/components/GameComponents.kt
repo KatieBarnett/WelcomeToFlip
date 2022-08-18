@@ -79,7 +79,7 @@ fun EndGameDialog(reshuffleStacks: () -> Unit,
                   endGame: () -> Unit,
                   onDismissRequest: () -> Unit
 ) {
-    ModalTransitionDialog(onDismissRequest = onDismissRequest) { modalTransitionDialogHelper ->
+    AnimatedTransitionDialog(onDismissRequest = onDismissRequest) { modalTransitionDialogHelper ->
         Surface(
             shape = RoundedCornerShape(Dimen.Dialog.radius),
             color = MaterialTheme.colorScheme.surface,
@@ -93,12 +93,12 @@ fun EndGameDialog(reshuffleStacks: () -> Unit,
                 Text(stringResource(id = R.string.stack_end_message))
                 ThemedButton(onClick = {
                     reshuffleStacks.invoke()
-                    modalTransitionDialogHelper::triggerAnimatedClose.invoke()
+                    modalTransitionDialogHelper::triggerAnimatedDismiss.invoke()
                 }) {
                     Text(stringResource(id = R.string.reshuffle_button))
                 }
                 ThemedButton(onClick = {
-                    modalTransitionDialogHelper::triggerAnimatedClose.invoke()
+                    modalTransitionDialogHelper::triggerAnimatedDismiss.invoke()
                     endGame.invoke() }) {
                     Text(stringResource(id = R.string.end_game_button))
                 }
