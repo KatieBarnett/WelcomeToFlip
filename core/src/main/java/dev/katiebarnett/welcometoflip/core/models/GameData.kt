@@ -2,7 +2,6 @@ package dev.katiebarnett.welcometoflip.core.models
 
 import dev.katiebarnett.welcometoflip.core.R
 import dev.katiebarnett.welcometoflip.core.theme.*
-import kotlin.Number
 
 
 object WelcomeToTheMoon: GameType(

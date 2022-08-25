@@ -1,7 +1,6 @@
 package dev.katiebarnett.welcometoflip.components
 
 import androidx.compose.animation.core.CubicBezierEasing
-import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -29,8 +28,6 @@ import dev.katiebarnett.welcometoflip.R
 import dev.katiebarnett.welcometoflip.core.models.*
 import dev.katiebarnett.welcometoflip.theme.Dimen
 import dev.katiebarnett.welcometoflip.theme.WelcomeToFlipTheme
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 
 
 private data class SoloSlotCoords(

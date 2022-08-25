@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,52 +28,28 @@ fun Stack(stack: List<Card>,
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
-    ) { 
-        TopCards(
-            numberCardStack = viewModel.numberStackTop,
-            actionCardStack = viewModel.actionStackTop,
-            currentCard = viewModel.currentCard,
-            transitionTrigger = position
+    ) {
+        StackLayout(
+            flipCard = viewModel.currentCard,
+            numberStack = { modifier ->
+                CardFaceDisplay(viewModel.numberStackTop?.number, viewModel.numberStackTop?.action, modifier)
+            }, actionStack = { modifier ->
+                CardFaceDisplay(viewModel.actionStackTop?.action, null, modifier)
+            },
+            transitionTrigger = position,
+            modifier = modifier
         )
     }
 }
 
 @Composable
-private fun TopCards(currentCard: Card?,
-                     numberCardStack: Card?,
-                     actionCardStack: Card?,
-                     transitionTrigger: Int = 0,
-                     modifier: Modifier = Modifier
-) {
-    StackLayout(
-        currentCard = currentCard, 
-        numberCardStack = {
-            if (numberCardStack != null) {
-                CardFaceDisplay(numberCardStack.number, numberCardStack.action)
-            } else {
-                CardDisplayPlaceholder()
-            }
-        }, actionCardStack = {
-            if (actionCardStack != null) {
-                CardFaceDisplay(actionCardStack.action, null)
-            } else {
-                CardDisplayPlaceholder()
-            }
-        }, transitionTrigger, modifier)
-}
-
-@Composable
 fun StackLayout(
-    currentCard: Card?,
-    numberCardStack: @Composable BoxScope.() -> Unit,
-    actionCardStack: @Composable BoxScope.() -> Unit,
+    flipCard: Card?,
+    numberStack: @Composable (modifier: Modifier) -> Unit,
+    actionStack: @Composable (modifier: Modifier) -> Unit,
     transitionTrigger: Int = 0,
     modifier: Modifier = Modifier
 ) {
-    val cardSpacing = with(LocalDensity.current) {
-        Dimen.Card.spacing.toPx()
-    }
-
     var offset by remember(transitionTrigger) { mutableStateOf(0f) }
     var flipRotation by remember(transitionTrigger) { mutableStateOf(0f) }
     val animationSpec = tween<Float>(1000, easing = CubicBezierEasing(0.4f, 0.0f, 0.8f, 0.8f))
@@ -95,53 +70,50 @@ fun StackLayout(
         modifier = modifier
             .fillMaxSize(),
         content = {
-            Box(modifier = Modifier
-                .layoutId("NumberStack"), content = numberCardStack)
-            Box(modifier = Modifier
-                .layoutId("ActionStack"), content = actionCardStack)
-            currentCard?.let {
-                Box(modifier = Modifier
-                    .layoutId("CurrentCardAnimated")
+            numberStack(modifier = Modifier.layoutId("NumberStack"))
+            actionStack(modifier = Modifier.layoutId("ActionStack"))
+            flipCard?.let {
+                val modifier = Modifier
+                    .layoutId("FlipCard")
                     .graphicsLayer {
                         rotationY = flipRotation
                         cameraDistance = 8 * density
                     }
-                , content = {
-                    if (flipRotation < 90f) {
-                        CardFaceDisplay(currentCard.number, currentCard.action)
-                    } else {
-                        // Rotate the action card back again so it does not appear reversed
-                        CardFaceDisplay(currentCard.action, null, 
-                            modifier = Modifier.graphicsLayer { 
-                                rotationY = 180f 
-                            }
-                        )
-                    }
-                })
+                if (flipRotation < 90f) {
+                    CardFaceDisplay(flipCard.number, flipCard.action, modifier)
+                } else {
+                    // Rotate the action card back again so it does not appear reversed
+                    CardFaceDisplay(flipCard.action, null,
+                        modifier = modifier.graphicsLayer {
+                            rotationY = 180f
+                        }
+                    )
+                }
             }
         }) { measurables, constraints ->
         
-        val currentCardAnimatedPlaceable =
-            measurables.firstOrNull { it.layoutId == "CurrentCardAnimated" }
+        val flipCardPlaceable =
+            measurables.firstOrNull { it.layoutId == "FlipCard" }
         val numberStackPlaceable =
             measurables.firstOrNull { it.layoutId == "NumberStack" }
         val actionStackPlaceable =
             measurables.firstOrNull { it.layoutId == "ActionStack"} 
 
         layout(constraints.maxWidth, constraints.maxHeight) {
+            val cardSpacing = Dimen.Card.spacing.toPx()
             val cardWidth = ((constraints.maxWidth - cardSpacing) / 2).toInt()
-            val stackConstraints = constraints.copy(
+            val cardConstraints = constraints.copy(
                 minWidth = minOf(constraints.minWidth, cardWidth),
                 maxWidth = cardWidth
             )
             
             val numberStackX = 0
             val actionStackX = numberStackX + cardSpacing + cardWidth
-            val currentCardAnimatedX = actionStackX * offset
+            val flipCardX = actionStackX * offset
 
-            numberStackPlaceable?.measure(stackConstraints)?.place(numberStackX, 0)
-            actionStackPlaceable?.measure(stackConstraints)?.place(actionStackX.toInt(), 0)
-            currentCardAnimatedPlaceable?.measure(stackConstraints)?.place(currentCardAnimatedX.toInt(), 0)
+            numberStackPlaceable?.measure(cardConstraints)?.place(numberStackX, 0)
+            actionStackPlaceable?.measure(cardConstraints)?.place(actionStackX.toInt(), 0)
+            flipCardPlaceable?.measure(cardConstraints)?.place(flipCardX.toInt(), 0)
         }
     }
 }
@@ -163,10 +135,13 @@ fun BasicStackLayout(
 @Composable
 fun StackPreview() {
     WelcomeToFlipTheme {
-        TopCards(
-            currentCard = Card(Astronaut, Number12),
-            numberCardStack = Card(Water, Number6),
-            actionCardStack = Card(Lightning, Number1), 
+        StackLayout(
+            flipCard = Card(Astronaut, Number12),
+            numberStack = { modifier ->
+                CardFaceDisplay(Number6, Water, modifier)
+            }, actionStack = { modifier ->
+                CardFaceDisplay(Lightning, null, modifier)
+            },
             modifier = Modifier
                 .height(400.dp)
                 .padding(Dimen.spacingDouble)
@@ -191,9 +166,17 @@ fun BasicStackLayoutPreview() {
 @Composable
 fun StackPreviewWithEmptyAction() {
     WelcomeToFlipTheme {
-        TopCards(Card(Astronaut, Number12), null, null, modifier = Modifier
-            .height(400.dp)
-            .padding(Dimen.spacingDouble))
+        StackLayout(
+            flipCard = Card(Astronaut, Number12),
+            numberStack = { modifier ->
+                CardFaceDisplay(Number6, Water, modifier)
+            }, actionStack = { modifier ->
+                CardFaceDisplay(null, null, modifier)
+            },
+            modifier = Modifier
+                .height(400.dp)
+                .padding(Dimen.spacingDouble)
+        )
     }
 }
 
@@ -201,8 +184,16 @@ fun StackPreviewWithEmptyAction() {
 @Composable
 fun StackPreviewWithEmptyNumber() {
     WelcomeToFlipTheme {
-        TopCards(null, Card(Water, Number6), null, modifier = Modifier
-            .height(400.dp)
-            .padding(Dimen.spacingDouble))
+        StackLayout(
+            flipCard = Card(Astronaut, Number12),
+            numberStack = { modifier ->
+                CardFaceDisplay(null, null, modifier)
+            }, actionStack = { modifier ->
+                CardFaceDisplay(Lightning, null, modifier)
+            },
+            modifier = Modifier
+                .height(400.dp)
+                .padding(Dimen.spacingDouble)
+        )
     }
 }

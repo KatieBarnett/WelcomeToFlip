@@ -1,22 +1,22 @@
 package dev.katiebarnett.welcometoflip.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import dev.katiebarnett.welcometoflip.R
 import dev.katiebarnett.welcometoflip.core.models.AstraA
 import dev.katiebarnett.welcometoflip.core.models.Astronaut
@@ -27,78 +27,86 @@ import dev.katiebarnett.welcometoflip.theme.WelcomeToFlipTheme
 
 @Composable
 fun CardFaceDisplay(
-    cardFace: CardFace,
+    cardFace: CardFace?,
     peek: CardFace? = null,
     modifier: Modifier = Modifier
 ) {
-    ConstraintLayout(
-        modifier = modifier.fillMaxSize()
-    ) {
-        val (peekTop, peekBottom, image, background) = createRefs()
-        
-        // TODO fix alt text
-
-        Surface(
-            color = cardFace.backgroundColor ?: MaterialTheme.colorScheme.surface,
-            modifier = Modifier
-                .clip(RoundedCornerShape(Dimen.Card.radius))
-                .border(
-                    width = Dimen.Card.border,
-                    color = MaterialTheme.colorScheme.outline,
-                    shape = RoundedCornerShape(Dimen.Card.radius)
-                )
-                .constrainAs(background) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                    height = Dimension.fillToConstraints
-                }) {}
-
-        peek?.backgroundColor?.let { peekColor ->
-            Image(
-                painter = painterResource(R.drawable.peek_triangle),
-                contentDescription = stringResource(id = R.string.action_deck_alt),
-                colorFilter = ColorFilter.tint(peekColor),
-                modifier = Modifier
-                    .fillMaxHeight(0.25f)
-                    .aspectRatio(1f)
-                    .rotate(180f)
-                    .constrainAs(peekTop) {
-                        top.linkTo(background.top, margin = Dimen.spacing)
-                        start.linkTo(background.start, margin = Dimen.spacing)
-                    }
+    if (cardFace != null) {
+        Box(contentAlignment = Alignment.Center,
+            modifier = modifier.fillMaxSize()
+            .clip(RoundedCornerShape(Dimen.Card.radius))
+            .border(
+                Dimen.Card.border,
+                MaterialTheme.colorScheme.primary,
+                RoundedCornerShape(Dimen.Card.radius)
             )
+            .background(cardFace.backgroundColor ?: MaterialTheme.colorScheme.surface)) {
+            if (peek?.backgroundColor != null) {
+                CardNumberContent(cardFace = cardFace, peek.backgroundColor ?: Color.Black)
+            } else {
+                CardActionContent(cardFace = cardFace)
+            }
         }
+    } else {
+        CardDisplayPlaceholder(modifier)
+
+    }}
+
+@Composable
+private fun CardNumberContent(
+    cardFace: CardFace,
+    peekColor: Color,
+    modifier: Modifier = Modifier
+) {
+    Box(modifier = modifier
+        .fillMaxSize()
+        .padding(paddingValues = PaddingValues(Dimen.spacing, Dimen.spacing))) {
         Image(
             painter = painterResource(cardFace.drawableRes),
-            contentDescription = stringResource(id = R.string.action_deck_alt),
-            modifier = Modifier
+            contentDescription = null,
+            modifier = modifier
                 .fillMaxHeight(0.5f)
                 .fillMaxWidth(0.6f)
-                .constrainAs(image) {
-                    top.linkTo(background.top)
-                    bottom.linkTo(background.bottom)
-                    start.linkTo(background.start)
-                    end.linkTo(background.end)
-                }
+                .align(Alignment.Center)
         )
-        peek?.backgroundColor?.let { peekColor ->
-            Image(
-                painter = painterResource(R.drawable.peek_triangle),
-                contentDescription = stringResource(id = R.string.action_deck_alt),
-                colorFilter = ColorFilter.tint(peekColor),
-                modifier = Modifier
-                    .fillMaxHeight(0.25f)
-                    .aspectRatio(1f)
-                    .constrainAs(peekBottom) {
-                        bottom.linkTo(background.bottom, margin = Dimen.spacing)
-                        end.linkTo(background.end, margin = Dimen.spacing)
-                    }
+        Image(
+            painter = painterResource(R.drawable.peek_triangle),
+            contentDescription = stringResource(id = R.string.action_deck_alt),
+            colorFilter = ColorFilter.tint(peekColor),
+            modifier = Modifier
+                .fillMaxHeight(0.25f)
+                .aspectRatio(1f)
+                .rotate(180f)
+                .align(Alignment.TopStart)
+        )
+        Image(
+            painter = painterResource(R.drawable.peek_triangle),
+            contentDescription = stringResource(id = R.string.action_deck_alt),
+            colorFilter = ColorFilter.tint(peekColor),
+            modifier = Modifier
+                .fillMaxHeight(0.25f)
+                .aspectRatio(1f)
+                .align(Alignment.BottomEnd)
+        )
+    }
+}
 
-            )
-        }
+@Composable
+private fun CardActionContent(
+    cardFace: CardFace,
+    modifier: Modifier = Modifier
+) {
+    Box(modifier = modifier
+        .fillMaxSize()
+        .padding(Dimen.spacing)) {
+        Image(
+            painter = painterResource(cardFace.drawableRes),
+            contentDescription = null,
+            modifier = modifier
+                .fillMaxHeight(0.5f)
+                .fillMaxWidth(0.6f)
+                .align(Alignment.Center)
+        )
     }
 }
 
@@ -115,34 +123,46 @@ fun CardDisplayPlaceholder(modifier: Modifier = Modifier) {
 //    }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun NumberCardPreview() {
     WelcomeToFlipTheme {
-        CardFaceDisplay(Number12, Astronaut, modifier = Modifier.height(400.dp).width(300.dp))
+        CardFaceDisplay(Number12, Astronaut, modifier = Modifier
+            .padding(Dimen.spacing)
+            .height(400.dp)
+            .width(300.dp))
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun ActionCardPreview() {
     WelcomeToFlipTheme {
-        CardFaceDisplay(Astronaut, modifier = Modifier.height(400.dp).width(300.dp))
+        CardFaceDisplay(Astronaut, modifier = Modifier
+            .padding(Dimen.spacing)
+            .height(400.dp)
+            .width(300.dp))
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun LetterCardPreview() {
     WelcomeToFlipTheme {
-        CardFaceDisplay(AstraA, modifier = Modifier.height(400.dp).width(300.dp))
+        CardFaceDisplay(AstraA, modifier = Modifier
+            .padding(Dimen.spacing)
+            .height(400.dp)
+            .width(300.dp))
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun CardDisplayPlaceholderPreview() {
     WelcomeToFlipTheme {
-        CardDisplayPlaceholder(modifier = Modifier.height(400.dp).width(300.dp))
+        CardDisplayPlaceholder(modifier = Modifier
+            .padding(Dimen.spacing)
+            .height(400.dp)
+            .width(300.dp))
     }
 }
