@@ -3,6 +3,9 @@ package dev.katiebarnett.welcometoflip.core.theme
 import androidx.compose.ui.graphics.Color
 
 // Palette
+val Plum = Color(0xff382036)
+val Cream = Color(0xffFCF5D1)
+val Blush = Color(0xffF8C7B7)
 val White = Color(0xFFFFFFFF)
 val Black = Color(0xFF000000)
 val PurpleDark = Color(0xff6272A4)

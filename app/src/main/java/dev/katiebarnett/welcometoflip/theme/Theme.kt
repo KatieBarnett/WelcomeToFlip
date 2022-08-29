@@ -10,34 +10,31 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
-import dev.katiebarnett.welcometoflip.core.theme.Black
-import dev.katiebarnett.welcometoflip.core.theme.GreyLight
-import dev.katiebarnett.welcometoflip.core.theme.PurpleDark
-import dev.katiebarnett.welcometoflip.core.theme.White
+import dev.katiebarnett.welcometoflip.core.theme.*
 
 // TODO: Night mode
 private val DarkColorScheme = darkColorScheme(
-    primary = PurpleDark,
+    primary = Plum,
     secondary = Black,
     background = White,
     surface = GreyLight,
-    onPrimary = White,
+    onPrimary = Cream,
     onSecondary = White,
     onBackground = Black,
     onSurface = Black,
-    outline = PurpleDark
+    outline = Plum
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = PurpleDark,
+    primary = Plum,
     secondary = Black,
     background = White,
     surface = GreyLight,
-    onPrimary = White,
+    onPrimary = Cream,
     onSecondary = White,
     onBackground = Black,
     onSurface = Black,
-    outline = PurpleDark
+    outline = Plum
 )
 
 @Composable
