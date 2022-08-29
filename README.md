@@ -2,7 +2,6 @@
 
 
 ## Icons
-App Icon: Sign by Iconstock from NounProject.com https://thenounproject.com/icon/sign-1265362/
 
 ### Welcome To The Moon
 Rocket by Hasanudin from NounProject.com https://thenounproject.com/icon/rocket-4925595/
