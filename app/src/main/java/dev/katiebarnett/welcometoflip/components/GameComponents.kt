@@ -15,6 +15,8 @@ import dev.katiebarnett.welcometoflip.core.models.GameType
 import dev.katiebarnett.welcometoflip.core.models.WelcomeToTheMoon
 import dev.katiebarnett.welcometoflip.theme.Dimen
 import dev.katiebarnett.welcometoflip.theme.WelcomeToFlipTheme
+import dev.katiebarnett.welcometoflip.util.trackEndGame
+import dev.katiebarnett.welcometoflip.util.trackShuffleGame
 
 
 @Composable
@@ -75,7 +77,9 @@ fun SoloGameContainer(displayPosition: Int,
 }
 
 @Composable
-fun EndGameDialog(reshuffleStacks: () -> Unit,
+fun EndGameDialog(gameType: GameType,
+                  position: Int,
+                  reshuffleStacks: () -> Unit,
                   endGame: () -> Unit,
                   onDismissRequest: () -> Unit
 ) {
@@ -92,12 +96,14 @@ fun EndGameDialog(reshuffleStacks: () -> Unit,
             ) {
                 Text(stringResource(id = R.string.stack_end_message))
                 ThemedButton(onClick = {
+                    trackShuffleGame(gameType, position)
                     reshuffleStacks.invoke()
                     dialogHelper::triggerAnimatedDismiss.invoke()
                 }) {
                     Text(stringResource(id = R.string.reshuffle_button))
                 }
                 ThemedButton(onClick = {
+                    trackEndGame(gameType, position)
                     dialogHelper::triggerAnimatedDismiss.invoke()
                     endGame.invoke() }) {
                     Text(stringResource(id = R.string.end_game_button))
@@ -129,6 +135,6 @@ fun GameContainerPreview() {
 @Composable
 fun EndGameDialogPreview() {
     WelcomeToFlipTheme {
-        EndGameDialog(reshuffleStacks = {}, endGame = {}, onDismissRequest = {})
+        EndGameDialog(WelcomeToTheMoon, 8, reshuffleStacks = {}, endGame = {}, onDismissRequest = {})
     }
 }

@@ -15,17 +15,24 @@ import dev.katiebarnett.welcometoflip.components.Stack
 import dev.katiebarnett.welcometoflip.core.models.*
 import dev.katiebarnett.welcometoflip.theme.Dimen
 import dev.katiebarnett.welcometoflip.theme.WelcomeToFlipTheme
+import dev.katiebarnett.welcometoflip.util.Analytics
+import dev.katiebarnett.welcometoflip.util.TrackedScreen
 import dev.katiebarnett.welcometoflip.util.getStackSize
 import dev.katiebarnett.welcometoflip.util.observeLifecycle
+import dev.katiebarnett.welcometoflip.util.trackScreenView
 
 @Composable
-fun RegularGameBody(viewModel: GameViewModel,
-                    gameType: GameType,
-                    seed: Long? = null,
-                    initialPosition: Int? = null,
-                    onGameEnd: () -> Unit,
-                    modifier: Modifier = Modifier
+fun RegularGameScreen(viewModel: GameViewModel,
+                      gameType: GameType,
+                      seed: Long? = null,
+                      initialPosition: Int? = null,
+                      onGameEnd: () -> Unit,
+                      modifier: Modifier = Modifier
 ) {
+    TrackedScreen {
+        trackScreenView(name = gameType.name)
+    }
+
     val position by viewModel.position.observeAsState(initialPosition ?: viewModel.initialPosition)
     val advancePositionEnabled by viewModel.advancePositionEnabled.observeAsState(true)
     val isEndGame by viewModel.isEndGame.observeAsState(false)
@@ -58,6 +65,8 @@ fun RegularGameBody(viewModel: GameViewModel,
     
     if (showEndGameDialog) {
         EndGameDialog(
+            gameType = gameType,
+            position = position,
             reshuffleStacks = {
                 viewModel.reshuffleStacks()
             },

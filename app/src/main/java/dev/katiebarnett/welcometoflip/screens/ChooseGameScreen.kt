@@ -24,22 +24,33 @@ import dev.katiebarnett.welcometoflip.core.models.SavedGame
 import dev.katiebarnett.welcometoflip.core.models.WelcomeToTheMoon
 import dev.katiebarnett.welcometoflip.theme.Dimen
 import dev.katiebarnett.welcometoflip.theme.WelcomeToFlipTheme
+import dev.katiebarnett.welcometoflip.util.Analytics
+import dev.katiebarnett.welcometoflip.util.TrackedScreen
 import dev.katiebarnett.welcometoflip.util.displayDateTime
+import dev.katiebarnett.welcometoflip.util.trackDeleteGame
+import dev.katiebarnett.welcometoflip.util.trackLoadGame
+import dev.katiebarnett.welcometoflip.util.trackScreenView
 import dev.katiebarnett.welcometoflip.core.R as Rcore
 
 @Composable
-fun ChooseGame(chooseGameAction: (gameType: GameType) -> Unit, loadGameAction: (savedGame: SavedGame) -> Unit, modifier: Modifier = Modifier) {
+fun ChooseGameScreen(chooseGameAction: (gameType: GameType) -> Unit, loadGameAction: (savedGame: SavedGame) -> Unit, modifier: Modifier = Modifier) {
     val viewModel: MainViewModel = hiltViewModel()
     val savedGames: List<SavedGame> by viewModel.savedGames.collectAsState(initial = emptyList())
+
+    TrackedScreen {
+        trackScreenView(name = Analytics.Screen.ChooseGame)
+    }
 
     ChooseGameBody(
         gameTypes = viewModel.gameTypes,
         savedGames = savedGames,
         chooseNewGameAction = chooseGameAction,
-        loadGameAction = { savedGame -> 
+        loadGameAction = { savedGame ->
+            trackLoadGame(savedGame)
             loadGameAction.invoke(savedGame)
         },
-        deleteSavedGameAction = { savedGame -> 
+        deleteSavedGameAction = { savedGame ->
+            trackDeleteGame(savedGame)
             viewModel.deleteGameAction(savedGame)
         },
         modifier = modifier

@@ -22,17 +22,24 @@ import dev.katiebarnett.welcometoflip.components.*
 import dev.katiebarnett.welcometoflip.core.models.*
 import dev.katiebarnett.welcometoflip.theme.Dimen
 import dev.katiebarnett.welcometoflip.theme.WelcomeToFlipTheme
+import dev.katiebarnett.welcometoflip.util.Analytics
+import dev.katiebarnett.welcometoflip.util.TrackedScreen
 import dev.katiebarnett.welcometoflip.util.observeLifecycle
+import dev.katiebarnett.welcometoflip.util.trackScreenView
 
 
 @Composable
-fun SoloGameBody(viewModel: SoloGameViewModel, 
+fun SoloGameScreen(viewModel: SoloGameViewModel,
                  gameType: GameType,
                  seed: Long? = null,
                  initialPosition: Int? = null,
                  onGameEnd: () -> Unit,
                  modifier: Modifier = Modifier
 ) {
+    TrackedScreen {
+        trackScreenView(name = gameType.name)
+    }
+
     val position by viewModel.position.observeAsState(initialPosition ?: viewModel.initialPosition)
     val advancePositionEnabled by viewModel.advancePositionEnabled.observeAsState(true)
     val isEndGame by viewModel.isEndGame.observeAsState(false)
@@ -86,6 +93,8 @@ fun SoloGameBody(viewModel: SoloGameViewModel,
 
     if (showEndGameDialog) {
         EndGameDialog(
+            gameType = gameType,
+            position = position,
             reshuffleStacks = {
                 viewModel.reshuffleStacks()
             },

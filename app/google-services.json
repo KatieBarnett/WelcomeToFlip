@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "92180024543",
+    "project_id": "welcome-to-flip",
+    "storage_bucket": "welcome-to-flip.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:92180024543:android:26abd611a49f5a8254ad6a",
+        "android_client_info": {
+          "package_name": "dev.katiebarnett.welcometoflip"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "92180024543-sb58m6aecl53sdkn453tmi1a4fkk22vg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRtaudq3n3Wx9A1zTrsq0d6rbe6V1-ndM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "92180024543-sb58m6aecl53sdkn453tmi1a4fkk22vg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:92180024543:android:464f329dfb43af9e54ad6a",
+        "android_client_info": {
+          "package_name": "dev.katiebarnett.welcometoflip.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "92180024543-sb58m6aecl53sdkn453tmi1a4fkk22vg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRtaudq3n3Wx9A1zTrsq0d6rbe6V1-ndM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "92180024543-sb58m6aecl53sdkn453tmi1a4fkk22vg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,6 +3,8 @@ plugins {
     id 'kotlin-android'
     id 'dagger.hilt.android.plugin'
     id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 static def computeVersionCode() {
@@ -47,6 +49,18 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    flavorDimensions "env"
+    productFlavors {
+        dev {
+            applicationIdSuffix '.dev'
+            versionNameSuffix ".dev"
+            dimension 'env'
+        }
+        prod {
+            dimension 'env'
+        }
+    }
+
     buildTypes {
         debug {
             versionNameSuffix ".debug"
@@ -75,6 +89,9 @@ dependencies {
 
     implementation coreLibs
     implementation uiLibs
+
+    implementation platform("com.google.firebase:firebase-bom:$firebase_bom_version")
+    implementation firebaseLibs
 
     implementation platform("androidx.compose:compose-bom:$compose_bom_version")
     implementation jetpackComposeLibs

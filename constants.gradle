@@ -22,4 +22,5 @@ ext {
     protobuf_plugin_version = '0.8.17'
 
     compose_bom_version = '2022.10.00'
+    firebase_bom_version = '31.0.2'
 }

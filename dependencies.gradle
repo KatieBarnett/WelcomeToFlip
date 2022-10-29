@@ -47,6 +47,11 @@ ext {
             "com.google.protobuf:protobuf-javalite:$protobuf_version"
     ]
 
+    firebaseLibs = [
+            "com.google.firebase:firebase-analytics-ktx",
+            "com.google.firebase:firebase-crashlytics-ktx"
+    ]
+
     coreLibsKapt = [
             "com.google.dagger:hilt-compiler:$hilt_version"
     ]

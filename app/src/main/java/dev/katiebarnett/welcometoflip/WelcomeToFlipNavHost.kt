@@ -7,9 +7,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import dev.katiebarnett.welcometoflip.core.models.mapToGameType
-import dev.katiebarnett.welcometoflip.screens.ChooseGame
-import dev.katiebarnett.welcometoflip.screens.RegularGameBody
-import dev.katiebarnett.welcometoflip.screens.SoloGameBody
+import dev.katiebarnett.welcometoflip.screens.ChooseGameScreen
+import dev.katiebarnett.welcometoflip.screens.RegularGameScreen
+import dev.katiebarnett.welcometoflip.screens.SoloGameScreen
 
 @Composable
 fun WelcomeToFlipNavHost(
@@ -22,11 +22,11 @@ fun WelcomeToFlipNavHost(
         modifier = modifier
     ) {
         composable(route = ChooseGame.route) {
-            ChooseGame(
-                chooseGameAction = { 
+            ChooseGameScreen(
+                chooseGameAction = {
                     navController.navigate(route = Game.getRoute(it))
                 },
-                loadGameAction = { 
+                loadGameAction = {
                     navController.navigate(route = Game.getRoute(it)) 
                 }
             )
@@ -37,7 +37,7 @@ fun WelcomeToFlipNavHost(
                 val seed = it.arguments?.getString(Game.seedArg)?.toLong()
                 val position = it.arguments?.getString(Game.positionArg)?.toInt()
                 if (gameType.solo) {
-                    SoloGameBody(
+                    SoloGameScreen(
                         viewModel = hiltViewModel(),
                         gameType = gameType,
                         seed = seed,
@@ -45,7 +45,7 @@ fun WelcomeToFlipNavHost(
                         onGameEnd = { navController.navigateUp() }
                     )
                 } else {
-                    RegularGameBody(
+                    RegularGameScreen(
                         viewModel = hiltViewModel(),
                         gameType = gameType,
                         seed = seed,
