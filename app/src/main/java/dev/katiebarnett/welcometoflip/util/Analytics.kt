@@ -25,6 +25,7 @@ private const val ANALYTICS_LOG_TAG = "Analytics"
 object Analytics {
     object Screen {
         const val ChooseGame = "Choose Game"
+        const val About = "About"
     }
 
     object Action {

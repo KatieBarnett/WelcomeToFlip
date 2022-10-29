@@ -2,15 +2,26 @@ package dev.katiebarnett.welcometoflip.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import dev.katiebarnett.welcometoflip.GameViewModel
+import dev.katiebarnett.welcometoflip.R
+import dev.katiebarnett.welcometoflip.components.AboutActionIcon
 import dev.katiebarnett.welcometoflip.components.EndGameDialog
 import dev.katiebarnett.welcometoflip.components.GameContainer
+import dev.katiebarnett.welcometoflip.components.NavigationIcon
 import dev.katiebarnett.welcometoflip.components.Stack
 import dev.katiebarnett.welcometoflip.core.models.*
 import dev.katiebarnett.welcometoflip.theme.Dimen
@@ -21,12 +32,13 @@ import dev.katiebarnett.welcometoflip.util.getStackSize
 import dev.katiebarnett.welcometoflip.util.observeLifecycle
 import dev.katiebarnett.welcometoflip.util.trackScreenView
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegularGameScreen(viewModel: GameViewModel,
                       gameType: GameType,
                       seed: Long? = null,
                       initialPosition: Int? = null,
-                      onGameEnd: () -> Unit,
+                      navController: NavController = rememberNavController(),
                       modifier: Modifier = Modifier
 ) {
     TrackedScreen {
@@ -46,22 +58,34 @@ fun RegularGameScreen(viewModel: GameViewModel,
     viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
     viewModel.initialiseGame(gameType, gameSeed, position)
 
-    GameContainer(
-        displayPosition = position + 1,
-        displayEndPosition = viewModel.stacks.getStackSize() ?: 0,
-        gameType = gameType,
-        advancePosition = {
-            viewModel.advancePosition()
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = stringResource(id = gameType.displayName)) },
+                navigationIcon = { NavigationIcon(navController = navController) },
+                actions = { AboutActionIcon(navController) }
+            )
         },
-        advancePositionEnabled = advancePositionEnabled,
-        content = { contentModifier ->
-            RegularGame(
-                position = position, 
-                stacks = viewModel.stacks, 
-                modifier = contentModifier
-        )},
         modifier = modifier
-    )
+    ) { innerPadding ->
+        GameContainer(
+            displayPosition = position + 1,
+            displayEndPosition = viewModel.stacks.getStackSize() ?: 0,
+            gameType = gameType,
+            advancePosition = {
+                viewModel.advancePosition()
+            },
+            advancePositionEnabled = advancePositionEnabled,
+            content = { contentModifier ->
+                RegularGame(
+                    position = position,
+                    stacks = viewModel.stacks,
+                    modifier = contentModifier
+                )
+            },
+            modifier = Modifier.padding(innerPadding)
+        )
+    }
     
     if (showEndGameDialog) {
         EndGameDialog(
@@ -71,7 +95,9 @@ fun RegularGameScreen(viewModel: GameViewModel,
                 viewModel.reshuffleStacks()
             },
             endGame = {
-                viewModel.endGame(onGameEnd)
+                viewModel.endGame {
+                    navController.navigateUp()
+                }
             },
             onDismissRequest = {
                 showEndGameDialog = false

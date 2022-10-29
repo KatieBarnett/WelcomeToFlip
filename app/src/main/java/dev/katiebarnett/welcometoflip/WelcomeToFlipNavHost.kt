@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import dev.katiebarnett.welcometoflip.core.models.mapToGameType
+import dev.katiebarnett.welcometoflip.screens.AboutScreen
 import dev.katiebarnett.welcometoflip.screens.ChooseGameScreen
 import dev.katiebarnett.welcometoflip.screens.RegularGameScreen
 import dev.katiebarnett.welcometoflip.screens.SoloGameScreen
@@ -23,12 +24,12 @@ fun WelcomeToFlipNavHost(
     ) {
         composable(route = ChooseGame.route) {
             ChooseGameScreen(
-                chooseGameAction = {
-                    navController.navigate(route = Game.getRoute(it))
-                },
-                loadGameAction = {
-                    navController.navigate(route = Game.getRoute(it)) 
-                }
+                navController = navController
+            )
+        }
+        composable(route = About.route) {
+            AboutScreen(
+                navController = navController
             )
         }
         composable(route = Game.routeWithArgs, arguments = Game.arguments, deepLinks = Game.deepLinks) {
@@ -50,7 +51,7 @@ fun WelcomeToFlipNavHost(
                         gameType = gameType,
                         seed = seed,
                         initialPosition = position,
-                        onGameEnd = { navController.navigateUp() }
+                        navController = navController
                     )
                 }
             }

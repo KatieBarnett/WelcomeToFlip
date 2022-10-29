@@ -9,6 +9,7 @@ import dev.katiebarnett.welcometoflip.core.models.SavedGame
 sealed class WelcomeToFlipDestination(val route: String)
 
 object ChooseGame : WelcomeToFlipDestination("ChooseGame")
+object About : WelcomeToFlipDestination("About")
 
 object Game : WelcomeToFlipDestination("Game") {
 

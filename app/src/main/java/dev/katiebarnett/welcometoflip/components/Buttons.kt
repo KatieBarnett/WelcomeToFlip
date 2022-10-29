@@ -53,11 +53,11 @@ fun ButtonWithIcon(@StringRes textRes: Int,
 }
 
 @Composable
-fun IconButton(@StringRes altTextRes: Int? = null,
-               @DrawableRes iconRes: Int,
-               onClick: () -> Unit,
-               enabled: Boolean = true,
-               modifier: Modifier = Modifier) {
+fun ThemedIconButton(@StringRes altTextRes: Int? = null,
+                     @DrawableRes iconRes: Int,
+                     onClick: () -> Unit,
+                     enabled: Boolean = true,
+                     modifier: Modifier = Modifier) {
     ElevatedButton(
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
         onClick = onClick,
@@ -101,7 +101,7 @@ fun ButtonWithIconPreview() {
 @Composable
 fun IconButtonPreview() {
     WelcomeToFlipTheme {
-        IconButton(
+        ThemedIconButton(
             altTextRes = R.string.game_welcome_to_the_moon,
             R.drawable.noun_bin_2034046,
             onClick = {}

@@ -4,8 +4,17 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -15,10 +24,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import dev.katiebarnett.welcometoflip.Game
 import dev.katiebarnett.welcometoflip.MainViewModel
 import dev.katiebarnett.welcometoflip.R
+import dev.katiebarnett.welcometoflip.components.AboutActionIcon
 import dev.katiebarnett.welcometoflip.components.ButtonWithIcon
-import dev.katiebarnett.welcometoflip.components.IconButton
+import dev.katiebarnett.welcometoflip.components.NavigationIcon
+import dev.katiebarnett.welcometoflip.components.ThemedIconButton
 import dev.katiebarnett.welcometoflip.core.models.GameType
 import dev.katiebarnett.welcometoflip.core.models.SavedGame
 import dev.katiebarnett.welcometoflip.core.models.WelcomeToTheMoon
@@ -32,8 +46,12 @@ import dev.katiebarnett.welcometoflip.util.trackLoadGame
 import dev.katiebarnett.welcometoflip.util.trackScreenView
 import dev.katiebarnett.welcometoflip.core.R as Rcore
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChooseGameScreen(chooseGameAction: (gameType: GameType) -> Unit, loadGameAction: (savedGame: SavedGame) -> Unit, modifier: Modifier = Modifier) {
+fun ChooseGameScreen(
+    navController: NavController = rememberNavController(),
+    modifier: Modifier = Modifier) {
+
     val viewModel: MainViewModel = hiltViewModel()
     val savedGames: List<SavedGame> by viewModel.savedGames.collectAsState(initial = emptyList())
 
@@ -41,20 +59,33 @@ fun ChooseGameScreen(chooseGameAction: (gameType: GameType) -> Unit, loadGameAct
         trackScreenView(name = Analytics.Screen.ChooseGame)
     }
 
-    ChooseGameBody(
-        gameTypes = viewModel.gameTypes,
-        savedGames = savedGames,
-        chooseNewGameAction = chooseGameAction,
-        loadGameAction = { savedGame ->
-            trackLoadGame(savedGame)
-            loadGameAction.invoke(savedGame)
-        },
-        deleteSavedGameAction = { savedGame ->
-            trackDeleteGame(savedGame)
-            viewModel.deleteGameAction(savedGame)
+    Scaffold(
+        topBar = {
+            LargeTopAppBar(
+                title = { Text(text = stringResource(id = R.string.app_name))},
+                navigationIcon = { NavigationIcon(navController = navController)},
+                actions = { AboutActionIcon(navController) }
+            )
         },
         modifier = modifier
-    )
+    ) { innerPadding ->
+        ChooseGameBody(
+            gameTypes = viewModel.gameTypes,
+            savedGames = savedGames,
+            chooseNewGameAction = {
+                navController.navigate(route = Game.getRoute(it))
+            },
+            loadGameAction = { savedGame ->
+                trackLoadGame(savedGame)
+                navController.navigate(route = Game.getRoute(savedGame))
+            },
+            deleteSavedGameAction = { savedGame ->
+                trackDeleteGame(savedGame)
+                viewModel.deleteGameAction(savedGame)
+            },
+            modifier = modifier.padding(innerPadding)
+        )
+    }
 }
 
 @Composable
@@ -141,12 +172,12 @@ fun SavedGame(savedGame: SavedGame,
             Text(stringResource(id = R.string.position_label, savedGame.displayPosition, savedGame.stackSize))
         }
         Spacer(modifier = Modifier.weight(1f))
-        IconButton(
+        ThemedIconButton(
             altTextRes = R.string.delete_saved_button,
             iconRes = Rcore.drawable.noun_bin_2034046,
             onClick = { deleteGameAction.invoke(savedGame) }
         )
-        IconButton(
+        ThemedIconButton(
             altTextRes = R.string.load_saved_button,
             iconRes = Rcore.drawable.noun_arrow_60381,
             onClick = { loadGameAction.invoke(savedGame) }

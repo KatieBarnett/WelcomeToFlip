@@ -36,7 +36,7 @@ fun GameContainer(displayPosition: Int,
         Row(modifier = Modifier
             .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(Dimen.spacing)) {
-            Text(stringResource(id = gameType.displayName), modifier = modifier.weight(1f))
+            Text(stringResource(id = gameType.displayName), modifier = Modifier.weight(1f))
             Text(stringResource(id = R.string.deck_position, displayPosition, displayEndPosition))
         }
         content(modifier = Modifier
@@ -46,7 +46,7 @@ fun GameContainer(displayPosition: Int,
             horizontalArrangement = Arrangement.spacedBy(Dimen.Button.spacing)) {
             ThemedButton(onClick = {
                 advancePosition.invoke()
-            }, enabled = advancePositionEnabled, modifier = modifier.weight(1f)) {
+            }, enabled = advancePositionEnabled, modifier = Modifier.weight(1f)) {
                 Text(stringResource(id = R.string.flip_button))
             }
         }
