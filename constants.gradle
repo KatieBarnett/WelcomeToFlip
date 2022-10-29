@@ -7,10 +7,8 @@ ext {
     hilt_androidx_version = '1.0.0'
     coil_version = '2.1.0'
     compose_version = '1.2.0'
-    compose_activity_version = '1.5.0'
     compose_constraint_layout_version = '1.0.0'
     compose_compiler_version = '1.2.0'
-    compose_material_version = '1.0.0-alpha14'
     compose_navigation_version = '2.5.0'
     compose_viewmodel_version = '2.5.0'
     core_ktx_version = '1.8.0'
@@ -22,4 +20,6 @@ ext {
     material_version = '1.5.0'
     protobuf_version = '3.18.0'
     protobuf_plugin_version = '0.8.17'
+
+    compose_bom_version = '2022.10.00'
 }

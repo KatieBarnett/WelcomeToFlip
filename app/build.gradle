@@ -72,8 +72,11 @@ dependencies {
     implementation project(":storage")
     implementation project(':core')
 
+
     implementation coreLibs
     implementation uiLibs
+
+    implementation platform("androidx.compose:compose-bom:$compose_bom_version")
     implementation jetpackComposeLibs
     debugImplementation jetpackComposeLibsDebug
     implementation lifecycleLibs

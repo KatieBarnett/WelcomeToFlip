@@ -39,6 +39,7 @@ android {
 dependencies {
     implementation coreLibs
 
+    implementation platform("androidx.compose:compose-bom:$compose_bom_version")
     implementation jetpackComposeLibs
     
     kapt coreLibsKapt
