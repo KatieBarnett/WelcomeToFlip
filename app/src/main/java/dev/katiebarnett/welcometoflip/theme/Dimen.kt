@@ -9,6 +9,10 @@ object Dimen {
     val spacingDouble = spacing * 2
     val spacingHalf = spacing / 2
 
+
+
+    val bulletTextIndent = 12.sp
+
     object Button {
         val spacing = 8.dp
         val iconSize = 24.dp

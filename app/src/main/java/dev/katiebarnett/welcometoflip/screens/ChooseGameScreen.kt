@@ -1,28 +1,29 @@
 package dev.katiebarnett.welcometoflip.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -36,6 +37,7 @@ import dev.katiebarnett.welcometoflip.components.ThemedIconButton
 import dev.katiebarnett.welcometoflip.core.models.GameType
 import dev.katiebarnett.welcometoflip.core.models.SavedGame
 import dev.katiebarnett.welcometoflip.core.models.WelcomeToTheMoon
+import dev.katiebarnett.welcometoflip.core.theme.Plum
 import dev.katiebarnett.welcometoflip.theme.Dimen
 import dev.katiebarnett.welcometoflip.theme.WelcomeToFlipTheme
 import dev.katiebarnett.welcometoflip.util.Analytics
@@ -62,7 +64,11 @@ fun ChooseGameScreen(
     Scaffold(
         topBar = {
             LargeTopAppBar(
-                title = { Text(text = stringResource(id = R.string.app_name))},
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.app_name),
+                        fontWeight = FontWeight.Bold,
+                    )},
                 navigationIcon = { NavigationIcon(navController = navController)},
                 actions = { AboutActionIcon(navController) }
             )
@@ -88,6 +94,7 @@ fun ChooseGameScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ChooseGameBody(gameTypes: List<GameType>,
                    savedGames: List<SavedGame>,
@@ -95,62 +102,38 @@ fun ChooseGameBody(gameTypes: List<GameType>,
                    loadGameAction: (savedGame: SavedGame) -> Unit,
                    deleteSavedGameAction: (savedGame: SavedGame) -> Unit,
                    modifier: Modifier = Modifier) {
-    
-    Column(
-        verticalArrangement = Arrangement.spacedBy(Dimen.spacingDouble),
-        modifier = modifier.padding(Dimen.spacing)
+
+    LazyColumn(
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.spacedBy(Dimen.spacing),
+        modifier = modifier
     ) {
-        GameChoiceList(gameTypes, chooseNewGameAction, Modifier)
+        stickyHeader {
+            Column(verticalArrangement = Arrangement.spacedBy(Dimen.spacing),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(Dimen.spacing)
+            ) {
+                Text(stringResource(id = R.string.main_instruction))
+                gameTypes.forEach { gameType ->
+                    ButtonWithIcon(
+                        textRes = gameType.displayName,
+                        iconRes = gameType.icon,
+                        onClick = { chooseNewGameAction.invoke(gameType) }
+                    )
+                }
+                Text(stringResource(id = R.string.saved_instruction))
+            }
+        }
         if (savedGames.isNotEmpty()) {
-            SavedGamesList(
-                savedGames, loadGameAction, deleteSavedGameAction,
-                Modifier.weight(1f)
-            )
+            items(savedGames) { game ->
+                SavedGame(game, loadGameAction, deleteSavedGameAction)
+            }
         }
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun GameChoiceList(gameTypes: List<GameType>, chooseGameAction: (gameType: GameType) -> Unit, modifier: Modifier = Modifier) {
-    LazyColumn(
-        horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.spacedBy(Dimen.Button.spacing),
-        modifier = modifier
-    ) {
-        stickyHeader {
-            Text(stringResource(id = R.string.main_instruction))
-        }
-        items(gameTypes) { gameType ->
-            ButtonWithIcon(
-                textRes = gameType.displayName,
-                iconRes = gameType.icon,
-                onClick = { chooseGameAction.invoke(gameType) }
-            )
-        }
-    }
-}
-
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun SavedGamesList(savedGames: List<SavedGame>,
-                   loadGameAction: (savedGame: SavedGame) -> Unit,
-                   deleteGameAction: (savedGame: SavedGame) -> Unit,
-                   modifier: Modifier = Modifier) {
-    LazyColumn(
-        horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.spacedBy(Dimen.Button.spacing),
-        modifier = modifier
-    ) {
-        stickyHeader {
-            Text(stringResource(id = R.string.saved_instruction))
-        }
-        items(savedGames) { game ->
-            SavedGame(game, loadGameAction, deleteGameAction)
-        }
-    }
-}
 
 @Composable
 fun SavedGame(savedGame: SavedGame,
@@ -158,7 +141,8 @@ fun SavedGame(savedGame: SavedGame,
               deleteGameAction: (savedGame: SavedGame) -> Unit,
               modifier: Modifier = Modifier) {
     Row(verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(Dimen.spacing), modifier = modifier) {
+        horizontalArrangement = Arrangement.spacedBy(Dimen.spacing),
+        modifier = modifier.padding(horizontal = Dimen.spacing)) {
         savedGame.gameType?.let {
             Icon(
                 painter = painterResource(id = it.icon),
@@ -226,35 +210,5 @@ fun ChooseGameBodyPreview() {
             deleteSavedGameAction = {},
             modifier = Modifier
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GameListPreview() {
-    WelcomeToFlipTheme {
-        GameChoiceList(listOf(WelcomeToTheMoon, WelcomeToTheMoon), {}, Modifier)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SavedGameListPreview() {
-    WelcomeToFlipTheme {
-        val savedGame1 = SavedGame(
-            position = 1,
-            stackSize = 21,
-            seed = 1234567890,
-            gameType = WelcomeToTheMoon,
-            lastModified = System.currentTimeMillis()
-        )
-        val savedGame2 = SavedGame(
-            position = 90,
-            stackSize = 180,
-            seed = 987654321,
-            gameType = WelcomeToTheMoon,
-            lastModified = System.currentTimeMillis()
-        )
-        SavedGamesList(listOf(savedGame1, savedGame2), {}, {}, Modifier)
     }
 }

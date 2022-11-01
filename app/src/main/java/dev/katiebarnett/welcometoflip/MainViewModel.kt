@@ -1,5 +1,6 @@
 package dev.katiebarnett.welcometoflip
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,6 +14,8 @@ class MainViewModel @Inject constructor(
     private val deckRepository: DeckRepository,
     private val savedGamesRepository: SavedGamesRepository
 ) : ViewModel() {
+
+    val showWelcomeDialog = MutableLiveData(true)
 
     val gameTypes = deckRepository.getAvailableGames()
     
