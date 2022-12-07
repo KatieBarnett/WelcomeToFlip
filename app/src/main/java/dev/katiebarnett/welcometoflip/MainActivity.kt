@@ -35,7 +35,6 @@ class MainActivity : ComponentActivity() {
     fun WelcomeToFlipApp() {
         WelcomeToFlipTheme {
             val navController = rememberNavController()
-            val viewModel: MainViewModel = hiltViewModel()
             var showWelcomeDialog by remember { mutableStateOf(true) }
             WelcomeToFlipNavHost(navController = navController)
             if (showWelcomeDialog) {
