@@ -9,9 +9,12 @@ object Dimen {
     val spacingDouble = spacing * 2
     val spacingHalf = spacing / 2
 
-
-
     val bulletTextIndent = 12.sp
+    
+    object AppBar {
+        val ExpandedTextSize = 28
+        val CollapsedTextSize = 22
+    }
 
     object Button {
         val spacing = 8.dp

@@ -22,7 +22,7 @@ ext {
             "androidx.activity:activity-compose",
             // Compose Material Design
             "androidx.compose.material3:material3",
-            "androidx.compose.ui:ui:$compose_version",
+            "androidx.compose.ui:ui",
             // Animations
             "androidx.compose.animation:animation",
             // Tooling support (Previews, etc.)

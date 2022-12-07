@@ -12,18 +12,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -37,8 +36,9 @@ import dev.katiebarnett.welcometoflip.components.ThemedIconButton
 import dev.katiebarnett.welcometoflip.core.models.GameType
 import dev.katiebarnett.welcometoflip.core.models.SavedGame
 import dev.katiebarnett.welcometoflip.core.models.WelcomeToTheMoon
-import dev.katiebarnett.welcometoflip.core.theme.Plum
 import dev.katiebarnett.welcometoflip.theme.Dimen
+import dev.katiebarnett.welcometoflip.theme.Dimen.AppBar.CollapsedTextSize
+import dev.katiebarnett.welcometoflip.theme.Dimen.AppBar.ExpandedTextSize
 import dev.katiebarnett.welcometoflip.theme.WelcomeToFlipTheme
 import dev.katiebarnett.welcometoflip.util.Analytics
 import dev.katiebarnett.welcometoflip.util.TrackedScreen
@@ -56,24 +56,36 @@ fun ChooseGameScreen(
 
     val viewModel: MainViewModel = hiltViewModel()
     val savedGames: List<SavedGame> by viewModel.savedGames.collectAsState(initial = emptyList())
-
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    
     TrackedScreen {
         trackScreenView(name = Analytics.Screen.ChooseGame)
     }
+    
+    val topAppBarElementColor = if (scrollBehavior.state.collapsedFraction > 0.5) {
+        MaterialTheme.colorScheme.onSurface
+    } else {
+        MaterialTheme.colorScheme.onPrimary
+    }
+    val topAppBarTextSize = (CollapsedTextSize + (ExpandedTextSize - CollapsedTextSize)*(1-scrollBehavior.state.collapsedFraction))
 
     Scaffold(
         topBar = {
             LargeTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.app_name),
-                        fontWeight = FontWeight.Bold,
-                    )},
+                title = { Text(text = stringResource(id = R.string.app_name), fontSize = topAppBarTextSize.sp)},
                 navigationIcon = { NavigationIcon(navController = navController)},
-                actions = { AboutActionIcon(navController) }
+                actions = { AboutActionIcon(navController) },
+                scrollBehavior = scrollBehavior,
+                colors = TopAppBarDefaults.largeTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    scrolledContainerColor = MaterialTheme.colorScheme.surface,
+                    navigationIconContentColor = topAppBarElementColor,
+                    titleContentColor = topAppBarElementColor,
+                    actionIconContentColor= topAppBarElementColor,
+                )
             )
         },
-        modifier = modifier
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         ChooseGameBody(
             gameTypes = viewModel.gameTypes,

@@ -6,7 +6,6 @@ ext {
     hilt_version = '2.42'
     hilt_androidx_version = '1.0.0'
     coil_version = '2.1.0'
-    compose_version = '1.2.0'
     compose_constraint_layout_version = '1.0.0'
     compose_compiler_version = '1.2.0'
     compose_navigation_version = '2.5.0'
@@ -21,6 +20,6 @@ ext {
     protobuf_version = '3.18.0'
     protobuf_plugin_version = '0.8.17'
 
-    compose_bom_version = '2022.10.00'
+    compose_bom_version = '2022.11.00'
     firebase_bom_version = '31.0.2'
 }
