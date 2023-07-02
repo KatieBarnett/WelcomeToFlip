@@ -2,7 +2,7 @@ package dev.katiebarnett.welcometoflip
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.katiebarnett.welcometoflip.core.models.Action
@@ -24,7 +24,7 @@ class SoloGameViewModel @Inject constructor(
         private const val ACTIVE_CARD_COUNT = 3
     }
     
-    val phase = Transformations.map(position) {
+    val phase = position.map {
         if (it < 0) {
             SoloGamePhase.SETUP
         } else {
@@ -43,7 +43,7 @@ class SoloGameViewModel @Inject constructor(
     private val effectCardsDrawn = mutableListOf<Letter>()
     
     val currentState = MutableLiveData(SoloState())
-    val activeCardToAstra = Transformations.map(currentState) {
+    val activeCardToAstra = currentState.map {
         null//.it.activeCardsAvailable
     }
     

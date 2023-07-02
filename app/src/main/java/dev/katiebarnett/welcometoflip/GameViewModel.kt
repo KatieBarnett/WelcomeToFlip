@@ -33,11 +33,11 @@ open class GameViewModel @Inject constructor(
     
     private var shouldSaveGameOnPause = true
 
-    val advancePositionEnabled = Transformations.map(position) {
+    val advancePositionEnabled = position.map {
         (stacks.getStackSize() ?: 0) > it + 1
     }
 
-    val isEndGame = Transformations.map(advancePositionEnabled) {
+    val isEndGame = advancePositionEnabled.map {
         !it
     }
     
