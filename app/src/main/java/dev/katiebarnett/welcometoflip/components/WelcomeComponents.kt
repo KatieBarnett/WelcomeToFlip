@@ -97,7 +97,7 @@ fun WelcomeDialogContent(navController: NavController, onDismissRequest: () -> U
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Welcome Dialog", showBackground = true)
 @Composable
 fun WelcomeDialogPreview() {
     WelcomeToFlipTheme {

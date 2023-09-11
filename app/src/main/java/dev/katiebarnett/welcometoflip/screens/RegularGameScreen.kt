@@ -119,7 +119,7 @@ fun RegularGame(position: Int,
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Regular Game Screen", showBackground = true)
 @Composable
 fun RegularGamePreview() {
 

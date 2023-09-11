@@ -123,7 +123,7 @@ fun CardDisplayPlaceholder(modifier: Modifier = Modifier) {
 //    }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Card Components", showBackground = true)
 @Composable
 fun NumberCardPreview() {
     WelcomeToFlipTheme {
@@ -134,7 +134,7 @@ fun NumberCardPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Card Components", showBackground = true)
 @Composable
 fun ActionCardPreview() {
     WelcomeToFlipTheme {
@@ -145,7 +145,7 @@ fun ActionCardPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Card Components", showBackground = true)
 @Composable
 fun LetterCardPreview() {
     WelcomeToFlipTheme {
@@ -156,7 +156,7 @@ fun LetterCardPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Card Components", showBackground = true)
 @Composable
 fun CardDisplayPlaceholderPreview() {
     WelcomeToFlipTheme {

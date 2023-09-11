@@ -101,7 +101,7 @@ fun PileInsertionLayout(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Pile Components", showBackground = true)
 @Composable
 fun PileLayoutPreview() {
     

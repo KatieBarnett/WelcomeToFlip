@@ -75,7 +75,7 @@ fun ThemedIconButton(@StringRes altTextRes: Int? = null,
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Buttons", showBackground = true)
 @Composable
 fun ThemedButtonPreview() {
     WelcomeToFlipTheme {
@@ -85,7 +85,7 @@ fun ThemedButtonPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Buttons", showBackground = true)
 @Composable
 fun ButtonWithIconPreview() {
     WelcomeToFlipTheme {
@@ -97,7 +97,7 @@ fun ButtonWithIconPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Buttons", showBackground = true)
 @Composable
 fun IconButtonPreview() {
     WelcomeToFlipTheme {

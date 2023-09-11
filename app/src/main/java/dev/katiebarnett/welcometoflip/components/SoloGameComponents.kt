@@ -360,7 +360,7 @@ fun SoloEffectItem(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Solo Game Components", showBackground = true)
 @Composable
 fun SoloEffectItemPreview() {
     WelcomeToFlipTheme {
@@ -372,7 +372,7 @@ fun SoloEffectItemPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Solo Game Components", showBackground = true)
 @Composable
 fun SoloAstraItemPreview() {
     WelcomeToFlipTheme {
@@ -384,7 +384,7 @@ fun SoloAstraItemPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Solo Game Components", showBackground = true)
 @Composable
 fun SoloAstraLayoutPreview() {
     WelcomeToFlipTheme {
@@ -403,7 +403,7 @@ fun SoloAstraLayoutPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Solo Game Components", showBackground = true)
 @Composable
 fun SoloSlotLayoutPreview() {
     WelcomeToFlipTheme {

@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @Preview(showSystemUi = true, showBackground = true)
+    @Preview(group = "Full App", showSystemUi = true, showBackground = true)
     @Composable
     fun DefaultPreview() {
         WelcomeToFlipApp()

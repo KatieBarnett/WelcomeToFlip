@@ -113,7 +113,7 @@ fun EndGameDialog(gameType: GameType,
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Game Components", showBackground = true)
 @Composable
 fun GameContainerPreview() {
     WelcomeToFlipTheme {
@@ -131,7 +131,7 @@ fun GameContainerPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Game Components", showBackground = true)
 @Composable
 fun EndGameDialogPreview() {
     WelcomeToFlipTheme {

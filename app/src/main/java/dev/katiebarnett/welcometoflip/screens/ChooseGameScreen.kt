@@ -181,7 +181,7 @@ fun SavedGame(savedGame: SavedGame,
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Choose Game Screen", showBackground = true)
 @Composable
 fun SavedGamePreview() {
     WelcomeToFlipTheme {
@@ -196,7 +196,7 @@ fun SavedGamePreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Choose Game Screen", showBackground = true)
 @Composable
 fun ChooseGameBodyPreview() {
     WelcomeToFlipTheme {

@@ -204,7 +204,7 @@ fun SoloGame(state: SoloState,
     )
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Solo Game Screen", showBackground = true)
 @Composable
 fun SoloGameSetupPreview() {
 
@@ -235,7 +235,7 @@ fun SoloGameSetupPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Solo Game Screen", showBackground = true)
 @Composable
 fun SoloGamePreview() {
 

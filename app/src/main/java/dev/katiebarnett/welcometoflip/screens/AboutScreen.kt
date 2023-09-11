@@ -139,7 +139,7 @@ fun AboutScreen(
 }
 
 
-@Preview(showBackground = true)
+@Preview(group = "About Screen", showBackground = true)
 @Composable
 fun AboutScreenPreview() {
     WelcomeToFlipTheme {

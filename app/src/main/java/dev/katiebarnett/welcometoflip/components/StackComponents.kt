@@ -131,7 +131,7 @@ fun BasicStackLayout(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Stack Components", showBackground = true)
 @Composable
 fun StackPreview() {
     WelcomeToFlipTheme {
@@ -149,7 +149,7 @@ fun StackPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Stack Components", showBackground = true)
 @Composable
 fun BasicStackLayoutPreview() {
     WelcomeToFlipTheme {
@@ -162,7 +162,7 @@ fun BasicStackLayoutPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Stack Components", showBackground = true)
 @Composable
 fun StackPreviewWithEmptyAction() {
     WelcomeToFlipTheme {
@@ -180,7 +180,7 @@ fun StackPreviewWithEmptyAction() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(group = "Stack Components", showBackground = true)
 @Composable
 fun StackPreviewWithEmptyNumber() {
     WelcomeToFlipTheme {
