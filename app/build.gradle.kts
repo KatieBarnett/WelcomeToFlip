@@ -104,6 +104,9 @@ dependencies {
     implementation(libs.lifecycle.runtime)
     implementation(libs.lifecycle.viewmodel.compose)
 
+    implementation(libs.showkase)
+    ksp(libs.showkase.processor)
+
     ksp(libs.hilt.compiler)
 }
 

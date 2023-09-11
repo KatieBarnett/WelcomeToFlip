@@ -3,6 +3,7 @@ package dev.katiebarnett.welcometoflip.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
@@ -10,20 +11,27 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.airbnb.android.showkase.models.Showkase
+import dev.katiebarnett.welcometoflip.BuildConfig
 import dev.katiebarnett.welcometoflip.MainViewModel
 import dev.katiebarnett.welcometoflip.R
 import dev.katiebarnett.welcometoflip.components.NavigationIcon
+import dev.katiebarnett.welcometoflip.components.ThemedButton
 import dev.katiebarnett.welcometoflip.core.models.SavedGame
+import dev.katiebarnett.welcometoflip.showkase.getBrowserIntent
 import dev.katiebarnett.welcometoflip.theme.Dimen
 import dev.katiebarnett.welcometoflip.theme.WelcomeToFlipTheme
 import dev.katiebarnett.welcometoflip.util.AboutAppText
@@ -118,6 +126,14 @@ fun AboutScreen(
                     .fillMaxWidth()
                     .padding(bottom = Dimen.spacing)
             )
+            if (BuildConfig.DEBUG) {
+                val context = LocalContext.current
+                ThemedButton(content = {
+                    Text(stringResource(id = R.string.debug_showkase))
+                }, onClick = {
+                    startActivity(context, Showkase.getBrowserIntent(context), null)
+                })
+            }
         }
     }
 }
