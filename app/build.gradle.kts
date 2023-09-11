@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.paparazzi)
 }
 
 android {
@@ -71,6 +72,9 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
+    }
+    ksp {
+        arg("skipPrivatePreviews", "true")
     }
 }
 
