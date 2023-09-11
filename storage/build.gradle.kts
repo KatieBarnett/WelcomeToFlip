@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android )
     alias(libs.plugins.dagger.hilt.android)
     alias(libs.plugins.protobuf)
-    kotlin("kapt")
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -34,9 +34,6 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-//    kapt {
-//        correctErrorTypes = true
-//    }
     namespace = "dev.katiebarnett.welcometoflip.storage"
 }
 
@@ -49,7 +46,7 @@ dependencies {
     implementation(libs.datastore)
     implementation(libs.protobuf.kotlin.lite)
 
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 }
 
 // Setup protobuf configuration, generating lite Java and Kotlin classes

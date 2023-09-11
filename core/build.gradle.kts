@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android )
     alias(libs.plugins.dagger.hilt.android)
-    kotlin("kapt")
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -49,5 +49,5 @@ dependencies {
     implementation(libs.compose.animation)
     implementation(libs.compose.runtime.livedata)
 
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 }

@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.dagger.hilt.android)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
-    kotlin("kapt")
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -104,6 +104,6 @@ dependencies {
     implementation(libs.lifecycle.runtime)
     implementation(libs.lifecycle.viewmodel.compose)
 
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 }
 
