@@ -27,7 +27,7 @@ jobs:
 
       - name: Run screenshot tests
         id: screenshot-tests
-        run: ./gradlew verifyPaparazziDebug --continue
+        run: ./gradlew verifyPaparazziDevDebug --continue
 
       - name: Process failed screenshot tests
         if: failure()
