@@ -133,7 +133,7 @@ fun GameButton(
 fun ThemedButtonPreview() {
     WelcomeToFlipTheme {
         ThemedButton(content = {
-            Text("Button Text")
+            Text("Button Text No Icon")
         }, onClick = {})
     }
 }
