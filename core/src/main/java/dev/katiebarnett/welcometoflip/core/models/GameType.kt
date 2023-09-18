@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 
 sealed class GameType(
     @DrawableRes open val icon: Int,
+    @DrawableRes open val largeIcon: Int,
     @StringRes open val displayName: Int,
     open val solo: Boolean,
     open val name: String

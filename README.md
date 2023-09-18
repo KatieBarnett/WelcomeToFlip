@@ -13,3 +13,4 @@ Astronaut by Akriti Bhusal from NounProject.com https://thenounproject.com/icon/
 Water Drop by Georgiana Ionescu from NounProject.com https://thenounproject.com/icon/water-drop-1506321/
 Bin by Alice Design from NounProject.com https://thenounproject.com/icon/bin-2034046/
 Arrow by Jamison Wieser from NounProject.com https://thenounproject.com/icon/arrow-60381/
+Moon by Rafi Al Hakim from NounProject.com https://thenounproject.com/icon/moon-6086589/

@@ -30,7 +30,7 @@ import dev.katiebarnett.welcometoflip.Game
 import dev.katiebarnett.welcometoflip.MainViewModel
 import dev.katiebarnett.welcometoflip.R
 import dev.katiebarnett.welcometoflip.components.AboutActionIcon
-import dev.katiebarnett.welcometoflip.components.ButtonWithIcon
+import dev.katiebarnett.welcometoflip.components.GameButton
 import dev.katiebarnett.welcometoflip.components.NavigationIcon
 import dev.katiebarnett.welcometoflip.components.ThemedIconButton
 import dev.katiebarnett.welcometoflip.core.models.GameType
@@ -52,28 +52,28 @@ import dev.katiebarnett.welcometoflip.core.R as Rcore
 @Composable
 fun ChooseGameScreen(
     navController: NavController = rememberNavController(),
-    modifier: Modifier = Modifier) {
-
+    modifier: Modifier = Modifier
+) {
     val viewModel: MainViewModel = hiltViewModel()
     val savedGames: List<SavedGame> by viewModel.savedGames.collectAsState(initial = emptyList())
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-    
+
     TrackedScreen {
         trackScreenView(name = Analytics.Screen.ChooseGame)
     }
-    
+
     val topAppBarElementColor = if (scrollBehavior.state.collapsedFraction > 0.5) {
         MaterialTheme.colorScheme.onSurface
     } else {
         MaterialTheme.colorScheme.onPrimary
     }
-    val topAppBarTextSize = (CollapsedTextSize + (ExpandedTextSize - CollapsedTextSize)*(1-scrollBehavior.state.collapsedFraction))
+    val topAppBarTextSize = (CollapsedTextSize + (ExpandedTextSize - CollapsedTextSize) * (1 - scrollBehavior.state.collapsedFraction))
 
     Scaffold(
         topBar = {
             LargeTopAppBar(
-                title = { Text(text = stringResource(id = R.string.app_name), fontSize = topAppBarTextSize.sp)},
-                navigationIcon = { NavigationIcon(navController = navController)},
+                title = { Text(text = stringResource(id = R.string.app_name), fontSize = topAppBarTextSize.sp) },
+                navigationIcon = { NavigationIcon(navController = navController) },
                 actions = { AboutActionIcon(navController) },
                 scrollBehavior = scrollBehavior,
                 colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -81,7 +81,7 @@ fun ChooseGameScreen(
                     scrolledContainerColor = MaterialTheme.colorScheme.surface,
                     navigationIconContentColor = topAppBarElementColor,
                     titleContentColor = topAppBarElementColor,
-                    actionIconContentColor= topAppBarElementColor,
+                    actionIconContentColor = topAppBarElementColor,
                 )
             )
         },
@@ -108,30 +108,32 @@ fun ChooseGameScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ChooseGameBody(gameTypes: List<GameType>,
-                   savedGames: List<SavedGame>,
-                   chooseNewGameAction: (gameType: GameType) -> Unit,
-                   loadGameAction: (savedGame: SavedGame) -> Unit,
-                   deleteSavedGameAction: (savedGame: SavedGame) -> Unit,
-                   modifier: Modifier = Modifier) {
-
+fun ChooseGameBody(
+    gameTypes: List<GameType>,
+    savedGames: List<SavedGame>,
+    chooseNewGameAction: (gameType: GameType) -> Unit,
+    loadGameAction: (savedGame: SavedGame) -> Unit,
+    deleteSavedGameAction: (savedGame: SavedGame) -> Unit,
+    modifier: Modifier = Modifier
+) {
     LazyColumn(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(Dimen.spacing),
         modifier = modifier
     ) {
         stickyHeader {
-            Column(verticalArrangement = Arrangement.spacedBy(Dimen.spacing),
+            Column(
+                verticalArrangement = Arrangement.spacedBy(Dimen.spacing),
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.background)
-                    .padding(Dimen.spacing)
+                    .padding(Dimen.spacingDouble)
             ) {
                 Text(stringResource(id = R.string.main_instruction))
                 gameTypes.forEach { gameType ->
-                    ButtonWithIcon(
+                    GameButton(
                         textRes = gameType.displayName,
-                        iconRes = gameType.icon,
+                        imageRes = gameType.largeIcon,
                         onClick = { chooseNewGameAction.invoke(gameType) }
                     )
                 }
@@ -146,15 +148,18 @@ fun ChooseGameBody(gameTypes: List<GameType>,
     }
 }
 
-
 @Composable
-fun SavedGame(savedGame: SavedGame,
-              loadGameAction: (savedGame: SavedGame) -> Unit,
-              deleteGameAction: (savedGame: SavedGame) -> Unit,
-              modifier: Modifier = Modifier) {
-    Row(verticalAlignment = Alignment.CenterVertically,
+fun SavedGame(
+    savedGame: SavedGame,
+    loadGameAction: (savedGame: SavedGame) -> Unit,
+    deleteGameAction: (savedGame: SavedGame) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Dimen.spacing),
-        modifier = modifier.padding(horizontal = Dimen.spacing)) {
+        modifier = modifier.padding(horizontal = Dimen.spacing)
+    ) {
         savedGame.gameType?.let {
             Icon(
                 painter = painterResource(id = it.icon),
@@ -192,7 +197,11 @@ fun SavedGamePreview() {
                 gameType = WelcomeToTheMoon,
                 lastModified = System.currentTimeMillis(),
                 stackSize = 21
-            ), {}, {}, Modifier)
+            ),
+            {},
+            {},
+            Modifier
+        )
     }
 }
 

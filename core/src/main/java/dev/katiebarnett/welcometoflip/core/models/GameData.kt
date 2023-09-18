@@ -7,6 +7,7 @@ import dev.katiebarnett.welcometoflip.core.theme.*
 object WelcomeToTheMoon: GameType(
     name = "WelcomeToTheMoon",
     icon = R.drawable.noun_rocket_4925595,
+    largeIcon = R.drawable.noun_moon_6086589,
     displayName = R.string.game_welcome_to_the_moon,
     solo = false
 )
@@ -14,6 +15,7 @@ object WelcomeToTheMoon: GameType(
 object WelcomeToTheMoonSolo: GameType(
     name = "WelcomeToTheMoonSolo",
     icon = R.drawable.noun_rocket_4925595,
+    largeIcon = R.drawable.noun_moon_6086589,
     displayName = R.string.game_welcome_to_the_moon_solo,
     solo = true
 )
