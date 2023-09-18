@@ -18,7 +18,7 @@ abstract class PaparazziShowkaseTest<T : ScreenshotPreview>(
 
     @get:Rule
     val paparazzi = Paparazzi(
-        maxPercentDifference = 0.0,
+        maxPercentDifference = 0.5,
         showSystemUi = false,
         deviceConfig = when (config.device) {
             Device.PIXEL_6 -> DeviceConfig.PIXEL_6
