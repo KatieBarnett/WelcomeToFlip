@@ -17,7 +17,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.katiebarnett.welcometoflip.GameViewModel
-import dev.katiebarnett.welcometoflip.R
 import dev.katiebarnett.welcometoflip.components.AboutActionIcon
 import dev.katiebarnett.welcometoflip.components.EndGameDialog
 import dev.katiebarnett.welcometoflip.components.GameContainer
@@ -26,7 +25,6 @@ import dev.katiebarnett.welcometoflip.components.Stack
 import dev.katiebarnett.welcometoflip.core.models.*
 import dev.katiebarnett.welcometoflip.theme.Dimen
 import dev.katiebarnett.welcometoflip.theme.WelcomeToFlipTheme
-import dev.katiebarnett.welcometoflip.util.Analytics
 import dev.katiebarnett.welcometoflip.util.TrackedScreen
 import dev.katiebarnett.welcometoflip.util.getStackSize
 import dev.katiebarnett.welcometoflip.util.observeLifecycle
@@ -34,12 +32,13 @@ import dev.katiebarnett.welcometoflip.util.trackScreenView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegularGameScreen(viewModel: GameViewModel,
-                      gameType: GameType,
-                      seed: Long? = null,
-                      initialPosition: Int? = null,
-                      navController: NavController = rememberNavController(),
-                      modifier: Modifier = Modifier
+fun RegularGameScreen(
+    viewModel: GameViewModel,
+    gameType: GameType,
+    seed: Long? = null,
+    initialPosition: Int? = null,
+    navController: NavController = rememberNavController(),
+    modifier: Modifier = Modifier
 ) {
     TrackedScreen {
         trackScreenView(name = gameType.name)
@@ -86,7 +85,7 @@ fun RegularGameScreen(viewModel: GameViewModel,
             modifier = Modifier.padding(innerPadding)
         )
     }
-    
+
     if (showEndGameDialog) {
         EndGameDialog(
             gameType = gameType,
@@ -107,22 +106,24 @@ fun RegularGameScreen(viewModel: GameViewModel,
 }
 
 @Composable
-fun RegularGame(position: Int,
-         stacks: List<List<Card>>,
-         modifier: Modifier = Modifier) {
+fun RegularGame(
+    position: Int,
+    stacks: List<List<Card>>,
+    modifier: Modifier = Modifier
+) {
     Column(
         verticalArrangement = Arrangement.spacedBy(Dimen.spacing),
-        modifier = modifier) {
+        modifier = modifier
+    ) {
         stacks.forEach { stack ->
             Stack(stack, position, Modifier.weight(1f))
-        }        
+        }
     }
 }
 
 @Preview(group = "Regular Game Screen", showBackground = true)
 @Composable
 fun RegularGamePreview() {
-
     val stacks = listOf(
         listOf(
             Card(Robot, Number1),
