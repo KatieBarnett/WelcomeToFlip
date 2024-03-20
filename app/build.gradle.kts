@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android )
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.dagger.hilt.android)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
@@ -17,12 +17,12 @@ android {
         minSdk = rootProject.extra["minSdk"] as Int
         targetSdk = rootProject.extra["targetSdk"] as Int
 
-        //Set the first two digits of the version code to the targetSdkVersion, such as 28.
-        //Set the next three digits to the product version, such as 152 for a product version of 1.5.2.
-        //Set the next two digits to build or release number, such as 01.
-        //Reserve the last two digits for a multi-APK variant, such as 00.
+        // Set the first two digits of the version code to the targetSdkVersion, such as 28.
+        // Set the next three digits to the product version, such as 152 for a product version of 1.5.2.
+        // Set the next two digits to build or release number, such as 01.
+        // Reserve the last two digits for a multi-APK variant, such as 00.
 
-        //33.001.02.00
+        // 33.001.02.00
 
         versionCode = 331000000
         versionName = rootProject.extra["appVersionName"] as String
@@ -50,7 +50,7 @@ android {
         debug {
             versionNameSuffix = ".debug"
         }
-        
+
         release {
             isMinifyEnabled = true
             isShrinkResources = true
@@ -114,4 +114,3 @@ dependencies {
 
     ksp(libs.hilt.compiler)
 }
-

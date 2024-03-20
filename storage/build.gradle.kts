@@ -1,12 +1,13 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android )
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.dagger.hilt.android)
     alias(libs.plugins.protobuf)
     alias(libs.plugins.ksp)
 }
 
 android {
+    namespace = "dev.katiebarnett.welcometoflip.storage"
     compileSdk = rootProject.extra["compileSdk"] as Int
 
     defaultConfig {
@@ -15,9 +16,8 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
-    buildTypes {        
+    buildTypes {
         debug {
-
         }
         release {
             isMinifyEnabled = true
@@ -34,7 +34,6 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    namespace = "dev.katiebarnett.welcometoflip.storage"
 }
 
 dependencies {
