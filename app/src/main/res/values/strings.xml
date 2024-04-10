@@ -8,7 +8,9 @@
     <string name="welcome_title">Welcome!</string>
     <string name="welcome_close">Close</string>
     <string name="welcome_dont_show_again">Don\'t show this again</string>
-    <string name="about_instructions">Before you start, this is not a game by itself.\n\nThis app is meant to be used with the Welcome To The Moon game to allow you to flip cards easily, save your game and save precious table space.\n\nYou must have access to the physical game in order to play, this just replaces the three stacks of number and action cards.\n\nAll mechanics, theme and gameplay of the game belong to the designers Alexis Allard &amp; Benoit Turpin.\n\nIf you don\'t already have the game, you can check it out at BoardGameGeek:\n</string>
+    <string name="about_instructions">Before you start, this is not a game by itself.\n\nThis app is meant to be used with the Welcome To series of games to allow you to flip cards easily, save your game, save precious table space or play on the move.\n\nYou must have access to the physical game in order to play, this just replaces the three stacks of number and action cards.\n\nAll mechanics, theme and gameplay of the game belong to the designers Alexis Allard &amp; Benoit Turpin.\n\nIf you don\'t already have the game, you can check it out at BoardGameGeek:\n</string>
+    <string name="bgg_link_wt_text">Welcome To on BGG</string>
+    <string name="bgg_link_wt">https://boardgamegeek.com/boardgame/233867/welcome-to</string>
     <string name="bgg_link_wttm_text">Welcome To The Moon on BGG</string>
     <string name="bgg_link_wttm">https://boardgamegeek.com/boardgame/339789/welcome-moon</string>
     <string name="welcome_remove_ads_1">Don\'t want to see ads? Click</string>
@@ -16,7 +18,6 @@
     <string name="welcome_remove_ads_3">to remove them.</string>
     <string name="welcome_coming_soon_title">Coming Soon</string>
     <string name="welcome_coming_soon_ul_1">Solo mode</string>
-    <string name="welcome_coming_soon_ul_2">Welcome To - The Original Game</string>
 
     <string name="about_subtitle">About the app</string>
     <string name="about_credits_graphics_title">The icons &amp; graphics used in this app were designed by:</string>
@@ -61,7 +62,10 @@
     <string name="solo_action_instruction">Select your cards to use:</string>
     <string name="solo_astra">Cards for Astra:</string>
 
-
     <string name="debug_showkase">Showkase Browser</string>
+
+    <string name="purchase_error_generic">Error processing purchase. Please try again.</string>
+    <string name="purchase_error_disconnected">Error connecting to billing system. Please try again.</string>
+    <string name="purchase_error_dismiss">OK</string>
     
 </resources>

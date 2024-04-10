@@ -32,7 +32,7 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    namespace = "dev.katiebarnett.welcometoflip.core"
+    namespace = "dev.veryniche.welcometoflip.core"
 }
 
 dependencies {

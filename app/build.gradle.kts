@@ -9,22 +9,15 @@ plugins {
 }
 
 android {
-    namespace = "dev.katiebarnett.welcometoflip"
+    namespace = "dev.veryniche.welcometoflip"
     compileSdk = rootProject.extra["compileSdk"] as Int
 
     defaultConfig {
-        applicationId = "dev.katiebarnett.welcometoflip"
+        applicationId = "dev.veryniche.welcometoflip"
         minSdk = rootProject.extra["minSdk"] as Int
         targetSdk = rootProject.extra["targetSdk"] as Int
 
-        // Set the first two digits of the version code to the targetSdkVersion, such as 28.
-        // Set the next three digits to the product version, such as 152 for a product version of 1.5.2.
-        // Set the next two digits to build or release number, such as 01.
-        // Reserve the last two digits for a multi-APK variant, such as 00.
-
-        // 33.001.02.00
-
-        versionCode = 331000000
+        versionCode = rootProject.extra["appVersionCode"] as Int
         versionName = rootProject.extra["appVersionName"] as String
 
 //        // Required because of https://commonsware.com/blog/2020/10/14/android-studio-4p1-library-modules-version-code.html
@@ -72,7 +65,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
     ksp {
         arg("skipPrivatePreviews", "true")
@@ -88,6 +81,8 @@ dependencies {
 
     implementation(libs.material)
 
+    implementation(libs.billing)
+
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
@@ -96,6 +91,7 @@ dependencies {
     implementation(libs.compose.foundation)
     implementation(libs.compose.material3)
     implementation(libs.compose.ui)
+    implementation(libs.lifecycle.runtime.compose)
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.animation)
@@ -108,6 +104,13 @@ dependencies {
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.runtime)
     implementation(libs.lifecycle.viewmodel.compose)
+
+    implementation(libs.splashscreen)
+
+    implementation(libs.timber)
+    
+//    implementation(libs.play.services.base)
+//    implementation(libs.play.services.ads)
 
     implementation(libs.showkase)
     ksp(libs.showkase.processor)

@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:92180024543:android:26abd611a49f5a8254ad6a",
         "android_client_info": {
-          "package_name": "dev.katiebarnett.welcometoflip"
+          "package_name": "dev.veryniche.welcometoflip"
         }
       },
       "oauth_client": [
@@ -38,7 +38,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:92180024543:android:464f329dfb43af9e54ad6a",
         "android_client_info": {
-          "package_name": "dev.katiebarnett.welcometoflip.dev"
+          "package_name": "dev.veryniche.welcometoflip.dev"
         }
       },
       "oauth_client": [

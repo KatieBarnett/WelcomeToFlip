@@ -1,4 +1,4 @@
-package dev.katiebarnett.welcometoflip.core
+package dev.veryniche.welcometoflip.core
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -17,6 +17,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("dev.katiebarnett.welcometoflip.core.test", appContext.packageName)
+        assertEquals("dev.veryniche.welcometoflip.core.test", appContext.packageName)
     }
 }

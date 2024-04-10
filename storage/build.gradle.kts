@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "dev.katiebarnett.welcometoflip.storage"
+    namespace = "dev.veryniche.welcometoflip.storage"
     compileSdk = rootProject.extra["compileSdk"] as Int
 
     defaultConfig {

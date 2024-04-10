@@ -34,17 +34,17 @@
 -keep class * extends com.google.crypto.tink.shaded.protobuf.GeneratedMessageLite { *; }
 
 # from Missing classes detected while running R8 message
--dontwarn dev.katiebarnett.welcometoflip.core.Constants
--dontwarn dev.katiebarnett.welcometoflip.core.ImageUtilKt
--dontwarn dev.katiebarnett.welcometoflip.core.di.DispatchersModule_ProvidesIODispatcherFactory
--dontwarn dev.katiebarnett.welcometoflip.storage.models.QRCodeItem
--dontwarn dev.katiebarnett.welcometoflip.storage.models.QRColor
--dontwarn dev.katiebarnett.welcometoflip.storage.models.QRColorKt
--dontwarn dev.katiebarnett.welcometoflip.storage.models.QRIcon
--dontwarn dev.katiebarnett.welcometoflip.storage.models.QRIconKt
--dontwarn dev.katiebarnett.welcometoflip.core.theme.Dimen
--dontwarn dev.katiebarnett.welcometoflip.core.theme.ThemeKt
--dontwarn dev.katiebarnett.welcometoflip.storage.QRCodesDataSource
--dontwarn dev.katiebarnett.welcometoflip.storage.QRCodesRepository
--dontwarn dev.katiebarnett.welcometoflip.storage.QrCodesSerializer
--dontwarn dev.katiebarnett.welcometoflip.storage.di.DataStoreModule_ProvidesQRCodesStoreFactory
+-dontwarn dev.veryniche.welcometoflip.core.Constants
+-dontwarn dev.veryniche.welcometoflip.core.ImageUtilKt
+-dontwarn dev.veryniche.welcometoflip.core.di.DispatchersModule_ProvidesIODispatcherFactory
+-dontwarn dev.veryniche.welcometoflip.storage.models.QRCodeItem
+-dontwarn dev.veryniche.welcometoflip.storage.models.QRColor
+-dontwarn dev.veryniche.welcometoflip.storage.models.QRColorKt
+-dontwarn dev.veryniche.welcometoflip.storage.models.QRIcon
+-dontwarn dev.veryniche.welcometoflip.storage.models.QRIconKt
+-dontwarn dev.veryniche.welcometoflip.core.theme.Dimen
+-dontwarn dev.veryniche.welcometoflip.core.theme.ThemeKt
+-dontwarn dev.veryniche.welcometoflip.storage.QRCodesDataSource
+-dontwarn dev.veryniche.welcometoflip.storage.QRCodesRepository
+-dontwarn dev.veryniche.welcometoflip.storage.QrCodesSerializer
+-dontwarn dev.veryniche.welcometoflip.storage.di.DataStoreModule_ProvidesQRCodesStoreFactory

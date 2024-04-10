@@ -1,5 +1,5 @@
 syntax = "proto3";
-option java_package = "dev.katiebarnett.welcometoflip.storage.models";
+option java_package = "dev.veryniche.welcometoflip.storage.models";
 option java_multiple_files = true;
 
 
