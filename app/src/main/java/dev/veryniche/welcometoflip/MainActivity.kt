@@ -21,7 +21,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
-import dev.katiebarnett.welcometoflip.purchase.PurchaseManager
+import dev.veryniche.welcometoflip.purchase.PurchaseManager
 import dev.veryniche.welcometoflip.components.WelcomeDialog
 import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
 

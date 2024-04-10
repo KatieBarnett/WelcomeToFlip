@@ -3,6 +3,7 @@ package dev.veryniche.welcometoflip.components
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,8 +11,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
@@ -25,10 +28,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.veryniche.welcometoflip.core.R
@@ -105,10 +110,12 @@ fun ThemedIconButton(
 fun GameButton(
     @StringRes textRes: Int,
     @DrawableRes imageRes: Int,
+    purchased: Boolean,
+    solo: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    ElevatedCard (
+    ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
         ),
@@ -116,28 +123,61 @@ fun GameButton(
             containerColor = MaterialTheme.colorScheme.primary,
         ),
         onClick = onClick,
-        modifier = modifier.aspectRatio(3 / 2f)
+        modifier = modifier.aspectRatio(
+            if (purchased) {
+                3 / 1.8f
+            } else {
+                3 / 1f
+            }
+        )
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier) {
-            Text(
-                stringResource(textRes),
-                style = MaterialTheme.typography.displayMedium,
-                color = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(Dimen.spacingDouble)
-            )
-            Box(Modifier.weight(0.66f)) {
-                Image(
-                    painterResource(imageRes),
-                    contentDescription = stringResource(textRes),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
-                    contentScale = ContentScale.Crop,
+        Box(modifier = Modifier) {
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier) {
+                Text(
+                    stringResource(textRes),
+                    style = if (purchased) {
+                        MaterialTheme.typography.displayMedium
+                    } else {
+                        MaterialTheme.typography.displaySmall
+                    },
+                    color = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier
-                        .alpha(0.4f)
-                        .fillMaxHeight()
-                        .wrapContentWidth(Alignment.Start, unbounded = true)
-                        .aspectRatio(1f)
+                        .weight(1f)
+                        .padding(Dimen.spacingDouble)
+                )
+                Box(
+                    Modifier.weight(
+                        if (purchased) {
+                            0.66f
+                        } else {
+                            0.2f
+                        }
+                    )
+                ) {
+                    Image(
+                        painterResource(imageRes),
+                        contentDescription = stringResource(textRes),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .alpha(0.4f)
+                            .fillMaxHeight()
+                            .wrapContentWidth(Alignment.Start, unbounded = true)
+                            .aspectRatio(1f)
+                    )
+                }
+            }
+            if (solo) {
+                Text(
+                    text = stringResource(id = dev.veryniche.welcometoflip.R.string.game_solo),
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .rotate(-45f)
+                        .fillMaxWidth()
+                        .padding(Dimen.spacing)
+                        .background(MaterialTheme.colorScheme.tertiaryContainer)
                 )
             }
         }
@@ -178,7 +218,39 @@ fun IconButtonPreview() {
     }
 }
 
-@Preview(group = "Buttons", showBackground = true)
+@Preview(group = "Game Buttons", showBackground = true)
+@Composable
+fun GameButtonPurchasedPreview() {
+    WelcomeToFlipTheme {
+        Box(Modifier.padding(Dimen.spacingDouble)) {
+            GameButton(
+                textRes = R.string.game_welcome_to_the_moon,
+                R.drawable.noun_moon_6086589,
+                purchased = true,
+                solo = false,
+                onClick = {}
+            )
+        }
+    }
+}
+
+@Preview(group = "Game Buttons", showBackground = true)
+@Composable
+fun GameButtonSoloPurchasedPreview() {
+    WelcomeToFlipTheme {
+        Box(Modifier.padding(Dimen.spacingDouble)) {
+            GameButton(
+                textRes = R.string.game_welcome_to_the_moon,
+                R.drawable.noun_moon_6086589,
+                purchased = true,
+                solo = true,
+                onClick = {}
+            )
+        }
+    }
+}
+
+@Preview(group = "Game Buttons", showBackground = true)
 @Composable
 fun GameButtonPreview() {
     WelcomeToFlipTheme {
@@ -186,6 +258,24 @@ fun GameButtonPreview() {
             GameButton(
                 textRes = R.string.game_welcome_to_the_moon,
                 R.drawable.noun_moon_6086589,
+                purchased = false,
+                solo = false,
+                onClick = {}
+            )
+        }
+    }
+}
+
+@Preview(group = "Game Buttons", showBackground = true)
+@Composable
+fun GameButtonSoloPreview() {
+    WelcomeToFlipTheme {
+        Box(Modifier.padding(Dimen.spacingDouble)) {
+            GameButton(
+                textRes = R.string.game_welcome_to_the_moon,
+                R.drawable.noun_moon_6086589,
+                purchased = false,
+                solo = true,
                 onClick = {}
             )
         }

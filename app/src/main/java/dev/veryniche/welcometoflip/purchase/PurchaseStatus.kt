@@ -1,4 +1,4 @@
-package dev.katiebarnett.welcometoflip.purchase
+package dev.veryniche.welcometoflip.purchase
 
 data class PurchaseStatus(
     val isAdRemovalPurchased: Boolean,

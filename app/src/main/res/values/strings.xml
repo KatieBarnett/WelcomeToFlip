@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Welcome To Flip</string>
     <string name="main_instruction">Choose which game to play:</string>
+    <string name="main_instruction_purchase">Available to purchase:</string>
     <string name="saved_instruction">Select from a previously started game:</string>
     <string name="navigate_back">Back</string>
     <string name="navigate_about">About</string>
@@ -50,6 +51,8 @@
     <string name="action_deck_alt">Action Deck</string>
 
     <string name="empty">Empty stack</string>
+
+    <string name="game_solo">SOLO</string>
     
     <string name="date_time_format">dd-MM-yyyy h:mma</string>
     

@@ -4,12 +4,31 @@ import dev.veryniche.welcometoflip.core.R
 import dev.veryniche.welcometoflip.core.theme.*
 
 
+object WelcomeToClassic: GameType(
+    name = "WelcomeToClassic",
+    icon = R.drawable.noun_rocket_4925595,
+    largeIcon = R.drawable.noun_moon_6086589,
+    displayName = R.string.game_welcome_to_classic,
+    solo = false,
+    purchased = true
+)
+
+object WelcomeToClassicSolo: GameType(
+    name = "WelcomeToClassic",
+    icon = R.drawable.noun_rocket_4925595,
+    largeIcon = R.drawable.noun_moon_6086589,
+    displayName = R.string.game_welcome_to_classic_solo,
+    solo = true,
+    purchased = true
+)
+
 object WelcomeToTheMoon: GameType(
-    name = "WelcomeToTheMoon",
+    name = "WelcomeToTheMoonSolo",
     icon = R.drawable.noun_rocket_4925595,
     largeIcon = R.drawable.noun_moon_6086589,
     displayName = R.string.game_welcome_to_the_moon,
-    solo = false
+    solo = false,
+    purchased = false,
 )
 
 object WelcomeToTheMoonSolo: GameType(
@@ -17,7 +36,8 @@ object WelcomeToTheMoonSolo: GameType(
     icon = R.drawable.noun_rocket_4925595,
     largeIcon = R.drawable.noun_moon_6086589,
     displayName = R.string.game_welcome_to_the_moon_solo,
-    solo = true
+    solo = true,
+    purchased = false,
 )
 
 object Plant: Action(R.drawable.noun_plant_4982354, ActionPlant)

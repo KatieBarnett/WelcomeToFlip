@@ -1,5 +1,7 @@
 <resources>
 
+    <string name="game_welcome_to_classic">Welcome To</string>
+    <string name="game_welcome_to_classic_solo">Welcome To - Solo</string>
     <string name="game_welcome_to_the_moon">Welcome To The Moon</string>
     <string name="game_welcome_to_the_moon_solo">Welcome To The Moon - Solo</string>
     

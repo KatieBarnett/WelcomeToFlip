@@ -1,6 +1,4 @@
-package dev.katiebarnett.welcometoflip.purchase
-
-import dev.veryniche.welcometoflip.purchase.Products
+package dev.veryniche.welcometoflip.purchase
 
 fun purchasePro(manager: PurchaseManager,
                 onError: (message: Int) -> Unit

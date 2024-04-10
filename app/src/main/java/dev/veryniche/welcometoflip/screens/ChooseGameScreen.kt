@@ -1,12 +1,10 @@
 package dev.veryniche.welcometoflip.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -42,6 +40,7 @@ import dev.veryniche.welcometoflip.components.ThemedIconButton
 import dev.veryniche.welcometoflip.core.models.GameType
 import dev.veryniche.welcometoflip.core.models.SavedGame
 import dev.veryniche.welcometoflip.core.models.WelcomeToTheMoon
+import dev.veryniche.welcometoflip.storage.models.game
 import dev.veryniche.welcometoflip.theme.Dimen
 import dev.veryniche.welcometoflip.theme.Dimen.AppBar.CollapsedTextSize
 import dev.veryniche.welcometoflip.theme.Dimen.AppBar.ExpandedTextSize
@@ -125,28 +124,36 @@ fun ChooseGameBody(
     LazyColumn(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(Dimen.spacing),
-        modifier = modifier
+        modifier = modifier.padding(Dimen.spacing)
     ) {
-        stickyHeader {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(Dimen.spacing),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(Dimen.spacingDouble)
-            ) {
-                Text(stringResource(id = R.string.main_instruction))
-                gameTypes.forEach { gameType ->
-                    GameButton(
-                        textRes = gameType.displayName,
-                        imageRes = gameType.largeIcon,
-                        onClick = { chooseNewGameAction.invoke(gameType) }
-                    )
-                }
-                Text(stringResource(id = R.string.saved_instruction))
-            }
+        item {
+            Text(stringResource(id = R.string.main_instruction))
+        }
+        items(gameTypes.filter { it.purchased }) { gameType ->
+            GameButton(
+                textRes = gameType.displayName,
+                imageRes = gameType.largeIcon,
+                purchased = true,
+                solo = gameType.solo,
+                onClick = { chooseNewGameAction.invoke(gameType) }
+            )
+        }
+        item {
+            Text(stringResource(id = R.string.main_instruction_purchase))
+        }
+        items(gameTypes.filter { !it.purchased && !it.solo }) { gameType ->
+            GameButton(
+                textRes = gameType.displayName,
+                imageRes = gameType.largeIcon,
+                purchased = false,
+                solo = false,
+                onClick = { chooseNewGameAction.invoke(gameType) }
+            )
         }
         if (savedGames.isNotEmpty()) {
+            item {
+                Text(stringResource(id = R.string.saved_instruction))
+            }
             items(savedGames) { game ->
                 SavedGame(game, loadGameAction, deleteSavedGameAction)
             }

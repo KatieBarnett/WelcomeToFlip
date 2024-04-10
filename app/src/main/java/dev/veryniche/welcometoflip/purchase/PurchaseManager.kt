@@ -1,4 +1,4 @@
-package dev.katiebarnett.welcometoflip.purchase
+package dev.veryniche.welcometoflip.purchase
 
 import android.app.Activity
 import com.android.billingclient.api.BillingClient
@@ -14,7 +14,6 @@ import com.android.billingclient.api.queryProductDetails
 import com.android.billingclient.api.queryPurchasesAsync
 import com.google.common.collect.ImmutableList
 import dev.veryniche.welcometoflip.R
-import dev.veryniche.welcometoflip.purchase.Products
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
