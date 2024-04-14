@@ -43,6 +43,7 @@ dependencies {
     implementation(libs.hilt)
 
     implementation(libs.datastore)
+    implementation(libs.datastore.preferences)
     implementation(libs.protobuf.kotlin.lite)
 
     ksp(libs.hilt.compiler)

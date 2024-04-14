@@ -15,7 +15,8 @@ import dev.veryniche.welcometoflip.screens.SoloGameScreen
 @Composable
 fun WelcomeToFlipNavHost(
     navController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    mainViewModel: MainViewModel
 ) {
     NavHost(
         navController = navController,
@@ -24,7 +25,8 @@ fun WelcomeToFlipNavHost(
     ) {
         composable(route = ChooseGame.route) {
             ChooseGameScreen(
-                navController = navController
+                navController = navController,
+                viewModel = mainViewModel
             )
         }
         composable(route = About.route) {

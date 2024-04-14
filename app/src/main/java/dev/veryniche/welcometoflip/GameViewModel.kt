@@ -22,7 +22,7 @@ open class GameViewModel @Inject constructor(
     private val deckRepository: DeckRepository,
     private val savedGamesRepository: SavedGamesRepository
 ) : ViewModel(), DefaultLifecycleObserver {
-    
+
     companion object {
         private const val STACK_COUNT = 3
     }
@@ -30,13 +30,13 @@ open class GameViewModel @Inject constructor(
     lateinit var gameType: GameType
     protected var gameSeed: Long = 0L
     lateinit var stacks: List<List<Card>>
-    
+
     open val initialPosition
         get() = 0
-    
+
     private val _position = MutableLiveData(initialPosition)
     val position: LiveData<Int> = _position
-    
+
     private var shouldSaveGameOnPause = true
 
     val advancePositionEnabled = position.map {
@@ -46,7 +46,7 @@ open class GameViewModel @Inject constructor(
     val isEndGame = advancePositionEnabled.map {
         !it
     }
-    
+
     open fun initialiseGame(gameType: GameType, gameSeed: Long, position: Int) {
         // Only initialise if not already initialised
         if (!this::stacks.isInitialized) {
@@ -61,7 +61,7 @@ open class GameViewModel @Inject constructor(
             }
         }
     }
-    
+
     open fun advancePosition(): Int {
         val newPosition = (_position.value ?: 0) + 1
         _position.postValue(newPosition)
@@ -72,7 +72,7 @@ open class GameViewModel @Inject constructor(
         stacks = stacks.map { it.shuffled() }
         _position.postValue(0)
     }
-    
+
     fun endGame(onEnd: () -> Unit) {
         shouldSaveGameOnPause = false
         viewModelScope.launch {
@@ -80,7 +80,7 @@ open class GameViewModel @Inject constructor(
             onEnd.invoke()
         }
     }
-    
+
     fun saveGame() {
         viewModelScope.launch {
             savedGamesRepository.saveGame(
@@ -98,7 +98,4 @@ open class GameViewModel @Inject constructor(
             saveGame()
         }
     }
-    
-    
-
 }

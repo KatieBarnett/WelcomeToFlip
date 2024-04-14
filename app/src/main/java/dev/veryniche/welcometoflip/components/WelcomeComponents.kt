@@ -13,8 +13,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -31,16 +33,24 @@ import dev.veryniche.welcometoflip.util.RemoveAdsText
 import dev.veryniche.welcometoflip.util.UnorderedListText
 
 @Composable
-fun WelcomeDialog(navController: NavController, onDismissRequest: () -> Unit) {
+fun WelcomeDialog(
+    navController: NavController,
+    onDismissRequest: () -> Unit,
+    saveShowWelcomeOnStart: (Boolean) -> Unit
+) {
     AnimatedTransitionDialog(onDismissRequest = onDismissRequest) { dialogHelper ->
-        WelcomeDialogContent(navController, onDismissRequest)
+        WelcomeDialogContent(navController, onDismissRequest, saveShowWelcomeOnStart)
     }
 }
 
 @Composable
-fun WelcomeDialogContent(navController: NavController, onDismissRequest: () -> Unit) {
+fun WelcomeDialogContent(
+    navController: NavController,
+    onDismissRequest: () -> Unit,
+    saveWelcomePreference: (Boolean) -> Unit
+) {
     val scrollableState = rememberScrollState()
-    val checkedState = remember { mutableStateOf(false) }
+    var checkedState by remember { mutableStateOf(false) }
     Surface(
         shape = RoundedCornerShape(Dimen.Dialog.radius),
         color = MaterialTheme.colorScheme.surface,
@@ -83,14 +93,15 @@ fun WelcomeDialogContent(navController: NavController, onDismissRequest: () -> U
                     text = stringResource(id = R.string.welcome_dont_show_again)
                 )
                 Checkbox(
-                    checked = checkedState.value,
-                    onCheckedChange = { checkedState.value = it }
+                    checked = checkedState,
+                    onCheckedChange = { checkedState = it }
                 )
             }
             ThemedButton(content = {
                 Text(stringResource(id = R.string.welcome_close))
             }, onClick = {
-                onDismissRequest.invoke(/*checkedState.value*/)
+                saveWelcomePreference.invoke(checkedState)
+                onDismissRequest.invoke()
             })
         }
     }
@@ -100,6 +111,6 @@ fun WelcomeDialogContent(navController: NavController, onDismissRequest: () -> U
 @Composable
 fun WelcomeDialogPreview() {
     WelcomeToFlipTheme {
-        WelcomeDialogContent(rememberNavController(), {})
+        WelcomeDialogContent(rememberNavController(), {}, {})
     }
 }

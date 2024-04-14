@@ -57,9 +57,9 @@ import dev.veryniche.welcometoflip.core.R as Rcore
 @Composable
 fun ChooseGameScreen(
     navController: NavController = rememberNavController(),
+    viewModel: MainViewModel,
     modifier: Modifier = Modifier
 ) {
-    val viewModel: MainViewModel = hiltViewModel()
     val savedGames: List<SavedGame> by viewModel.savedGames.collectAsState(initial = emptyList())
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 

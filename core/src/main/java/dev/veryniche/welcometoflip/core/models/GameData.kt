@@ -4,7 +4,7 @@ import dev.veryniche.welcometoflip.core.R
 import dev.veryniche.welcometoflip.core.theme.*
 
 
-object WelcomeToClassic: GameType(
+data object WelcomeToClassic: GameType(
     name = "WelcomeToClassic",
     icon = R.drawable.noun_rocket_4925595,
     largeIcon = R.drawable.noun_moon_6086589,
@@ -13,7 +13,7 @@ object WelcomeToClassic: GameType(
     purchased = true
 )
 
-object WelcomeToClassicSolo: GameType(
+data object WelcomeToClassicSolo: GameType(
     name = "WelcomeToClassic",
     icon = R.drawable.noun_rocket_4925595,
     largeIcon = R.drawable.noun_moon_6086589,
@@ -22,7 +22,7 @@ object WelcomeToClassicSolo: GameType(
     purchased = true
 )
 
-object WelcomeToTheMoon: GameType(
+data object WelcomeToTheMoon: GameType(
     name = "WelcomeToTheMoonSolo",
     icon = R.drawable.noun_rocket_4925595,
     largeIcon = R.drawable.noun_moon_6086589,
@@ -31,7 +31,7 @@ object WelcomeToTheMoon: GameType(
     purchased = false,
 )
 
-object WelcomeToTheMoonSolo: GameType(
+data object WelcomeToTheMoonSolo: GameType(
     name = "WelcomeToTheMoonSolo",
     icon = R.drawable.noun_rocket_4925595,
     largeIcon = R.drawable.noun_moon_6086589,
@@ -40,16 +40,16 @@ object WelcomeToTheMoonSolo: GameType(
     purchased = false,
 )
 
-object Plant: Action(R.drawable.noun_plant_4982354, ActionPlant)
-object Water: Action(R.drawable.noun_water_drop_1506321, ActionWater)
-object Lightning: Action(R.drawable.noun_thunder_4978759, ActionLightning)
-object Robot: Action(R.drawable.noun_robot_4971447, ActionRobot)
-object Astronaut: Action(R.drawable.noun_astronaut_2801977, ActionAstronaut)
-object X: Action(R.drawable.noun_remove_schedule_4359088, ActionX)
+data object Plant: Action(R.drawable.noun_plant_4982354, ActionPlant)
+data object Water: Action(R.drawable.noun_water_drop_1506321, ActionWater)
+data object Lightning: Action(R.drawable.noun_thunder_4978759, ActionLightning)
+data object Robot: Action(R.drawable.noun_robot_4971447, ActionRobot)
+data object Astronaut: Action(R.drawable.noun_astronaut_2801977, ActionAstronaut)
+data object X: Action(R.drawable.noun_remove_schedule_4359088, ActionX)
 
-object AstraA: Letter(R.drawable.letter_a, DuskyPink)
-object AstraB: Letter(R.drawable.letter_b, DuskyPurple)
-object AstraC: Letter(R.drawable.letter_c, DuskyYellow)
+data object AstraA: Letter(R.drawable.letter_a, DuskyPink)
+data object AstraB: Letter(R.drawable.letter_b, DuskyPurple)
+data object AstraC: Letter(R.drawable.letter_c, DuskyYellow)
 
 val welcomeToTheMoonDeck = listOf(
     Card(Robot, Number1),
