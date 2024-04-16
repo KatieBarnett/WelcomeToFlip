@@ -25,20 +25,6 @@ android {
 //        buildConfigField 'String', 'APP_VERSION_NAME', "\"$app_version_name\""
     }
 
-    flavorDimensions.add("env")
-
-    productFlavors {
-        create("dev") {
-            applicationIdSuffix = ".dev"
-            versionNameSuffix = ".dev"
-            dimension = "env"
-        }
-
-        create("prod") {
-            dimension = "env"
-        }
-    }
-
     buildTypes {
         debug {
             versionNameSuffix = ".debug"

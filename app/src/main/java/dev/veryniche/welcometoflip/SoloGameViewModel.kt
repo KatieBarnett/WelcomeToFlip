@@ -4,6 +4,9 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.veryniche.welcometoflip.core.models.Action
 import dev.veryniche.welcometoflip.core.models.Card
@@ -11,19 +14,26 @@ import dev.veryniche.welcometoflip.core.models.GameType
 import dev.veryniche.welcometoflip.core.models.Letter
 import dev.veryniche.welcometoflip.storage.SavedGamesRepository
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import kotlin.random.Random
 
-@HiltViewModel
-class SoloGameViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = SoloGameViewModel.SoloGameViewModelFactory::class)
+class SoloGameViewModel @AssistedInject constructor(
+    @Assisted override val gameType: GameType,
+    @Assisted override val gameSeed: Long,
+    @Assisted override val initialPosition: Int,
     private val deckRepository: DeckRepository,
     private val savedGamesRepository: SavedGamesRepository
-) : GameViewModel(deckRepository, savedGamesRepository), DefaultLifecycleObserver {
+) : GameViewModel(gameType, gameSeed, initialPosition, deckRepository, savedGamesRepository), DefaultLifecycleObserver {
+
+    @AssistedFactory
+    interface SoloGameViewModelFactory {
+        fun create(gameType: GameType, gameSeed: Long, initialPosition: Int): SoloGameViewModel
+    }
 
     companion object {
         private const val ACTIVE_CARD_COUNT = 3
     }
-    
+
     val phase = position.map {
         if (it < 0) {
             SoloGamePhase.SETUP
@@ -32,34 +42,27 @@ class SoloGameViewModel @Inject constructor(
         }
     }
 
-    override val initialPosition: Int
-        get() = -1
-    
     lateinit var soloEffectCards: List<Card>
-    
+
     private val soloStack = mutableListOf<Card>()
     private val discardStack = mutableListOf<Card>()
     private val astraCards = mutableMapOf<Action, Int>()
     private val effectCardsDrawn = mutableListOf<Letter>()
-    
+
     val currentState = MutableLiveData(SoloState())
     val activeCardToAstra = currentState.map {
-        null//.it.activeCardsAvailable
+        null // .it.activeCardsAvailable
     }
-    
-    override fun initialiseGame(gameType: GameType, gameSeed: Long, position: Int) {
-        super.initialiseGame(gameType, gameSeed, position)
-        if (!this::soloEffectCards.isInitialized) {
-            viewModelScope.launch {
-                soloEffectCards = deckRepository.getSoloEffectCards(gameType)
-            }
+
+    init {
+        // TODO - does super init get called?
+        viewModelScope.launch {
+            soloEffectCards = deckRepository.getSoloEffectCards(gameType)
         }
-        if (position != initialPosition) {
-            setupSoloDrawStack()
-            setupAstraCards()
-        }
+        setupSoloDrawStack()
+        setupAstraCards()
     }
-    
+
     fun setupSoloDrawStack() {
         viewModelScope.launch {
             val bottomStack = stacks.last().toMutableList()
@@ -78,7 +81,7 @@ class SoloGameViewModel @Inject constructor(
             soloStack.addAll(combinedStack)
         }
     }
-    
+
     fun setupAstraCards() {
         astraCards.clear()
         deckRepository.getAvailableActions(gameType).forEach {
@@ -103,7 +106,7 @@ class SoloGameViewModel @Inject constructor(
         )
         return newPosition
     }
-    
+
     fun handleActiveCardClick(index: Int) {
         currentState.value?.let { state ->
             state.activeCards.getOrNull(index)?.let { discardedCard ->
@@ -112,17 +115,19 @@ class SoloGameViewModel @Inject constructor(
             }
         }
     }
-    
+
     fun checkRemainingActiveCards() {
         currentState.value?.let { state ->
             if (state.cardsDiscarded.size == state.activeCards.size - 1) {
-                currentState.postValue(state.copy(cardDiscardedToAstra = state.activeCards.getIndexOfCardNotInList(state.cardsDiscarded)))
+                currentState.postValue(
+                    state.copy(cardDiscardedToAstra = state.activeCards.getIndexOfCardNotInList(state.cardsDiscarded))
+                )
             }
         }
     }
-    
+
     fun List<Any>.getIndexOfCardNotInList(checkList: List<Int>): Int? {
-        forEachIndexed { index, _ -> 
+        forEachIndexed { index, _ ->
             if (!checkList.contains(index)) {
                 return index
             }

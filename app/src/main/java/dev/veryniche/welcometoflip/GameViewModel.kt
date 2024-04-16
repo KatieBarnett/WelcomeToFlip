@@ -7,32 +7,37 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.veryniche.welcometoflip.core.models.Card
 import dev.veryniche.welcometoflip.core.models.GameType
 import dev.veryniche.welcometoflip.storage.SavedGamesRepository
 import dev.veryniche.welcometoflip.util.getStackSize
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import kotlin.math.ceil
 import kotlin.random.Random
 
-@HiltViewModel
-open class GameViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = GameViewModel.GameViewModelFactory::class)
+open class GameViewModel @AssistedInject constructor(
+    @Assisted open val gameType: GameType,
+    @Assisted open val gameSeed: Long,
+    @Assisted open val initialPosition: Int,
     private val deckRepository: DeckRepository,
     private val savedGamesRepository: SavedGamesRepository
 ) : ViewModel(), DefaultLifecycleObserver {
+
+    @AssistedFactory
+    interface GameViewModelFactory {
+        fun create(gameType: GameType, gameSeed: Long, initialPosition: Int): GameViewModel
+    }
 
     companion object {
         private const val STACK_COUNT = 3
     }
 
-    lateinit var gameType: GameType
-    protected var gameSeed: Long = 0L
-    lateinit var stacks: List<List<Card>>
-
-    open val initialPosition
-        get() = 0
+    var stacks: List<List<Card>> = listOf()
 
     private val _position = MutableLiveData(initialPosition)
     val position: LiveData<Int> = _position
@@ -47,18 +52,12 @@ open class GameViewModel @Inject constructor(
         !it
     }
 
-    open fun initialiseGame(gameType: GameType, gameSeed: Long, position: Int) {
-        // Only initialise if not already initialised
-        if (!this::stacks.isInitialized) {
-            this.gameType = gameType
-            this.gameSeed = gameSeed
-            this._position.postValue(position)
-            viewModelScope.launch {
-                val shuffledDeck = deckRepository.getDeck(gameType).shuffled(Random(gameSeed))
-                val stackSize = ceil((shuffledDeck.size.toFloat() / STACK_COUNT).toDouble()).toInt()
-                // TODO Handle unequal stacks
-                stacks = shuffledDeck.chunked(stackSize)
-            }
+    init {
+        viewModelScope.launch {
+            val shuffledDeck = deckRepository.getDeck(gameType).shuffled(Random(gameSeed))
+            val stackSize = ceil((shuffledDeck.size.toFloat() / STACK_COUNT).toDouble()).toInt()
+            // TODO Handle unequal stacks
+            stacks = shuffledDeck.chunked(stackSize)
         }
     }
 

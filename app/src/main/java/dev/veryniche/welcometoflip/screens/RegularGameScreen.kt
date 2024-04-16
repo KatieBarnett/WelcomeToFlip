@@ -12,7 +12,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -49,8 +48,6 @@ import dev.veryniche.welcometoflip.util.trackScreenView
 fun RegularGameScreen(
     viewModel: GameViewModel,
     gameType: GameType,
-    seed: Long? = null,
-    initialPosition: Int? = null,
     navController: NavController = rememberNavController(),
     modifier: Modifier = Modifier
 ) {
@@ -58,18 +55,12 @@ fun RegularGameScreen(
         trackScreenView(name = gameType.name)
     }
 
-    val position by viewModel.position.observeAsState(initialPosition ?: viewModel.initialPosition)
+    val position by viewModel.position.observeAsState(viewModel.initialPosition)
     val advancePositionEnabled by viewModel.advancePositionEnabled.observeAsState(true)
     val isEndGame by viewModel.isEndGame.observeAsState(false)
-    val gameSeed by rememberSaveable { mutableStateOf(seed ?: System.currentTimeMillis()) }
-
-    var showEndGameDialog by remember { mutableStateOf(false) }
-    if (isEndGame && showEndGameDialog == false) {
-        showEndGameDialog = true
-    }
+    var showEndGameDialog by remember(isEndGame) { mutableStateOf(isEndGame) }
 
     viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
-    viewModel.initialiseGame(gameType, gameSeed, position)
 
     Scaffold(
         topBar = {

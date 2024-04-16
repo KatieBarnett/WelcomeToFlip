@@ -37,22 +37,26 @@ fun WelcomeToFlipNavHost(
         composable(route = Game.routeWithArgs, arguments = Game.arguments, deepLinks = Game.deepLinks) {
             // TODO handle navigation errors
             it.arguments?.getString(Game.gameTypeArg)?.mapToGameType()?.let { gameType ->
-                val seed = it.arguments?.getString(Game.seedArg)?.toLong()
-                val position = it.arguments?.getString(Game.positionArg)?.toInt()
+                val seed = it.arguments?.getString(Game.seedArg)?.toLong() ?: System.currentTimeMillis()
+                val position = it.arguments?.getString(Game.positionArg)?.toInt() ?: 0
+
                 if (gameType.solo) {
+                    val soloGameViewModel =
+                        hiltViewModel<SoloGameViewModel, SoloGameViewModel.SoloGameViewModelFactory> { factory ->
+                            factory.create(gameType, seed, position)
+                        }
                     SoloGameScreen(
-                        viewModel = hiltViewModel(),
+                        viewModel = soloGameViewModel,
                         gameType = gameType,
-                        seed = seed,
-                        initialPosition = position,
                         onGameEnd = { navController.navigateUp() }
                     )
                 } else {
+                    val gameViewModel = hiltViewModel<GameViewModel, GameViewModel.GameViewModelFactory> { factory ->
+                        factory.create(gameType, seed, position)
+                    }
                     RegularGameScreen(
-                        viewModel = hiltViewModel(),
+                        viewModel = gameViewModel,
                         gameType = gameType,
-                        seed = seed,
-                        initialPosition = position,
                         navController = navController
                     )
                 }

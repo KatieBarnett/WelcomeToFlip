@@ -53,8 +53,6 @@ import dev.veryniche.welcometoflip.util.trackScreenView
 @Composable
 fun SoloGameScreen(viewModel: SoloGameViewModel,
                  gameType: GameType,
-                 seed: Long? = null,
-                 initialPosition: Int? = null,
                  onGameEnd: () -> Unit,
                  modifier: Modifier = Modifier
 ) {
@@ -62,10 +60,9 @@ fun SoloGameScreen(viewModel: SoloGameViewModel,
         trackScreenView(name = gameType.name)
     }
 
-    val position by viewModel.position.observeAsState(initialPosition ?: viewModel.initialPosition)
+    val position by viewModel.position.observeAsState(viewModel.initialPosition)
     val advancePositionEnabled by viewModel.advancePositionEnabled.observeAsState(true)
     val isEndGame by viewModel.isEndGame.observeAsState(false)
-    val gameSeed by rememberSaveable { mutableStateOf(seed ?: System.currentTimeMillis()) }
 
     var showEndGameDialog by remember { mutableStateOf(false) }
     if (isEndGame && showEndGameDialog == false) {
@@ -77,7 +74,6 @@ fun SoloGameScreen(viewModel: SoloGameViewModel,
     val activeCardToAstra by viewModel.activeCardToAstra.observeAsState(null)
 
     viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
-    viewModel.initialiseGame(gameType, gameSeed, position)
 
     SoloGameContainer(
         displayPosition = position + 1,
