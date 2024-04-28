@@ -48,13 +48,15 @@ class MainActivity : ComponentActivity() {
 
             val purchasedProducts by purchaseManager.purchases.collectAsStateWithLifecycle()
             var showPurchaseErrorMessage by rememberSaveable { mutableStateOf<Int?>(null) }
-            WelcomeToFlipApp()
+            WelcomeToFlipApp(purchasedProducts)
         }
     }
 
     @Composable
-    fun WelcomeToFlipApp() {
-        val viewModel: MainViewModel = hiltViewModel()
+    fun WelcomeToFlipApp(purchasedProducts: List<String>) {
+        val viewModel: MainViewModel = hiltViewModel<MainViewModel, MainViewModel.MainViewModelFactory> { factory ->
+            factory.create(purchasedProducts)
+        }
         WelcomeToFlipTheme {
             val navController = rememberNavController()
 
@@ -80,6 +82,6 @@ class MainActivity : ComponentActivity() {
     @Preview(group = "Full App", showSystemUi = true, showBackground = true)
     @Composable
     fun DefaultPreview() {
-        WelcomeToFlipApp()
+        WelcomeToFlipApp(listOf())
     }
 }

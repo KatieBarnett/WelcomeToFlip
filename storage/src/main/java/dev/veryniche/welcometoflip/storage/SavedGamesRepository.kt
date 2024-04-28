@@ -22,6 +22,7 @@ class SavedGamesRepository @Inject constructor(
                 stackSize = stackSize,
                 gameType = gameType,
                 seed = seed,
+                solo = false, //solo,
                 lastModified = System.currentTimeMillis()
             )
         )

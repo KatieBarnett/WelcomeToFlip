@@ -27,14 +27,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.veryniche.welcometoflip.Game
 import dev.veryniche.welcometoflip.MainViewModel
 import dev.veryniche.welcometoflip.R
 import dev.veryniche.welcometoflip.components.AboutActionIcon
-import dev.veryniche.welcometoflip.components.GameButton
+import dev.veryniche.welcometoflip.components.GameTile
 import dev.veryniche.welcometoflip.components.NavigationIcon
 import dev.veryniche.welcometoflip.components.ThemedIconButton
 import dev.veryniche.welcometoflip.core.models.GameType
@@ -95,8 +94,8 @@ fun ChooseGameScreen(
         ChooseGameBody(
             gameTypes = viewModel.gameTypes,
             savedGames = savedGames,
-            chooseNewGameAction = {
-                navController.navigate(route = Game.getRoute(it))
+            chooseNewGameAction = { gameType, solo ->
+                navController.navigate(route = Game.getRoute(gameType, solo))
             },
             loadGameAction = { savedGame ->
                 trackLoadGame(savedGame)
@@ -105,6 +104,9 @@ fun ChooseGameScreen(
             deleteSavedGameAction = { savedGame ->
                 trackDeleteGame(savedGame)
                 viewModel.deleteGameAction(savedGame)
+            },
+            purchaseNewGameAction = { gameType, solo ->
+                // TODO
             },
             modifier = modifier.padding(innerPadding)
         )
@@ -116,7 +118,8 @@ fun ChooseGameScreen(
 fun ChooseGameBody(
     gameTypes: List<GameType>,
     savedGames: List<SavedGame>,
-    chooseNewGameAction: (gameType: GameType) -> Unit,
+    chooseNewGameAction: (gameType: GameType, solo: Boolean) -> Unit,
+    purchaseNewGameAction: (gameType: GameType, solo: Boolean) -> Unit,
     loadGameAction: (savedGame: SavedGame) -> Unit,
     deleteSavedGameAction: (savedGame: SavedGame) -> Unit,
     modifier: Modifier = Modifier
@@ -129,25 +132,28 @@ fun ChooseGameBody(
         item {
             Text(stringResource(id = R.string.main_instruction))
         }
-        items(gameTypes.filter { it.purchased }) { gameType ->
-            GameButton(
+        items(gameTypes) { gameType ->
+            GameTile(
                 textRes = gameType.displayName,
                 imageRes = gameType.largeIcon,
-                purchased = true,
+                purchased = gameType.purchased ?: false,
+                purchasePrice = gameType.purchasePrice,
                 solo = gameType.solo,
-                onClick = { chooseNewGameAction.invoke(gameType) }
-            )
-        }
-        item {
-            Text(stringResource(id = R.string.main_instruction_purchase))
-        }
-        items(gameTypes.filter { !it.purchased && !it.solo }) { gameType ->
-            GameButton(
-                textRes = gameType.displayName,
-                imageRes = gameType.largeIcon,
-                purchased = false,
-                solo = false,
-                onClick = { chooseNewGameAction.invoke(gameType) }
+                soloPurchased = gameType.soloPurchased ?: false,
+                soloPurchasePrice = gameType.soloPurchasePrice,
+                onClick = { solo ->
+                    val isPurchased = if (solo) {
+                        gameType.soloPurchased == true
+                    } else {
+                        gameType.purchased == true
+                    }
+                    if (isPurchased) {
+                        chooseNewGameAction.invoke(gameType, solo)
+                    } else {
+                        purchaseNewGameAction.invoke(gameType, solo)
+                    }
+                }
+
             )
         }
         if (savedGames.isNotEmpty()) {
@@ -204,16 +210,37 @@ fun SavedGame(
 fun SavedGamePreview() {
     WelcomeToFlipTheme {
         SavedGame(
-            SavedGame(
+            savedGame = SavedGame(
                 position = 1,
                 seed = 1234567890,
                 gameType = WelcomeToTheMoon,
                 lastModified = System.currentTimeMillis(),
+                solo = false,
                 stackSize = 21
             ),
-            {},
-            {},
-            Modifier
+            loadGameAction = {},
+            deleteGameAction = {},
+            modifier = Modifier
+        )
+    }
+}
+
+@Preview(group = "Choose Game Screen", showBackground = true)
+@Composable
+fun SavedGamePreviewSolo() {
+    WelcomeToFlipTheme {
+        SavedGame(
+            savedGame = SavedGame(
+                position = 1,
+                seed = 1234567890,
+                gameType = WelcomeToTheMoon,
+                lastModified = System.currentTimeMillis(),
+                solo = true,
+                stackSize = 21
+            ),
+            loadGameAction = {},
+            deleteGameAction = {},
+            modifier = Modifier
         )
     }
 }
@@ -227,6 +254,7 @@ fun ChooseGameBodyPreview() {
             seed = 1234567890,
             gameType = WelcomeToTheMoon,
             lastModified = System.currentTimeMillis(),
+            solo = false,
             stackSize = 21
         )
         val savedGame2 = SavedGame(
@@ -234,14 +262,16 @@ fun ChooseGameBodyPreview() {
             seed = 987654321,
             gameType = WelcomeToTheMoon,
             lastModified = System.currentTimeMillis(),
+            solo = true,
             stackSize = 21
         )
         ChooseGameBody(
             gameTypes = listOf(WelcomeToTheMoon, WelcomeToTheMoon),
             savedGames = listOf(savedGame1, savedGame2),
-            chooseNewGameAction = {},
+            chooseNewGameAction = { gameType, solo -> },
             loadGameAction = {},
             deleteSavedGameAction = {},
+            purchaseNewGameAction = { gameType, solo -> },
             modifier = Modifier
         )
     }

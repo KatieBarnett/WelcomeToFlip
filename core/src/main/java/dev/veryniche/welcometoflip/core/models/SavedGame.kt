@@ -5,6 +5,7 @@ data class SavedGame(
     val stackSize: Int,
     val gameType: GameType?,
     val seed: Long,
+    val solo: Boolean,
     val lastModified: Long
 ) {
     val displayPosition: Int

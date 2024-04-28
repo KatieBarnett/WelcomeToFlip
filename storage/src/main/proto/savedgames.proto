@@ -13,4 +13,5 @@ message Game {
   double lastModified = 3;
   string gameType = 4;
   int32 stackSize = 5;
+  bool solo = 6;
 }

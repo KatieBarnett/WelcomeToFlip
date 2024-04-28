@@ -1,7 +1,16 @@
 package dev.veryniche.welcometoflip.purchase
 
+import dev.veryniche.welcometoflip.core.models.WelcomeToClassic
+import dev.veryniche.welcometoflip.core.models.WelcomeToTheMoon
+
 object Products {
-    const val proVersion = "dev.veryniche.quickqr.pro"
+    const val adRemoval = "dev.veryniche.welcometoflip.addremoval"
+    const val sync = "dev.veryniche.welcometoflip.sync"
+    val gameWelcomeToClassicSolo = "dev.veryniche.welcometoflip." + WelcomeToClassic.name + ".solo"
+    val gameWelcomeToTheMoon = "dev.veryniche.welcometoflip." + WelcomeToTheMoon.name
+    val gameWelcomeToTheMoonSolo = "dev.veryniche.welcometoflip." + WelcomeToTheMoon.name + ".solo"
 }
 
-fun isProVersionRequired(tileCount: Int) = tileCount >= 1
+enum class PurchaseAction {
+    AD_REMOVAL, SYNC, PRO_BUNDLE, GAME_WELCOME_TO_THE_MOON
+}

@@ -82,6 +82,8 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.animation)
     implementation(libs.compose.runtime.livedata)
+    implementation(libs.compose.material.iconscore)
+    implementation(libs.compose.material.iconsext)
 
     implementation(libs.hilt.navigation.compose)
     implementation(libs.compose.navigation)

@@ -65,7 +65,7 @@ class PurchaseManager(
         val productList = ArrayList<QueryProductDetailsParams.Product>()
         productList.add(
             QueryProductDetailsParams.Product.newBuilder()
-                .setProductId(Products.proVersion)
+//                .setProductId(Products.proVersion)
                 .setProductType(BillingClient.ProductType.INAPP)
                 .build()
         )

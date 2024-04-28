@@ -24,6 +24,7 @@ class SavedGamesDataSource @Inject constructor(
                     gameType = it.gameType.mapToGameType(),
                     seed = it.seed.toLong(),
                     lastModified = it.lastModified.toLong(),
+                    solo = it.solo,
                     stackSize = it.stackSize
                 )
             }.sortedByDescending { it.lastModified }
