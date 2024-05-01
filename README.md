@@ -18,7 +18,7 @@ Moon by Rafi Al Hakim from https://thenounproject.com/icon/moon-6086589/
 Park by Ahmad Faiz from https://thenounproject.com/icon/park-6721083/
 Fence by kitaicons from https://thenounproject.com/icon/fence-6826093/
 mailbox by Fharaz from https://thenounproject.com/icon/mailbox-6180823/
-Traffic Cone by Iconnic from https://thenounproject.com/icon/traffic-cone-2140534/
+Traffic Cone by Dmitry Mirolyubov from https://thenounproject.com/icon/traffic-cone-57855/
 Pool by Larea from https://thenounproject.com/icon/pool-5817216/
 increase by ARISO from https://thenounproject.com/icon/increase-6785191/
 House by Jang Jeong Eui from https://thenounproject.com/icon/house-6786764/

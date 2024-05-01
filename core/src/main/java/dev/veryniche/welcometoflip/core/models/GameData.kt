@@ -5,7 +5,7 @@ import dev.veryniche.welcometoflip.core.theme.*
 
 val WelcomeToClassic = GameType(
     name = "WelcomeToClassic",
-    icon = R.drawable.noun_house_6786764,
+    icon = R.drawable.ic_sign,
     largeIcon = R.drawable.noun_house_6786764,
     displayName = R.string.game_welcome_to_classic,
     solo = false,
@@ -24,7 +24,7 @@ data object Fence : Action(R.drawable.noun_fence_6826093, ActionFence)
 data object Improve : Action(R.drawable.noun_increase_6785191, ActionImprove)
 data object Park : Action(R.drawable.noun_park_6721083, ActionPark)
 data object Pool : Action(R.drawable.noun_pool_5817216, ActionPool)
-data object Worker : Action(R.drawable.noun_traffic_cone_2140534, ActionWorker)
+data object Worker : Action(R.drawable.noun_traffic_cone_57855, ActionWorker)
 data object Extension : Action(R.drawable.noun_mailbox_6180823, ActionExtension)
 
 // Welcome To the Moon
