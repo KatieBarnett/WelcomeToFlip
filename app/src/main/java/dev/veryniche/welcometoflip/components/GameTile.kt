@@ -70,8 +70,12 @@ fun GameTile(
                 solo = solo,
                 soloPurchased = soloPurchased,
                 soloPurchasePrice = soloPurchasePrice,
-                onClick = { onClick.invoke(false) },
-                onClickSolo = { onClick.invoke(true) },
+                onClick = {
+                    onClick.invoke(false)
+                },
+                onClickSolo = {
+                    onClick.invoke(true)
+                },
                 modifier = modifier
             )
         },
@@ -122,7 +126,8 @@ fun GameTileFront(
                     )
                 }
             }
-            Row(modifier = Modifier.align(Alignment.BottomEnd),
+            Row(
+                modifier = Modifier.align(Alignment.BottomEnd),
                 verticalAlignment = Alignment.Bottom
             ) {
                 Image(
@@ -177,11 +182,21 @@ fun GameTileBack(
                 .fillMaxWidth()
         )
         Column(modifier = Modifier.padding(16.dp).weight(1f), verticalArrangement = Arrangement.SpaceAround) {
-            ElevatedButton(onClick = { onClick.invoke() }, Modifier.fillMaxWidth()) {
+            ElevatedButton(
+                onClick = {
+                    onClick.invoke()
+                },
+                Modifier.fillMaxWidth()
+            ) {
                 Text(getButtonText(purchased = purchased, solo = false, purchasePrice = purchasePrice))
             }
             if (solo) {
-                ElevatedButton(onClick = { onClickSolo.invoke() }, Modifier.fillMaxWidth()) {
+                ElevatedButton(
+                    onClick = {
+                        onClickSolo.invoke()
+                    },
+                    Modifier.fillMaxWidth()
+                ) {
                     Text(getButtonText(purchased = soloPurchased, solo = true, purchasePrice = soloPurchasePrice))
                 }
             }
@@ -190,7 +205,17 @@ fun GameTileBack(
 }
 
 @Composable
-fun getButtonText(purchased: Boolean, solo: Boolean, purchasePrice: String?) = if (purchased || purchasePrice == null) {
+fun getButtonText(
+    purchased: Boolean,
+    solo: Boolean,
+    purchasePrice: String?
+) = if (purchasePrice == null && !purchased) {
+    if (solo) {
+        stringResource(id = dev.veryniche.welcometoflip.R.string.solo_not_purchased_no_price)
+    } else {
+        stringResource(id = dev.veryniche.welcometoflip.R.string.multiplayer_not_purchased_no_price)
+    }
+} else if (purchased || purchasePrice == null) {
     if (solo) {
         stringResource(id = dev.veryniche.welcometoflip.R.string.solo_purchased)
     } else {

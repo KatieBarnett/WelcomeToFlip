@@ -73,7 +73,9 @@
 
     <string name="multiplayer_purchased">Play Multiplayer</string>
     <string name="multiplayer_not_purchased">Buy Multiplayer $%s</string>
+    <string name="multiplayer_not_purchased_no_price">Buy Multiplayer</string>
     <string name="solo_purchased">Play Solo</string>
     <string name="solo_not_purchased">Buy Solo $%f</string>
+    <string name="solo_not_purchased_no_price">Buy Solo</string>
     
 </resources>
