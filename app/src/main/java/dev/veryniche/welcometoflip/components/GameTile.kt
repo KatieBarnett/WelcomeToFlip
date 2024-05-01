@@ -3,20 +3,23 @@ package dev.veryniche.welcometoflip.components
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.twotone.Groups
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +30,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.veryniche.welcometoflip.core.R
@@ -48,7 +52,7 @@ fun GameTile(
     modifier: Modifier = Modifier
 ) {
     Tile(
-        sideFront = {
+        sideFront = { modifier ->
             GameTileFront(
                 textRes = textRes,
                 imageRes = imageRes,
@@ -57,7 +61,7 @@ fun GameTile(
                 modifier = modifier
             )
         },
-        sideBack = {
+        sideBack = { modifier ->
             GameTileBack(
                 textRes = textRes,
                 imageRes = imageRes,
@@ -118,19 +122,23 @@ fun GameTileFront(
                     )
                 }
             }
-            Row(modifier.align(Alignment.BottomEnd)) {
+            Row(modifier = Modifier.align(Alignment.BottomEnd),
+                verticalAlignment = Alignment.Bottom
+            ) {
                 Image(
                     imageVector = Icons.TwoTone.Groups,
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
                     contentDescription = "",
-                    modifier = Modifier.fillMaxSize(0.3f)
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier.width(48.dp).padding(end = 6.dp)
                 )
                 if (soloAvailable) {
                     Image(
                         imageVector = Icons.Filled.Person,
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
                         contentDescription = "",
-                        modifier = Modifier.fillMaxSize(0.3f)
+                        contentScale = ContentScale.FillWidth,
+                        modifier = Modifier.padding(bottom = 4.dp, end = 6.dp).width(32.dp)
                     )
                 }
             }
@@ -160,17 +168,39 @@ fun GameTileBack(
         ),
         modifier = modifier.fillMaxSize()
     ) {
-        Column {
-            Text(
-                stringResource(textRes),
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(Dimen.spacingDouble)
-            )
-
+        Text(
+            text = stringResource(textRes),
+            style = MaterialTheme.typography.headlineSmall,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .padding(Dimen.spacingDouble)
+                .fillMaxWidth()
+        )
+        Column(modifier = Modifier.padding(16.dp).weight(1f), verticalArrangement = Arrangement.SpaceAround) {
+            ElevatedButton(onClick = { onClick.invoke() }, Modifier.fillMaxWidth()) {
+                Text(getButtonText(purchased = purchased, solo = false, purchasePrice = purchasePrice))
+            }
+            if (solo) {
+                ElevatedButton(onClick = { onClickSolo.invoke() }, Modifier.fillMaxWidth()) {
+                    Text(getButtonText(purchased = soloPurchased, solo = true, purchasePrice = soloPurchasePrice))
+                }
+            }
         }
+    }
+}
+
+@Composable
+fun getButtonText(purchased: Boolean, solo: Boolean, purchasePrice: String?) = if (purchased || purchasePrice == null) {
+    if (solo) {
+        stringResource(id = dev.veryniche.welcometoflip.R.string.solo_purchased)
+    } else {
+        stringResource(id = dev.veryniche.welcometoflip.R.string.multiplayer_purchased)
+    }
+} else {
+    if (solo) {
+        stringResource(id = dev.veryniche.welcometoflip.R.string.solo_not_purchased, purchasePrice)
+    } else {
+        stringResource(id = dev.veryniche.welcometoflip.R.string.multiplayer_not_purchased, purchasePrice)
     }
 }
 
@@ -183,9 +213,9 @@ fun GameTilePurchasedPreview() {
                 textRes = R.string.game_welcome_to_the_moon,
                 R.drawable.noun_moon_6086589,
                 purchased = true,
-                purchasePrice = "$5.00",
+                purchasePrice = "5.00",
                 solo = false,
-                soloPurchasePrice = "$1.00",
+                soloPurchasePrice = "1.00",
                 soloPurchased = false,
                 onClick = {}
             )
@@ -202,9 +232,9 @@ fun GameTileSoloPurchasedPreview() {
                 textRes = R.string.game_welcome_to_the_moon,
                 R.drawable.noun_moon_6086589,
                 purchased = true,
-                purchasePrice = "$5.00",
+                purchasePrice = "5.00",
                 solo = true,
-                soloPurchasePrice = "$1.00",
+                soloPurchasePrice = "1.00",
                 soloPurchased = true,
                 onClick = {}
             )
@@ -221,9 +251,9 @@ fun GameTileNotPurchasedPreview() {
                 textRes = R.string.game_welcome_to_the_moon,
                 R.drawable.noun_moon_6086589,
                 purchased = false,
-                purchasePrice = "$5.00",
+                purchasePrice = "5.00",
                 solo = false,
-                soloPurchasePrice = "$1.00",
+                soloPurchasePrice = "1.00",
                 soloPurchased = false,
                 onClick = {}
             )
@@ -240,9 +270,9 @@ fun GameTileBackPurchasedPreview() {
                 textRes = R.string.game_welcome_to_the_moon,
                 R.drawable.noun_moon_6086589,
                 purchased = true,
-                purchasePrice = "$5.00",
+                purchasePrice = "5.00",
                 solo = false,
-                soloPurchasePrice = "$1.00",
+                soloPurchasePrice = "1.00",
                 soloPurchased = false,
                 onClickSolo = {},
                 onClick = {},
@@ -261,9 +291,9 @@ fun GameTileBackSoloPurchasedPreview() {
                 textRes = R.string.game_welcome_to_the_moon,
                 R.drawable.noun_moon_6086589,
                 purchased = true,
-                purchasePrice = "$5.00",
+                purchasePrice = "5.00",
                 solo = true,
-                soloPurchasePrice = "$1.00",
+                soloPurchasePrice = "1.00",
                 soloPurchased = true,
                 onClickSolo = {},
                 onClick = {},
@@ -282,9 +312,9 @@ fun GameTileBackNotPurchasedPreview() {
                 textRes = R.string.game_welcome_to_the_moon,
                 R.drawable.noun_moon_6086589,
                 purchased = false,
-                purchasePrice = "$5.00",
+                purchasePrice = "5.00",
                 solo = false,
-                soloPurchasePrice = "$1.00",
+                soloPurchasePrice = "1.00",
                 soloPurchased = false,
                 onClickSolo = {},
                 onClick = {},

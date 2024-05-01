@@ -70,5 +70,10 @@
     <string name="purchase_error_generic">Error processing purchase. Please try again.</string>
     <string name="purchase_error_disconnected">Error connecting to billing system. Please try again.</string>
     <string name="purchase_error_dismiss">OK</string>
+
+    <string name="multiplayer_purchased">Play Multiplayer</string>
+    <string name="multiplayer_not_purchased">Buy Multiplayer $%s</string>
+    <string name="solo_purchased">Play Solo</string>
+    <string name="solo_not_purchased">Buy Solo $%f</string>
     
 </resources>
