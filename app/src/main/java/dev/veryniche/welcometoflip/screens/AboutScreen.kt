@@ -1,5 +1,7 @@
 package dev.veryniche.welcometoflip.screens
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
@@ -43,7 +46,7 @@ fun AboutScreen(
     navController: NavController = rememberNavController(),
     modifier: Modifier = Modifier) {
     val scrollableState = rememberScrollState()
-
+    val context = LocalContext.current
     TrackedScreen {
         trackScreenView(name = Analytics.Screen.About)
     }
@@ -77,7 +80,14 @@ fun AboutScreen(
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold
             )
-            Text(text = stringResource(id = R.string.about_developer))
+            Text(text = stringResource(id = R.string.about_developer_text))
+            val aboutDeveloperUrl = stringResource(id = R.string.about_developer_url)
+            ThemedButton(content = {
+                Text(text = stringResource(id = R.string.about_developer))
+            }, onClick = {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(aboutDeveloperUrl))
+                context.startActivity(intent)
+            })
             Text(
                 text = stringResource(id = R.string.welcome_coming_soon_title),
                 style = MaterialTheme.typography.headlineMedium,
@@ -123,7 +133,6 @@ fun AboutScreen(
                     .padding(bottom = Dimen.spacing)
             )
             if (BuildConfig.DEBUG) {
-                val context = LocalContext.current
                 ThemedButton(content = {
                     Text(stringResource(id = R.string.debug_showkase))
                 }, onClick = {
