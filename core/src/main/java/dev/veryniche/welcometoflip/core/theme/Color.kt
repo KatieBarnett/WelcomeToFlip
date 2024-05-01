@@ -20,7 +20,15 @@ val DuskyPink = Color(0xffD3918C)
 val DuskyPurple = Color(0xff986E85)
 val DuskyYellow = Color(0xffE0C9A8)
 
-// Semantic colours
+// Welcome To Classic
+val ActionPark = Green
+val ActionFence = Grey
+val ActionImprove = Purple
+val ActionPool = Blue
+val ActionWorker = Orange
+val ActionExtension = Pink
+
+// Welcome To the Moon
 val ActionPlant = Green
 val ActionRobot = Grey
 val ActionLightning = Purple

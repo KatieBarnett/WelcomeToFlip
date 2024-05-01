@@ -5,6 +5,8 @@ import dev.veryniche.welcometoflip.core.models.Card
 import dev.veryniche.welcometoflip.core.models.GameType
 import dev.veryniche.welcometoflip.core.models.WelcomeToClassic
 import dev.veryniche.welcometoflip.core.models.WelcomeToTheMoon
+import dev.veryniche.welcometoflip.core.models.welcomeToClassicDeck
+import dev.veryniche.welcometoflip.core.models.welcomeToClassicSoloEffectCards
 import dev.veryniche.welcometoflip.core.models.welcomeToTheMoonAvailableActions
 import dev.veryniche.welcometoflip.core.models.welcomeToTheMoonDeck
 import dev.veryniche.welcometoflip.core.models.welcomeToTheMoonSoloEffectCards
@@ -22,7 +24,7 @@ class DeckRepository @Inject constructor() {
     fun getDeck(gameType: GameType): List<Card> {
         return when (gameType) {
             WelcomeToTheMoon -> welcomeToTheMoonDeck
-            WelcomeToClassic -> welcomeToTheMoonDeck // TODO
+            WelcomeToClassic -> welcomeToClassicDeck
             else -> {
                 Timber.e("Unknown game type $gameType")
                 throw Exception("Unknown game type")
@@ -33,7 +35,7 @@ class DeckRepository @Inject constructor() {
     fun getSoloEffectCards(gameType: GameType): List<Card> {
         return when (gameType) {
             WelcomeToTheMoon -> welcomeToTheMoonSoloEffectCards
-            WelcomeToClassic -> welcomeToTheMoonSoloEffectCards // TODO
+            WelcomeToClassic -> welcomeToClassicSoloEffectCards
             else -> {
                 Timber.e("Unknown game type $gameType")
                 throw Exception("Unknown game type")

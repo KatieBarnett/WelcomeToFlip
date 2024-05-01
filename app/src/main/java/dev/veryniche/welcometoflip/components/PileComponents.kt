@@ -18,9 +18,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import dev.veryniche.welcometoflip.core.models.AstraA
-import dev.veryniche.welcometoflip.core.models.AstraB
-import dev.veryniche.welcometoflip.core.models.AstraC
+import dev.veryniche.welcometoflip.core.models.SoloA
+import dev.veryniche.welcometoflip.core.models.SoloB
+import dev.veryniche.welcometoflip.core.models.SoloC
 import dev.veryniche.welcometoflip.core.models.Card
 import dev.veryniche.welcometoflip.theme.Dimen
 import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
@@ -106,9 +106,9 @@ fun PileInsertionLayout(
 fun PileLayoutPreview() {
     
     val pile = listOf(
-        Card(AstraA, AstraA),
-        Card(AstraB, AstraB),
-        Card(AstraC, AstraC)
+        Card(SoloA, SoloA),
+        Card(SoloB, SoloB),
+        Card(SoloC, SoloC)
     )
 
     WelcomeToFlipTheme {

@@ -41,9 +41,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import dev.veryniche.welcometoflip.R
 import dev.veryniche.welcometoflip.core.models.Action
-import dev.veryniche.welcometoflip.core.models.AstraA
-import dev.veryniche.welcometoflip.core.models.AstraB
-import dev.veryniche.welcometoflip.core.models.AstraC
+import dev.veryniche.welcometoflip.core.models.SoloA
+import dev.veryniche.welcometoflip.core.models.SoloB
+import dev.veryniche.welcometoflip.core.models.SoloC
 import dev.veryniche.welcometoflip.core.models.Astronaut
 import dev.veryniche.welcometoflip.core.models.Card
 import dev.veryniche.welcometoflip.core.models.Letter
@@ -396,7 +396,7 @@ fun SoloEffectItem(
 fun SoloEffectItemPreview() {
     WelcomeToFlipTheme {
         SoloEffectItem(
-            AstraB,
+            SoloB,
             modifier = Modifier
                 .height(100.dp)
                 .padding(Dimen.spacing))
@@ -427,7 +427,7 @@ fun SoloAstraLayoutPreview() {
                 Robot to 3,
                 Astronaut to 4,
                 X to 5),
-            effectCards = listOf(AstraA, AstraB, AstraC),
+            effectCards = listOf(SoloA, SoloB, SoloC),
             modifier = Modifier
                 .height(200.dp)
                 .padding(Dimen.spacing))
@@ -454,7 +454,7 @@ fun SoloSlotLayoutPreview() {
                         Robot to 3,
                         Astronaut to 4,
                         X to 5),
-                    effectCards = listOf(AstraA, AstraB, AstraC),
+                    effectCards = listOf(SoloA, SoloB, SoloC),
                     modifier = it
                         .height(400.dp)
                         .padding(Dimen.spacing))

@@ -26,7 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.veryniche.welcometoflip.R
-import dev.veryniche.welcometoflip.core.models.AstraA
+import dev.veryniche.welcometoflip.core.models.SoloA
 import dev.veryniche.welcometoflip.core.models.Astronaut
 import dev.veryniche.welcometoflip.core.models.CardFace
 import dev.veryniche.welcometoflip.core.models.Number12
@@ -157,7 +157,7 @@ fun ActionCardPreview() {
 @Composable
 fun LetterCardPreview() {
     WelcomeToFlipTheme {
-        CardFaceDisplay(AstraA, modifier = Modifier
+        CardFaceDisplay(SoloA, modifier = Modifier
             .padding(Dimen.spacing)
             .height(400.dp)
             .width(300.dp))

@@ -181,7 +181,7 @@ fun GameTileBack(
                 .padding(Dimen.spacingDouble)
                 .fillMaxWidth()
         )
-        Column(modifier = Modifier.padding(16.dp).weight(1f), verticalArrangement = Arrangement.SpaceAround) {
+        Column(modifier = Modifier.padding(32.dp).weight(1f), verticalArrangement = Arrangement.SpaceAround) {
             ElevatedButton(
                 onClick = {
                     onClick.invoke()

@@ -11,7 +11,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
@@ -29,9 +28,9 @@ import dev.veryniche.welcometoflip.components.PileInsertionLayout
 import dev.veryniche.welcometoflip.components.SoloAstraLayout
 import dev.veryniche.welcometoflip.components.SoloGameContainer
 import dev.veryniche.welcometoflip.components.SoloSlotLayout
-import dev.veryniche.welcometoflip.core.models.AstraA
-import dev.veryniche.welcometoflip.core.models.AstraB
-import dev.veryniche.welcometoflip.core.models.AstraC
+import dev.veryniche.welcometoflip.core.models.SoloA
+import dev.veryniche.welcometoflip.core.models.SoloB
+import dev.veryniche.welcometoflip.core.models.SoloC
 import dev.veryniche.welcometoflip.core.models.Astronaut
 import dev.veryniche.welcometoflip.core.models.Card
 import dev.veryniche.welcometoflip.core.models.GameType
@@ -243,9 +242,9 @@ fun SoloGameSetupPreview() {
     )
     
     val soloPile = listOf(
-        Card(AstraA, AstraA),
-        Card(AstraB, AstraB),
-        Card(AstraC, AstraC)
+        Card(SoloA, SoloA),
+        Card(SoloB, SoloB),
+        Card(SoloC, SoloC)
     )
 
     WelcomeToFlipTheme {
