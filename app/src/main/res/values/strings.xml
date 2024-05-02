@@ -22,15 +22,8 @@
 
     <string name="about_subtitle">About the app</string>
     <string name="about_credits_graphics_title">The icons &amp; graphics used in this app were designed by:</string>
-    <string name="about_credits_graphics_1">Rocket by Hasanudin https://thenounproject.com/icon/rocket-4925595/</string>
-    <string name="about_credits_graphics_2">Plant by Tyler DeHague - https://thenounproject.com/icon/plant-4982354/</string>
-    <string name="about_credits_graphics_3">Robot by Hasanudin https://thenounproject.com/icon/robot-4971447/</string>
-    <string name="about_credits_graphics_4">Thunder by Siti Masriatun https://thenounproject.com/icon/thunder-4978759/</string>
-    <string name="about_credits_graphics_5">Remove Schedule by Aris Sunjayay https://thenounproject.com/icon/remove-schedule-4359088/</string>
-    <string name="about_credits_graphics_6">Astronaut by Akriti Bhusal https://thenounproject.com/icon/astronaut-2801977/</string>
-    <string name="about_credits_graphics_7">Water Drop by Georgiana Ionescu https://thenounproject.com/icon/water-drop-1506321/</string>
-    <string name="about_credits_graphics_8">Bin by Alice Design https://thenounproject.com/icon/bin-2034046/</string>
-    <string name="about_credits_graphics_9">Arrow by Jamison Wieser https://thenounproject.com/icon/arrow-60381/</string>
+
+    <string name="about_version">App version: %s(%d)</string>
 
     <string name="about_developer_title">About the developer</string>
     <string name="about_developer">Visit our website</string>
@@ -39,7 +32,8 @@
     <string name="about_privacy_policy_title">Privacy policy</string>
     <string name="about_privacy_policy">Please click here to view the privacy policy.</string>
     <string name="about_remove_ads_title">Don\'t want to see ads?</string>
-    <string name="about_remove_ads">Help me get more games so I can make more apps about them!</string>
+    <string name="about_remove_ads">Remove ads %s</string>
+<!--    <string name="about_remove_ads">Help me get more games so I can make more apps about them!</string>-->
 
     <string name="flip_button">Flip!</string>
     <string name="reshuffle_button">Reshuffle Stacks</string>
@@ -74,10 +68,10 @@
     <string name="purchase_error_dismiss">OK</string>
 
     <string name="multiplayer_purchased">Play Multiplayer</string>
-    <string name="multiplayer_not_purchased">Buy Multiplayer $%s</string>
+    <string name="multiplayer_not_purchased">Buy Multiplayer %s</string>
     <string name="multiplayer_not_purchased_no_price">Buy Multiplayer</string>
     <string name="solo_purchased">Play Solo</string>
-    <string name="solo_not_purchased">Buy Solo $%f</string>
+    <string name="solo_not_purchased">Buy Solo %s</string>
     <string name="solo_not_purchased_no_price">Buy Solo</string>
     
 </resources>

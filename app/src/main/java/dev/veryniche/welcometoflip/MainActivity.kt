@@ -24,6 +24,7 @@ import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import dev.veryniche.welcometoflip.components.WelcomeDialog
 import dev.veryniche.welcometoflip.purchase.PurchaseManager
+import dev.veryniche.welcometoflip.purchase.PurchaseStatus
 import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
 
 @AndroidEntryPoint
@@ -64,7 +65,16 @@ class MainActivity : ComponentActivity() {
 
             var showWelcomeDialog by remember(showWelcomeDialogOnStart) { mutableStateOf(showWelcomeDialogOnStart) }
 
-            WelcomeToFlipNavHost(navController = navController, mainViewModel = viewModel)
+            var purchaseStatus by remember { mutableStateOf<Map<String, PurchaseStatus>>(mapOf()) }
+
+            WelcomeToFlipNavHost(
+                navController = navController,
+                purchaseStatus = purchaseStatus,
+                onPurchaseClick = {
+                    // TODO
+                },
+                mainViewModel = viewModel
+            )
             if (showWelcomeDialog == true) {
                 WelcomeDialog(
                     navController = navController,

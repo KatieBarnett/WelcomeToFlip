@@ -85,3 +85,4 @@ lint/tmp/
 # lint/reports/
 .idea/*
 core/src/main/res/.DS_Store
+core/src/main/res/drawable/.DS_Store

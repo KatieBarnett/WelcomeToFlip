@@ -36,5 +36,4 @@ class WelcomeToFlipApplication : Application() {
             }
         }
     }
-    
 }

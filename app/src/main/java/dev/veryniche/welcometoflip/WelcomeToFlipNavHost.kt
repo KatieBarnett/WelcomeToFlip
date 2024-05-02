@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import dev.veryniche.welcometoflip.core.models.mapToGameType
+import dev.veryniche.welcometoflip.purchase.PurchaseStatus
 import dev.veryniche.welcometoflip.screens.AboutScreen
 import dev.veryniche.welcometoflip.screens.ChooseGameScreen
 import dev.veryniche.welcometoflip.screens.RegularGameScreen
@@ -15,6 +16,8 @@ import dev.veryniche.welcometoflip.screens.SoloGameScreen
 @Composable
 fun WelcomeToFlipNavHost(
     navController: NavHostController,
+    purchaseStatus: Map<String, PurchaseStatus>,
+    onPurchaseClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     mainViewModel: MainViewModel
 ) {
@@ -31,7 +34,9 @@ fun WelcomeToFlipNavHost(
         }
         composable(route = About.route) {
             AboutScreen(
-                navController = navController
+                navController = navController,
+                purchaseStatus = purchaseStatus,
+                onPurchaseClick = onPurchaseClick,
             )
         }
         composable(route = Game.routeWithArgs, arguments = Game.arguments, deepLinks = Game.deepLinks) {

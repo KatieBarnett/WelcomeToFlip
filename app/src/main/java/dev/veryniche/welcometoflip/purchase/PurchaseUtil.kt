@@ -7,3 +7,7 @@ package dev.veryniche.welcometoflip.purchase
 //}
 //
 //fun isProPurchased(purchasedProducts: List<String>) = purchasedProducts.contains(Products.proVersion)
+
+fun getPurchaseStatus() {
+
+}
