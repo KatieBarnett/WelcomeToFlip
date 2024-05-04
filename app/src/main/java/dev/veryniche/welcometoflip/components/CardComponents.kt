@@ -26,10 +26,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.veryniche.welcometoflip.R
-import dev.veryniche.welcometoflip.core.models.SoloA
 import dev.veryniche.welcometoflip.core.models.Astronaut
 import dev.veryniche.welcometoflip.core.models.CardFace
 import dev.veryniche.welcometoflip.core.models.Number12
+import dev.veryniche.welcometoflip.core.models.SoloA
 import dev.veryniche.welcometoflip.theme.Dimen
 import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
 

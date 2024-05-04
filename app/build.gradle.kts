@@ -95,6 +95,8 @@ dependencies {
 
     implementation(libs.splashscreen)
 
+    implementation(libs.play.core.ktx)
+
     implementation(libs.timber)
     
 //    implementation(libs.play.services.base)

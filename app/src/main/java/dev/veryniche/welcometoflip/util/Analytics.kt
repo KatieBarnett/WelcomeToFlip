@@ -1,6 +1,5 @@
 package dev.veryniche.welcometoflip.util
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -20,6 +19,7 @@ import dev.veryniche.welcometoflip.util.Analytics.Action.DeleteGame
 import dev.veryniche.welcometoflip.util.Analytics.Action.EndGame
 import dev.veryniche.welcometoflip.util.Analytics.Action.LoadGame
 import dev.veryniche.welcometoflip.util.Analytics.Action.PurchaseClick
+import dev.veryniche.welcometoflip.util.Analytics.Action.ReviewRequested
 import dev.veryniche.welcometoflip.util.Analytics.Action.ShuffleGame
 import timber.log.Timber
 
@@ -37,6 +37,7 @@ object Analytics {
         const val ShuffleGame = "Shuffle Game"
         const val EndGame = "End Game"
         const val PurchaseClick = "Purchase Click"
+        const val ReviewRequested = "Review Requested"
     }
 }
 
@@ -75,6 +76,11 @@ internal fun trackScreenView(name: String?) {
     Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
         param(FirebaseAnalytics.Param.SCREEN_NAME, name ?: "Unknown")
     }
+}
+
+fun trackReviewRequested() {
+    Timber.d(ANALYTICS_LOG_TAG, "Track action: Review requested")
+    Firebase.analytics.logEvent(ReviewRequested) {}
 }
 
 fun trackPurchaseClick(purchaseId: String) {

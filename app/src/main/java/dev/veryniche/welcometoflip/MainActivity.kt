@@ -60,11 +60,8 @@ class MainActivity : ComponentActivity() {
         }
         WelcomeToFlipTheme {
             val navController = rememberNavController()
-
             val showWelcomeDialogOnStart by viewModel.showWelcomeDialog.collectAsStateWithLifecycle(null)
-
             var showWelcomeDialog by remember(showWelcomeDialogOnStart) { mutableStateOf(showWelcomeDialogOnStart) }
-
             var purchaseStatus by remember { mutableStateOf<Map<String, PurchaseStatus>>(mapOf()) }
 
             WelcomeToFlipNavHost(
@@ -73,7 +70,10 @@ class MainActivity : ComponentActivity() {
                 onPurchaseClick = {
                     // TODO
                 },
-                mainViewModel = viewModel
+                mainViewModel = viewModel,
+                onGameEnd = {
+                    viewModel.requestReviewIfAble(this)
+                }
             )
             if (showWelcomeDialog == true) {
                 WelcomeDialog(

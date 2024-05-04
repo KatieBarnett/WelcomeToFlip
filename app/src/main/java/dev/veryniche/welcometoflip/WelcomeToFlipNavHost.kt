@@ -18,6 +18,7 @@ fun WelcomeToFlipNavHost(
     navController: NavHostController,
     purchaseStatus: Map<String, PurchaseStatus>,
     onPurchaseClick: (String) -> Unit,
+    onGameEnd: () -> Unit,
     modifier: Modifier = Modifier,
     mainViewModel: MainViewModel
 ) {
@@ -62,6 +63,7 @@ fun WelcomeToFlipNavHost(
                     RegularGameScreen(
                         viewModel = gameViewModel,
                         gameType = gameType,
+                        onGameEnd = onGameEnd,
                         navController = navController
                     )
                 }

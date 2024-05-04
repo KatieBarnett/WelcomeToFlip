@@ -48,6 +48,7 @@ import dev.veryniche.welcometoflip.util.trackScreenView
 fun RegularGameScreen(
     viewModel: GameViewModel,
     gameType: GameType,
+    onGameEnd: () -> Unit,
     navController: NavController = rememberNavController(),
     modifier: Modifier = Modifier
 ) {
@@ -99,6 +100,7 @@ fun RegularGameScreen(
                 viewModel.reshuffleStacks()
             },
             endGame = {
+                onGameEnd.invoke()
                 viewModel.endGame {
                     navController.navigateUp()
                 }

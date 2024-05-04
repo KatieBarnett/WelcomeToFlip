@@ -28,9 +28,6 @@ import dev.veryniche.welcometoflip.components.PileInsertionLayout
 import dev.veryniche.welcometoflip.components.SoloAstraLayout
 import dev.veryniche.welcometoflip.components.SoloGameContainer
 import dev.veryniche.welcometoflip.components.SoloSlotLayout
-import dev.veryniche.welcometoflip.core.models.SoloA
-import dev.veryniche.welcometoflip.core.models.SoloB
-import dev.veryniche.welcometoflip.core.models.SoloC
 import dev.veryniche.welcometoflip.core.models.Astronaut
 import dev.veryniche.welcometoflip.core.models.Card
 import dev.veryniche.welcometoflip.core.models.GameType
@@ -40,6 +37,9 @@ import dev.veryniche.welcometoflip.core.models.Number2
 import dev.veryniche.welcometoflip.core.models.Number3
 import dev.veryniche.welcometoflip.core.models.Plant
 import dev.veryniche.welcometoflip.core.models.Robot
+import dev.veryniche.welcometoflip.core.models.SoloA
+import dev.veryniche.welcometoflip.core.models.SoloB
+import dev.veryniche.welcometoflip.core.models.SoloC
 import dev.veryniche.welcometoflip.core.models.Water
 import dev.veryniche.welcometoflip.core.models.X
 import dev.veryniche.welcometoflip.theme.Dimen
