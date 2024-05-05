@@ -42,6 +42,7 @@ import dev.veryniche.welcometoflip.components.NavigationIcon
 import dev.veryniche.welcometoflip.components.ThemedIconButton
 import dev.veryniche.welcometoflip.core.models.GameType
 import dev.veryniche.welcometoflip.core.models.SavedGame
+import dev.veryniche.welcometoflip.core.models.WelcomeToClassic
 import dev.veryniche.welcometoflip.core.models.WelcomeToTheMoon
 import dev.veryniche.welcometoflip.theme.Dimen
 import dev.veryniche.welcometoflip.theme.Dimen.AppBar.CollapsedTextSize
@@ -139,11 +140,15 @@ fun ChooseGameBody(
 ) {
     LazyColumn(
         horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.spacedBy(Dimen.spacing),
-        modifier = modifier.padding(Dimen.spacing)
+        verticalArrangement = Arrangement.spacedBy(Dimen.spacingDouble),
+        modifier = modifier.padding(Dimen.spacingDouble)
     ) {
         item {
-            Text(stringResource(id = R.string.main_instruction))
+            Text(
+                text = stringResource(id = R.string.main_instruction),
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier
+            )
         }
         items(gameTypes) { gameType ->
             GameTile(
@@ -171,7 +176,11 @@ fun ChooseGameBody(
         }
         if (savedGames.isNotEmpty()) {
             item {
-                Text(stringResource(id = R.string.saved_instruction))
+                Text(
+                    text = stringResource(id = R.string.saved_instruction),
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier
+                )
             }
             items(savedGames) { game ->
                 SavedGame(game, loadGameAction, deleteSavedGameAction)
@@ -265,7 +274,7 @@ fun ChooseGameBodyPreview() {
         val savedGame1 = SavedGame(
             position = 1,
             seed = 1234567890,
-            gameType = WelcomeToTheMoon,
+            gameType = WelcomeToClassic,
             lastModified = System.currentTimeMillis(),
             solo = false,
             stackSize = 21
@@ -279,7 +288,7 @@ fun ChooseGameBodyPreview() {
             stackSize = 21
         )
         ChooseGameBody(
-            gameTypes = listOf(WelcomeToTheMoon, WelcomeToTheMoon),
+            gameTypes = listOf(WelcomeToClassic, WelcomeToTheMoon),
             savedGames = listOf(savedGame1, savedGame2),
             chooseNewGameAction = { gameType, solo -> },
             loadGameAction = {},
