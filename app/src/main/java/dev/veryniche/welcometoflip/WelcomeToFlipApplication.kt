@@ -33,6 +33,8 @@ class WelcomeToFlipApplication : Application() {
                 Firebase.crashlytics.recordException(t ?: RuntimeException(message))
             } else if (priority == Log.WARN) {
                 Firebase.crashlytics.log(message)
+            } else if (priority == Log.INFO) {
+                Firebase.crashlytics.log(message)
             }
         }
     }

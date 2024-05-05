@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -41,7 +42,6 @@ import dev.veryniche.welcometoflip.util.Analytics
 import dev.veryniche.welcometoflip.util.ImageCreditText
 import dev.veryniche.welcometoflip.util.TrackedScreen
 import dev.veryniche.welcometoflip.util.UnorderedListText
-import dev.veryniche.welcometoflip.util.trackPurchaseClick
 import dev.veryniche.welcometoflip.util.trackScreenView
 
 @Composable
@@ -70,7 +70,7 @@ fun AboutScreen(
     navController: NavController = rememberNavController(),
     purchaseStatus: Map<String, PurchaseStatus>,
     onPurchaseClick: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val scrollableState = rememberScrollState()
     val context = LocalContext.current
@@ -106,12 +106,12 @@ fun AboutScreen(
                     .padding(bottom = Dimen.spacing)
             )
             purchaseStatus[Products.adRemoval]?.let {
-                if (it.purchased) {
+                if (!it.purchased) {
                     AboutHeading(R.string.about_remove_ads_title)
+                    AboutText(R.string.about_remove_ads_text)
                     ThemedButton(content = {
                         Text(text = stringResource(id = R.string.about_remove_ads, it.purchasePrice))
                     }, onClick = {
-                        trackPurchaseClick(it.productId)
                         onPurchaseClick.invoke(it.productId)
                     })
                 }
@@ -125,9 +125,20 @@ fun AboutScreen(
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(aboutDeveloperUrl))
                 context.startActivity(intent)
             })
+
+            val privacyPolicyUrl = stringResource(id = R.string.about_privacy_policy_url)
+            AboutHeading(R.string.about_privacy_policy_title)
+            Button(content = {
+                Text(text = stringResource(id = R.string.about_privacy_policy))
+            }, onClick = {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(privacyPolicyUrl))
+                context.startActivity(intent)
+            })
+
             Spacer(modifier = Modifier.height(Dimen.spacingDouble))
             AboutText(R.string.about_credits_graphics_title)
             ImageCreditText(Modifier)
+
             if (BuildConfig.DEBUG) {
                 ThemedButton(content = {
                     Text(stringResource(id = R.string.debug_showkase))

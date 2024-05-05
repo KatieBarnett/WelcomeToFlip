@@ -8,15 +8,16 @@ val WelcomeToClassic = GameType(
     icon = R.drawable.ic_sign,
     largeIcon = R.drawable.noun_house_6786764,
     displayName = R.string.game_welcome_to_classic,
-    solo = false,
+    soloAvailable = false,
+    purchased = true // Multiplayer purchased by default
 )
 
 val WelcomeToTheMoon = GameType(
-    name = "WelcomeToTheMoonSolo",
+    name = "WelcomeToTheMoon",
     icon = R.drawable.noun_rocket_4925595,
     largeIcon = R.drawable.noun_moon_6086589,
     displayName = R.string.game_welcome_to_the_moon,
-    solo = false,
+    soloAvailable = false,
 )
 
 // Welcome To Classic

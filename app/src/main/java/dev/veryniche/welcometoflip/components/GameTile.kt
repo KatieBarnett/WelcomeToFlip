@@ -45,10 +45,10 @@ fun GameTile(
     @DrawableRes imageRes: Int,
     purchased: Boolean,
     purchasePrice: String?,
-    solo: Boolean,
+    soloAvailable: Boolean,
     soloPurchased: Boolean,
     soloPurchasePrice: String?,
-    onClick: (solo: Boolean) -> Unit,
+    onGameClick: (solo: Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Tile(
@@ -57,7 +57,7 @@ fun GameTile(
                 textRes = textRes,
                 imageRes = imageRes,
                 anyPurchased = purchased || soloPurchased,
-                soloAvailable = solo,
+                soloAvailable = soloAvailable,
                 modifier = modifier
             )
         },
@@ -67,14 +67,14 @@ fun GameTile(
                 imageRes = imageRes,
                 purchased = purchased,
                 purchasePrice = purchasePrice,
-                solo = solo,
+                solo = soloAvailable,
                 soloPurchased = soloPurchased,
                 soloPurchasePrice = soloPurchasePrice,
                 onClick = {
-                    onClick.invoke(false)
+                    onGameClick.invoke(false)
                 },
                 onClickSolo = {
-                    onClick.invoke(true)
+                    onGameClick.invoke(true)
                 },
                 modifier = modifier
             )
@@ -199,6 +199,12 @@ fun GameTileBack(
                 ) {
                     Text(getButtonText(purchased = soloPurchased, solo = true, purchasePrice = soloPurchasePrice))
                 }
+            } else {
+                Text(
+                    text = stringResource(id = dev.veryniche.welcometoflip.R.string.solo_coming_soon),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     }
@@ -239,10 +245,10 @@ fun GameTilePurchasedPreview() {
                 R.drawable.noun_moon_6086589,
                 purchased = true,
                 purchasePrice = "5.00",
-                solo = false,
+                soloAvailable = false,
                 soloPurchasePrice = "1.00",
                 soloPurchased = false,
-                onClick = {}
+                onGameClick = {}
             )
         }
     }
@@ -258,10 +264,10 @@ fun GameTileSoloPurchasedPreview() {
                 R.drawable.noun_moon_6086589,
                 purchased = true,
                 purchasePrice = "5.00",
-                solo = true,
+                soloAvailable = true,
                 soloPurchasePrice = "1.00",
                 soloPurchased = true,
-                onClick = {}
+                onGameClick = {}
             )
         }
     }
@@ -277,10 +283,10 @@ fun GameTileNotPurchasedPreview() {
                 R.drawable.noun_moon_6086589,
                 purchased = false,
                 purchasePrice = "5.00",
-                solo = false,
+                soloAvailable = false,
                 soloPurchasePrice = "1.00",
                 soloPurchased = false,
-                onClick = {}
+                onGameClick = {}
             )
         }
     }

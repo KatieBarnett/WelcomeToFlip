@@ -30,10 +30,11 @@
     <string name="about_developer_text">At Very Niche we are a small app development team specialising in apps for very niche uses, nothing is too small! If you have an idea for an app you need, please let us know!</string>
     <string name="about_developer_url">https://veryniche.dev</string>
     <string name="about_privacy_policy_title">Privacy policy</string>
+    <string name="about_privacy_policy_url">https://veryniche.dev/apps/welcometoflip/privacypolicy/</string>
     <string name="about_privacy_policy">Please click here to view the privacy policy.</string>
     <string name="about_remove_ads_title">Don\'t want to see ads?</string>
     <string name="about_remove_ads">Remove ads %s</string>
-<!--    <string name="about_remove_ads">Help me get more games so I can make more apps about them!</string>-->
+    <string name="about_remove_ads_text">Help me get more games so I can make more apps about them!</string>
 
     <string name="flip_button">Flip!</string>
     <string name="reshuffle_button">Reshuffle Stacks</string>
@@ -73,5 +74,6 @@
     <string name="solo_purchased">Play Solo</string>
     <string name="solo_not_purchased">Buy Solo %s</string>
     <string name="solo_not_purchased_no_price">Buy Solo</string>
+    <string name="solo_coming_soon">Solo coming soon!</string>
     
 </resources>

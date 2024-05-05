@@ -2,8 +2,8 @@
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 
 ext {
-    extra["appVersionName"] = "0.1.0"
-    extra["appVersionCode"] = 1
+    extra["appVersionName"] = "0.2.0"
+    extra["appVersionCode"] = 2
     extra["compileSdk"] = 34
     extra["targetSdk"] = 34
     extra["minSdk"] = 26

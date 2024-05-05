@@ -41,35 +41,24 @@ class MainActivity : ComponentActivity() {
 //            Timber.d("AdMob init: ${initializationStatus.adapterStatusMap}")
 //        }
         setContent {
-            val coroutineScope = rememberCoroutineScope()
-            val purchaseManager = remember { PurchaseManager(this, coroutineScope) }
-            LaunchedEffect(Unit) {
-                purchaseManager.connectToBilling()
-            }
-
-            val purchasedProducts by purchaseManager.purchases.collectAsStateWithLifecycle()
-            var showPurchaseErrorMessage by rememberSaveable { mutableStateOf<Int?>(null) }
-            WelcomeToFlipApp(purchasedProducts)
+            WelcomeToFlipApp()
         }
     }
 
     @Composable
-    fun WelcomeToFlipApp(purchasedProducts: List<String>) {
+    fun WelcomeToFlipApp() {
+        val coroutineScope = rememberCoroutineScope()
+        val purchaseManager = remember { PurchaseManager(this, coroutineScope) }
         val viewModel: MainViewModel = hiltViewModel<MainViewModel, MainViewModel.MainViewModelFactory> { factory ->
-            factory.create(purchasedProducts)
+            factory.create(purchaseManager)
         }
         WelcomeToFlipTheme {
             val navController = rememberNavController()
             val showWelcomeDialogOnStart by viewModel.showWelcomeDialog.collectAsStateWithLifecycle(null)
             var showWelcomeDialog by remember(showWelcomeDialogOnStart) { mutableStateOf(showWelcomeDialogOnStart) }
-            var purchaseStatus by remember { mutableStateOf<Map<String, PurchaseStatus>>(mapOf()) }
 
             WelcomeToFlipNavHost(
                 navController = navController,
-                purchaseStatus = purchaseStatus,
-                onPurchaseClick = {
-                    // TODO
-                },
                 mainViewModel = viewModel,
                 onGameEnd = {
                     viewModel.requestReviewIfAble(this)
@@ -92,6 +81,6 @@ class MainActivity : ComponentActivity() {
     @Preview(group = "Full App", showSystemUi = true, showBackground = true)
     @Composable
     fun DefaultPreview() {
-        WelcomeToFlipApp(listOf())
+        WelcomeToFlipApp()
     }
 }

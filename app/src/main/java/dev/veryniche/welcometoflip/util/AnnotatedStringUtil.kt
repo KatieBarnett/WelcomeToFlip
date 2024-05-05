@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.text.withStyle
@@ -27,14 +28,22 @@ fun AboutAppText(modifier: Modifier = Modifier) {
         append(stringResource(id = R.string.about_instructions))
         pushStringAnnotation(tag = "bgg_wt_link", annotation = stringResource(id = R.string.bgg_link_wttm))
         withStyle(
-            style = SpanStyle(color = MaterialTheme.colorScheme.primary, textDecoration = TextDecoration.Underline)
+            style = SpanStyle(
+                color = MaterialTheme.colorScheme.secondary,
+                fontWeight = FontWeight.Bold,
+                textDecoration = TextDecoration.Underline
+            )
         ) {
             append(stringResource(id = R.string.bgg_link_wt_text))
         }
         append("\n")
         pushStringAnnotation(tag = "bgg_wttm_link", annotation = stringResource(id = R.string.bgg_link_wttm))
         withStyle(
-            style = SpanStyle(color = MaterialTheme.colorScheme.primary, textDecoration = TextDecoration.Underline)
+            style = SpanStyle(
+                color = MaterialTheme.colorScheme.secondary,
+                fontWeight = FontWeight.Bold,
+                textDecoration = TextDecoration.Underline
+            )
         ) {
             append(stringResource(id = R.string.bgg_link_wttm_text))
         }

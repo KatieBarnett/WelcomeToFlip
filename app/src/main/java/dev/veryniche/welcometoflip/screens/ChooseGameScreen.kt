@@ -1,6 +1,5 @@
 package dev.veryniche.welcometoflip.screens
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -56,9 +55,11 @@ import dev.veryniche.welcometoflip.core.R as Rcore
 fun ChooseGameScreen(
     navController: NavController = rememberNavController(),
     viewModel: MainViewModel,
+    onPurchaseError: (message: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val savedGames: List<SavedGame> by viewModel.savedGames.collectAsState(initial = emptyList())
+    val games: List<GameType> by viewModel.games.collectAsState(initial = emptyList())
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
     TrackedScreen {
@@ -91,7 +92,7 @@ fun ChooseGameScreen(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         ChooseGameBody(
-            gameTypes = viewModel.gameTypes,
+            gameTypes = games,
             savedGames = savedGames,
             chooseNewGameAction = { gameType, solo ->
                 navController.navigate(route = Game.getRoute(gameType, solo))
@@ -105,14 +106,14 @@ fun ChooseGameScreen(
                 viewModel.deleteGameAction(savedGame)
             },
             purchaseNewGameAction = { gameType, solo ->
-                // TODO
+                viewModel.purchaseGame(gameType, solo) { message: Int ->
+                }
             },
             modifier = modifier.padding(innerPadding)
         )
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ChooseGameBody(
     gameTypes: List<GameType>,
@@ -137,10 +138,10 @@ fun ChooseGameBody(
                 imageRes = gameType.largeIcon,
                 purchased = gameType.purchased ?: false,
                 purchasePrice = gameType.purchasePrice,
-                solo = gameType.solo,
+                soloAvailable = gameType.soloAvailable,
                 soloPurchased = gameType.soloPurchased ?: false,
                 soloPurchasePrice = gameType.soloPurchasePrice,
-                onClick = { solo ->
+                onGameClick = { solo ->
                     val isPurchased = if (solo) {
                         gameType.soloPurchased == true
                     } else {

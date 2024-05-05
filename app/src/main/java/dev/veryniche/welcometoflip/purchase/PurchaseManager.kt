@@ -23,6 +23,20 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
+data class Product(
+    val productId: String,
+    val purchasePrice: String?,
+    val purchaseCurrency: String?,
+) {
+    val displayedPrice = "$purchasePrice $purchaseCurrency"
+}
+
+internal fun getProductQuery(id: String) =
+    QueryProductDetailsParams.Product.newBuilder()
+        .setProductId(id)
+        .setProductType(BillingClient.ProductType.INAPP)
+        .build()
+
 class PurchaseManager(
     private val activity: Activity,
     private val coroutineScope: CoroutineScope
@@ -30,8 +44,11 @@ class PurchaseManager(
     private val _purchases = MutableStateFlow<List<String>>(emptyList())
     val purchases = _purchases.asStateFlow()
 
+    private val _availableProducts = MutableStateFlow<List<Product>>(emptyList())
+    val availableProducts = _availableProducts.asStateFlow()
+
     private val purchasesUpdatedListener =
-        PurchasesUpdatedListener { billingResult, purchases ->
+        PurchasesUpdatedListener { _, _ ->
             coroutineScope.launch {
                 processPurchases()
             }
@@ -48,6 +65,7 @@ class PurchaseManager(
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     // The BillingClient is ready. You can query purchases here.
                     coroutineScope.launch {
+                        processAvailableProducts()
                         processPurchases()
                     }
                 }
@@ -63,14 +81,10 @@ class PurchaseManager(
 
     suspend fun processAvailableProducts() {
         val productList = ArrayList<QueryProductDetailsParams.Product>()
-        productList.add(
-            QueryProductDetailsParams.Product.newBuilder()
-//                .setProductId(Products.proVersion)
-                .setProductType(BillingClient.ProductType.INAPP)
-                .build()
-        )
+        productList.addAll(productList)
+
         val params = QueryProductDetailsParams.newBuilder()
-        params.setProductList(productList)
+        params.setProductList(appProductList)
 
         // leverage queryProductDetails Kotlin extension function
         val productDetailsResult = withContext(Dispatchers.IO) {
@@ -79,9 +93,17 @@ class PurchaseManager(
 
         // Process the result.
         // Update products list
-        _purchases.update {
+        _availableProducts.update {
             val newList = it.toMutableList()
-            newList.add(productDetailsResult.productDetailsList?.firstOrNull().toString())
+            newList.addAll(
+                productDetailsResult.productDetailsList?.map {
+                    Product(
+                        productId = it.productId,
+                        purchasePrice = it.oneTimePurchaseOfferDetails?.formattedPrice,
+                        purchaseCurrency = it.oneTimePurchaseOfferDetails?.priceCurrencyCode
+                    )
+                } ?: listOf()
+            )
             newList
         }
     }
@@ -100,7 +122,9 @@ class PurchaseManager(
             newList.addAll(
                 purchasesResult.purchasesList.filter {
                     it.purchaseState == PurchaseState.PURCHASED
-                }.map { it.products.firstOrNull().toString() }
+                }.map {
+                    it.products.firstOrNull().toString()
+                }
             )
             newList
         }
@@ -130,6 +154,7 @@ class PurchaseManager(
                 }
                 if (productDetails != null) {
                     initiateBilling(productDetails)
+                    Timber.i("Initiating purchase of $productId")
                 } else {
                     onError.invoke(R.string.purchase_error_generic)
                     Timber.e("Product details for $productId are null")
@@ -159,7 +184,7 @@ class PurchaseManager(
         }
     }
 
-    fun initiateBilling(productDetails: ProductDetails) {
+    private fun initiateBilling(productDetails: ProductDetails) {
         val productDetailsParamsList = listOf(
             BillingFlowParams.ProductDetailsParams.newBuilder()
                 .setProductDetails(productDetails)
