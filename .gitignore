@@ -86,3 +86,4 @@ lint/tmp/
 .idea/*
 core/src/main/res/.DS_Store
 core/src/main/res/drawable/.DS_Store
+app/.DS_Store
