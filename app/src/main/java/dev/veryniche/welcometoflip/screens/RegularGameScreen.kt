@@ -21,6 +21,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.veryniche.welcometoflip.GameViewModel
 import dev.veryniche.welcometoflip.components.AboutActionIcon
+import dev.veryniche.welcometoflip.components.EndGameConfirmationDialog
 import dev.veryniche.welcometoflip.components.EndGameDialog
 import dev.veryniche.welcometoflip.components.GameContainer
 import dev.veryniche.welcometoflip.components.NavigationIcon
@@ -58,8 +59,10 @@ fun RegularGameScreen(
 
     val position by viewModel.position.observeAsState(viewModel.initialPosition)
     val advancePositionEnabled by viewModel.advancePositionEnabled.observeAsState(true)
+    val reversePositionEnabled by viewModel.reversePositionEnabled.observeAsState(true)
     val isEndGame by viewModel.isEndGame.observeAsState(false)
     var showEndGameDialog by remember(isEndGame) { mutableStateOf(isEndGame) }
+    var showEndGameConfirmationDialog by remember { mutableStateOf(false) }
 
     viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
 
@@ -76,17 +79,23 @@ fun RegularGameScreen(
         GameContainer(
             displayPosition = position + 1,
             displayEndPosition = viewModel.stacks.getStackSize() ?: 0,
-            gameType = gameType,
             advancePosition = {
                 viewModel.advancePosition()
             },
             advancePositionEnabled = advancePositionEnabled,
+            reversePosition = {
+                viewModel.reversePosition()
+            },
+            reversePositionEnabled = reversePositionEnabled,
             content = { contentModifier ->
                 RegularGame(
                     position = position,
                     stacks = viewModel.stacks,
                     modifier = contentModifier
                 )
+            },
+            endGame = {
+                showEndGameConfirmationDialog = true
             },
             modifier = Modifier.padding(innerPadding)
         )
@@ -107,6 +116,22 @@ fun RegularGameScreen(
             },
             onDismissRequest = {
                 showEndGameDialog = false
+            }
+        )
+    }
+
+    if (showEndGameConfirmationDialog) {
+        EndGameConfirmationDialog(
+            gameType = gameType,
+            position = position,
+            endGame = {
+                onGameEnd.invoke()
+                viewModel.endGame {
+                    navController.navigateUp()
+                }
+            },
+            onDismissRequest = {
+                showEndGameConfirmationDialog = false
             }
         )
     }

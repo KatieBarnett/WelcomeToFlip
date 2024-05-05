@@ -48,6 +48,10 @@ open class GameViewModel @AssistedInject constructor(
         (stacks.getStackSize() ?: 0) > it + 1
     }
 
+    val reversePositionEnabled = position.map {
+        it > 0
+    }
+
     val isEndGame = advancePositionEnabled.map {
         !it
     }
@@ -63,6 +67,12 @@ open class GameViewModel @AssistedInject constructor(
 
     open fun advancePosition(): Int {
         val newPosition = (_position.value ?: 0) + 1
+        _position.postValue(newPosition)
+        return newPosition
+    }
+
+    open fun reversePosition(): Int {
+        val newPosition = (_position.value ?: 0) - 1
         _position.postValue(newPosition)
         return newPosition
     }

@@ -23,70 +23,102 @@ import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
 import dev.veryniche.welcometoflip.util.trackEndGame
 import dev.veryniche.welcometoflip.util.trackShuffleGame
 
-
 @Composable
-fun GameContainer(displayPosition: Int, 
-                  displayEndPosition: Int,
-                  gameType: GameType,
-                  advancePosition: () -> Unit,
-                  advancePositionEnabled: Boolean,
-                  content: @Composable (modifier: Modifier) -> Unit,
-                  modifier: Modifier = Modifier) {
+fun GameContainer(
+    displayPosition: Int,
+    displayEndPosition: Int,
+    advancePosition: () -> Unit,
+    advancePositionEnabled: Boolean,
+    reversePosition: () -> Unit,
+    reversePositionEnabled: Boolean,
+    endGame: () -> Unit,
+    content: @Composable (Modifier) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         verticalArrangement = Arrangement.spacedBy(Dimen.spacing),
         modifier = modifier
             .fillMaxSize()
             .padding(Dimen.spacing)
     ) {
-        Row(modifier = Modifier
-            .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(Dimen.spacing)) {
-            Text(stringResource(id = gameType.displayName), modifier = Modifier.weight(1f))
-            Text(stringResource(id = R.string.deck_position, displayPosition, displayEndPosition))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Dimen.spacing)
+        ) {
+            Text(
+                text = stringResource(id = R.string.deck_position, displayPosition, displayEndPosition),
+                modifier = Modifier.weight(1f)
+            )
+            ThemedButtonWithIcon(
+                iconRes = dev.veryniche.welcometoflip.core.R.drawable.noun_undo_4100779,
+                textRes = null,
+                imageAltTextRes = R.string.flip_back_button,
+                onClick = {
+                    reversePosition.invoke()
+                },
+                enabled = reversePositionEnabled,
+                modifier = Modifier
+            )
+            ThemedButton(onClick = {
+                endGame.invoke()
+            }, modifier = Modifier) {
+                Text(stringResource(id = R.string.end_game_button))
+            }
         }
-        content(modifier = Modifier
-            .weight(1f))
-        Row( modifier = Modifier
-            .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(Dimen.Button.spacing)) {
+        content(Modifier.weight(1f))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(Dimen.Button.spacing)
+        ) {
             ThemedButton(onClick = {
                 advancePosition.invoke()
             }, enabled = advancePositionEnabled, modifier = Modifier.weight(1f)) {
-                Text(stringResource(id = R.string.flip_button))
+                Text(
+                    text = stringResource(id = R.string.flip_button),
+                    style = MaterialTheme.typography.displayMedium
+                )
             }
         }
     }
 }
 
 @Composable
-fun SoloGameContainer(displayPosition: Int,
-                  displayEndPosition: Int,
-                  gameType: GameType,
-                  content: @Composable (modifier: Modifier) -> Unit,
-                  modifier: Modifier = Modifier) {
+fun SoloGameContainer(
+    displayPosition: Int,
+    displayEndPosition: Int,
+    gameType: GameType,
+    content: @Composable (modifier: Modifier) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         verticalArrangement = Arrangement.spacedBy(Dimen.spacing),
         modifier = modifier
             .fillMaxSize()
             .padding(Dimen.spacing)
     ) {
-        Row(modifier = Modifier
-            .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(Dimen.spacing)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(Dimen.spacing)
+        ) {
             Text(stringResource(id = gameType.displayName), modifier = modifier.weight(1f))
             Text(stringResource(id = R.string.deck_position, displayPosition, displayEndPosition))
         }
-        content(modifier = Modifier
-            .weight(1f))
+        content(
+            modifier = Modifier
+                .weight(1f)
+        )
     }
 }
 
 @Composable
-fun EndGameDialog(gameType: GameType,
-                  position: Int,
-                  reshuffleStacks: () -> Unit,
-                  endGame: () -> Unit,
-                  onDismissRequest: () -> Unit
+fun EndGameDialog(
+    gameType: GameType,
+    position: Int,
+    reshuffleStacks: () -> Unit,
+    endGame: () -> Unit,
+    onDismissRequest: () -> Unit
 ) {
     AnimatedTransitionDialog(onDismissRequest = onDismissRequest) { dialogHelper ->
         Surface(
@@ -97,7 +129,7 @@ fun EndGameDialog(gameType: GameType,
             Column(
                 verticalArrangement = Arrangement.spacedBy(Dimen.spacing),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(Dimen.spacing)
+                modifier = Modifier.padding(Dimen.spacingDouble)
             ) {
                 Text(stringResource(id = R.string.stack_end_message))
                 ThemedButton(onClick = {
@@ -110,8 +142,50 @@ fun EndGameDialog(gameType: GameType,
                 ThemedButton(onClick = {
                     trackEndGame(gameType, position)
                     dialogHelper::triggerAnimatedDismiss.invoke()
-                    endGame.invoke() }) {
+                    endGame.invoke()
+                }) {
                     Text(stringResource(id = R.string.end_game_button))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun EndGameConfirmationDialog(
+    gameType: GameType,
+    position: Int,
+    endGame: () -> Unit,
+    onDismissRequest: () -> Unit
+) {
+    AnimatedTransitionDialog(onDismissRequest = onDismissRequest) { dialogHelper ->
+        Surface(
+            shape = RoundedCornerShape(Dimen.Dialog.radius),
+            color = MaterialTheme.colorScheme.surface,
+            modifier = Modifier
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(Dimen.spacing),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(Dimen.spacingDouble)
+            ) {
+                Text(stringResource(id = R.string.game_end_confirmation_message))
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    ThemedButton(onClick = {
+                        trackEndGame(gameType, position)
+                        dialogHelper::triggerAnimatedDismiss.invoke()
+                        endGame.invoke()
+                    }) {
+                        Text(stringResource(id = R.string.game_end_positive))
+                    }
+                    ThemedButton(onClick = {
+                        dialogHelper::triggerAnimatedDismiss.invoke()
+                    }) {
+                        Text(stringResource(id = R.string.game_end_negative))
+                    }
                 }
             }
         }
@@ -124,10 +198,12 @@ fun GameContainerPreview() {
     WelcomeToFlipTheme {
         GameContainer(
             displayPosition = 1,
-            displayEndPosition = 10, 
-            gameType = WelcomeToTheMoon,
+            displayEndPosition = 10,
             advancePosition = {},
             advancePositionEnabled = true,
+            reversePosition = {},
+            reversePositionEnabled = true,
+            endGame = {},
             content = { modifier ->
                 Text("Game content", modifier = modifier)
             },

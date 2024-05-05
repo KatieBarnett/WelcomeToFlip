@@ -14,7 +14,6 @@ Water Drop by Georgiana Ionescu from https://thenounproject.com/icon/water-drop-
 Bin by Alice Design from https://thenounproject.com/icon/bin-2034046/
 Arrow by Jamison Wieser from https://thenounproject.com/icon/arrow-60381/
 Moon by Rafi Al Hakim from https://thenounproject.com/icon/moon-6086589/
-
 Park by Ahmad Faiz from https://thenounproject.com/icon/park-6721083/
 Fence by kitaicons from https://thenounproject.com/icon/fence-6826093/
 mailbox by Fharaz from https://thenounproject.com/icon/mailbox-6180823/
@@ -22,3 +21,4 @@ Traffic Cone by Dmitry Mirolyubov from https://thenounproject.com/icon/traffic-c
 Pool by Larea from https://thenounproject.com/icon/pool-5817216/
 increase by ARISO from https://thenounproject.com/icon/increase-6785191/
 House by Jang Jeong Eui from https://thenounproject.com/icon/house-6786764/
+Undo by Marina Rizo from https://thenounproject.com/icon/undo-4100779/

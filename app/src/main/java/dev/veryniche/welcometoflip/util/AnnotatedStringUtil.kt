@@ -26,7 +26,7 @@ fun AboutAppText(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val annotatedString = buildAnnotatedString {
         append(stringResource(id = R.string.about_instructions))
-        pushStringAnnotation(tag = "bgg_wt_link", annotation = stringResource(id = R.string.bgg_link_wttm))
+        pushStringAnnotation(tag = "bgg_wt_link", annotation = stringResource(id = R.string.bgg_link_wt))
         withStyle(
             style = SpanStyle(
                 color = MaterialTheme.colorScheme.secondary,
@@ -83,6 +83,7 @@ fun ImageCreditText(modifier: Modifier = Modifier) {
         Pair("Pool by Larea", "https://thenounproject.com/icon/pool-5817216/"),
         Pair("Increase by ARISO", "https://thenounproject.com/icon/increase-6785191/"),
         Pair("House by Jang Jeong Eui", "https://thenounproject.com/icon/house-6786764/"),
+        Pair("Undo by Marina Rizo", "https://thenounproject.com/icon/undo-4100779/"),
     )
     val annotatedString = buildAnnotatedString {
         credits.forEachIndexed { index, credit ->

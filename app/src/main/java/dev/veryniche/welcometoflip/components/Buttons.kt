@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,12 +27,13 @@ import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
 @Composable
 fun ThemedButton(
     onClick: () -> Unit,
+    colors: ButtonColors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit
 ) {
     ElevatedButton(
-        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+        colors = colors,
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,
@@ -39,25 +42,29 @@ fun ThemedButton(
 }
 
 @Composable
-fun ButtonWithIcon(
-    @StringRes textRes: Int,
+fun ThemedButtonWithIcon(
+    @StringRes textRes: Int?,
+    @StringRes imageAltTextRes: Int? = null,
     @DrawableRes iconRes: Int,
+    colors: ButtonColors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
     onClick: () -> Unit,
     enabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
-    ThemedButton(onClick = onClick, enabled = enabled, modifier) {
+    ThemedButton(onClick = onClick, enabled = enabled, colors = colors, modifier = modifier) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(Dimen.Button.iconSpacing)
         ) {
             Icon(
                 painter = painterResource(id = iconRes),
-                contentDescription = stringResource(id = textRes),
+                contentDescription = stringResource(id = textRes ?: imageAltTextRes ?: 0),
                 modifier = Modifier
                     .size(Dimen.Button.iconSize)
             )
-            Text(stringResource(id = textRes))
+            textRes?.let {
+                Text(stringResource(id = textRes))
+            }
         }
     }
 }
@@ -66,12 +73,13 @@ fun ButtonWithIcon(
 fun ThemedIconButton(
     @StringRes altTextRes: Int? = null,
     @DrawableRes iconRes: Int,
+    colors: ButtonColors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
     onClick: () -> Unit,
     enabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     ElevatedButton(
-        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+        colors = colors,
         onClick = onClick,
         modifier = modifier.size(Dimen.Button.iconButtonSize),
         contentPadding = PaddingValues(Dimen.Button.iconButtonContentPadding),
@@ -87,8 +95,6 @@ fun ThemedIconButton(
     }
 }
 
-
-
 @Preview(group = "Buttons", showBackground = true)
 @Composable
 fun ThemedButtonPreview() {
@@ -101,11 +107,11 @@ fun ThemedButtonPreview() {
 
 @Preview(group = "Buttons", showBackground = true)
 @Composable
-fun ButtonWithIconPreview() {
+fun ThemedButtonWithIconPreview() {
     WelcomeToFlipTheme {
-        ButtonWithIcon(
+        ThemedButtonWithIcon(
             textRes = R.string.game_welcome_to_the_moon,
-            R.drawable.noun_rocket_4925595,
+            iconRes = R.drawable.noun_rocket_4925595,
             onClick = {}
         )
     }
@@ -113,11 +119,24 @@ fun ButtonWithIconPreview() {
 
 @Preview(group = "Buttons", showBackground = true)
 @Composable
-fun IconButtonPreview() {
+fun ThemedButtonWithIconPreviewJustIcon() {
+    WelcomeToFlipTheme {
+        ThemedButtonWithIcon(
+            imageAltTextRes = R.string.game_welcome_to_the_moon,
+            iconRes = R.drawable.noun_rocket_4925595,
+            textRes = null,
+            onClick = {}
+        )
+    }
+}
+
+@Preview(group = "Buttons", showBackground = true)
+@Composable
+fun ThemedIconButtonPreview() {
     WelcomeToFlipTheme {
         ThemedIconButton(
             altTextRes = R.string.game_welcome_to_the_moon,
-            R.drawable.noun_bin_2034046,
+            iconRes = R.drawable.noun_bin_2034046,
             onClick = {}
         )
     }

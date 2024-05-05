@@ -37,12 +37,13 @@
     <string name="about_remove_ads_text">Help me get more games so I can make more apps about them!</string>
 
     <string name="flip_button">Flip!</string>
+    <string name="flip_back_button">Flip back</string>
     <string name="reshuffle_button">Reshuffle Stacks</string>
     <string name="end_game_button">End Game</string>
     <string name="load_saved_button">Load saved game</string>
     <string name="delete_saved_button">Delete saved game</string>
 
-    <string name="deck_position">%1$d/%2$d</string>
+    <string name="deck_position">Deck position: %1$d/%2$d</string>
 
     <string name="number_deck_alt">Number Deck</string>
     <string name="action_deck_alt">Action Deck</string>
@@ -56,7 +57,11 @@
     <string name="position_label">Position: %1$d/%2$d</string>
     
     <string name="stack_end_message">You have reached the bottom of the stacks, do you want to reshuffle the stacks and continue, or end the game?</string>
-    
+
+    <string name="game_end_confirmation_message">Are you sure you want to end the game?</string>
+    <string name="game_end_positive">End game</string>
+    <string name="game_end_negative">Cancel</string>
+
     <string name="solo_draw_stack">Draw stack</string>
     <string name="solo_discard_stack">Discard stack</string>
     <string name="solo_action_instruction">Select your cards to use:</string>
