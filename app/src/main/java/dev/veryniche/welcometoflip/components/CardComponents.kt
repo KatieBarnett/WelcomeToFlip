@@ -40,15 +40,17 @@ fun CardFaceDisplay(
     modifier: Modifier = Modifier
 ) {
     if (cardFace != null) {
-        Box(contentAlignment = Alignment.Center,
+        Box(
+            contentAlignment = Alignment.Center,
             modifier = modifier.fillMaxSize()
-            .clip(RoundedCornerShape(Dimen.Card.radius))
-            .border(
-                Dimen.Card.border,
-                MaterialTheme.colorScheme.primary,
-                RoundedCornerShape(Dimen.Card.radius)
-            )
-            .background(cardFace.backgroundColor ?: MaterialTheme.colorScheme.surface)) {
+                .clip(RoundedCornerShape(Dimen.Card.radius))
+                .border(
+                    width = Dimen.Card.border,
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = RoundedCornerShape(Dimen.Card.radius)
+                )
+                .background(cardFace.backgroundColor ?: MaterialTheme.colorScheme.surface)
+        ) {
             if (peek?.backgroundColor != null) {
                 CardNumberContent(cardFace = cardFace, peek.backgroundColor ?: Color.Black)
             } else {
@@ -57,8 +59,8 @@ fun CardFaceDisplay(
         }
     } else {
         CardDisplayPlaceholder(modifier)
-
-    }}
+    } 
+}
 
 @Composable
 private fun CardNumberContent(
@@ -66,9 +68,11 @@ private fun CardNumberContent(
     peekColor: Color,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier
-        .fillMaxSize()
-        .padding(paddingValues = PaddingValues(Dimen.spacing, Dimen.spacing))) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(paddingValues = PaddingValues(Dimen.spacing, Dimen.spacing))
+    ) {
         Image(
             painter = painterResource(cardFace.drawableRes),
             contentDescription = null,
@@ -104,9 +108,11 @@ private fun CardActionContent(
     cardFace: CardFace,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier
-        .fillMaxSize()
-        .padding(Dimen.spacing)) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(Dimen.spacing)
+    ) {
         Image(
             painter = painterResource(cardFace.drawableRes),
             contentDescription = null,
@@ -135,10 +141,14 @@ fun CardDisplayPlaceholder(modifier: Modifier = Modifier) {
 @Composable
 fun NumberCardPreview() {
     WelcomeToFlipTheme {
-        CardFaceDisplay(Number12, Astronaut, modifier = Modifier
-            .padding(Dimen.spacing)
-            .height(400.dp)
-            .width(300.dp))
+        CardFaceDisplay(
+            Number12,
+            Astronaut,
+            modifier = Modifier
+                .padding(Dimen.spacing)
+                .height(400.dp)
+                .width(300.dp)
+        )
     }
 }
 
@@ -146,10 +156,13 @@ fun NumberCardPreview() {
 @Composable
 fun ActionCardPreview() {
     WelcomeToFlipTheme {
-        CardFaceDisplay(Astronaut, modifier = Modifier
-            .padding(Dimen.spacing)
-            .height(400.dp)
-            .width(300.dp))
+        CardFaceDisplay(
+            Astronaut,
+            modifier = Modifier
+                .padding(Dimen.spacing)
+                .height(400.dp)
+                .width(300.dp)
+        )
     }
 }
 
@@ -157,10 +170,13 @@ fun ActionCardPreview() {
 @Composable
 fun LetterCardPreview() {
     WelcomeToFlipTheme {
-        CardFaceDisplay(SoloA, modifier = Modifier
-            .padding(Dimen.spacing)
-            .height(400.dp)
-            .width(300.dp))
+        CardFaceDisplay(
+            SoloA,
+            modifier = Modifier
+                .padding(Dimen.spacing)
+                .height(400.dp)
+                .width(300.dp)
+        )
     }
 }
 
@@ -168,9 +184,11 @@ fun LetterCardPreview() {
 @Composable
 fun CardDisplayPlaceholderPreview() {
     WelcomeToFlipTheme {
-        CardDisplayPlaceholder(modifier = Modifier
-            .padding(Dimen.spacing)
-            .height(400.dp)
-            .width(300.dp))
+        CardDisplayPlaceholder(
+            modifier = Modifier
+                .padding(Dimen.spacing)
+                .height(400.dp)
+                .width(300.dp)
+        )
     }
 }

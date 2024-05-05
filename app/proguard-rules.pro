@@ -48,7 +48,7 @@
 -dontwarn dev.veryniche.welcometoflip.core.models.SoloC
 -dontwarn dev.veryniche.welcometoflip.core.models.Water
 -dontwarn dev.veryniche.welcometoflip.core.models.X
--dontwarn dev.veryniche.welcometoflip.core.theme.ColorKt
+-dontwarn dev.veryniche.welcometoflip.core.theme.CardColorsKt
 -dontwarn dev.veryniche.welcometoflip.core.di.DispatchersModule_ProvidesIODispatcherFactory
 -dontwarn dev.veryniche.welcometoflip.storage.SavedGamesDataSource
 -dontwarn dev.veryniche.welcometoflip.storage.SavedGamesRepository

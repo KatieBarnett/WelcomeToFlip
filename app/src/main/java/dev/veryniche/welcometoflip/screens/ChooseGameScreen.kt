@@ -14,6 +14,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -40,6 +41,7 @@ import dev.veryniche.welcometoflip.components.AboutActionIcon
 import dev.veryniche.welcometoflip.components.GameTile
 import dev.veryniche.welcometoflip.components.NavigationIcon
 import dev.veryniche.welcometoflip.components.ThemedIconButton
+import dev.veryniche.welcometoflip.config.getMediumTopAppBarColors
 import dev.veryniche.welcometoflip.core.models.GameType
 import dev.veryniche.welcometoflip.core.models.SavedGame
 import dev.veryniche.welcometoflip.core.models.WelcomeToClassic
@@ -72,28 +74,16 @@ fun ChooseGameScreen(
     TrackedScreen {
         trackScreenView(name = Analytics.Screen.ChooseGame)
     }
-
-    val topAppBarElementColor = if (scrollBehavior.state.collapsedFraction > 0.5) {
-        MaterialTheme.colorScheme.onSurface
-    } else {
-        MaterialTheme.colorScheme.onPrimary
-    }
     val topAppBarTextSize = (CollapsedTextSize + (ExpandedTextSize - CollapsedTextSize) * (1 - scrollBehavior.state.collapsedFraction))
 
     Scaffold(
         topBar = {
-            LargeTopAppBar(
+            MediumTopAppBar(
                 title = { Text(text = stringResource(id = R.string.app_name), fontSize = topAppBarTextSize.sp) },
                 navigationIcon = { NavigationIcon(navController = navController) },
                 actions = { AboutActionIcon(navController) },
                 scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.largeTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surface,
-                    navigationIconContentColor = topAppBarElementColor,
-                    titleContentColor = topAppBarElementColor,
-                    actionIconContentColor = topAppBarElementColor,
-                )
+                colors = getMediumTopAppBarColors()
             )
         },
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)

@@ -23,7 +23,7 @@
     <string name="about_subtitle">About the app</string>
     <string name="about_credits_graphics_title">The icons &amp; graphics used in this app were designed by:</string>
 
-    <string name="about_version">App version: %s(%d)</string>
+    <string name="about_version">App version: %s (%d)</string>
 
     <string name="about_developer_title">About the developer</string>
     <string name="about_developer">Visit our website</string>

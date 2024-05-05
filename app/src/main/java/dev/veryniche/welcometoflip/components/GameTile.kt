@@ -114,7 +114,7 @@ fun GameTileFront(
                     Modifier.weight(0.66f)
                 ) {
                     Image(
-                        painterResource(imageRes),
+                        painter = painterResource(id = imageRes),
                         contentDescription = stringResource(textRes),
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
                         contentScale = ContentScale.Crop,

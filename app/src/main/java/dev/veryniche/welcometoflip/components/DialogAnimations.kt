@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 internal const val ANIMATION_TIME = 1000L
-internal const val DIALOG_BUILD_TIME = 300L 
+internal const val DIALOG_BUILD_TIME = 300L
 
 // Inspired by https://medium.com/tech-takeaways/ios-like-modal-view-dialog-animation-in-jetpack-compose-fac5778969af
 
@@ -84,20 +84,21 @@ fun AnimatedTransitionDialog(
             animateTrigger.value = true
         }
         launch {
-            onDismissSharedFlow.asSharedFlow().collectLatest { 
-                startDismissWithExitAnimation(animateTrigger, onDismissRequest) 
+            onDismissSharedFlow.asSharedFlow().collectLatest {
+                startDismissWithExitAnimation(animateTrigger, onDismissRequest)
             }
         }
     }
 
     Dialog(onDismissRequest = {
-            coroutineScope.launch {
-                startDismissWithExitAnimation(animateTrigger, onDismissRequest)
-            }
+        coroutineScope.launch {
+            startDismissWithExitAnimation(animateTrigger, onDismissRequest)
+        }
     }) {
-        Box(contentAlignment = contentAlignment, 
-            modifier = Modifier.fillMaxSize() 
-        ) { 
+        Box(
+            contentAlignment = contentAlignment,
+            modifier = Modifier.fillMaxSize()
+        ) {
             AnimatedScaleInTransition(visible = animateTrigger.value) {
                 content(AnimatedTransitionDialogHelper(coroutineScope, onDismissSharedFlow))
             }
@@ -105,10 +106,10 @@ fun AnimatedTransitionDialog(
     }
 }
 
-
 class AnimatedTransitionDialogHelper(
-    private val coroutineScope: CoroutineScope, 
-    private val onDismissFlow: MutableSharedFlow<Any>) {
+    private val coroutineScope: CoroutineScope,
+    private val onDismissFlow: MutableSharedFlow<Any>
+) {
     fun triggerAnimatedDismiss() {
         coroutineScope.launch {
             onDismissFlow.emit(Any())

@@ -31,6 +31,7 @@ import dev.veryniche.welcometoflip.components.EndGameDialog
 import dev.veryniche.welcometoflip.components.GameContainer
 import dev.veryniche.welcometoflip.components.NavigationIcon
 import dev.veryniche.welcometoflip.components.Stack
+import dev.veryniche.welcometoflip.config.getTopAppBarColors
 import dev.veryniche.welcometoflip.core.models.Astronaut
 import dev.veryniche.welcometoflip.core.models.Card
 import dev.veryniche.welcometoflip.core.models.GameType
@@ -77,7 +78,8 @@ fun RegularGameScreen(
             TopAppBar(
                 title = { Text(text = stringResource(id = gameType.displayName)) },
                 navigationIcon = { NavigationIcon(navController = navController) },
-                actions = { AboutActionIcon(navController) }
+                actions = { AboutActionIcon(navController) },
+                colors = getTopAppBarColors(),
             )
         },
         modifier = modifier

@@ -26,7 +26,7 @@ import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
 @Composable
 fun ThemedButton(
     onClick: () -> Unit,
-    colors: ButtonColors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+    colors: ButtonColors = ButtonDefaults.buttonColors(),
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit

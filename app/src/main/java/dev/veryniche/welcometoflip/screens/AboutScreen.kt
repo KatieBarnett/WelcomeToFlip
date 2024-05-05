@@ -36,6 +36,7 @@ import dev.veryniche.welcometoflip.BuildConfig
 import dev.veryniche.welcometoflip.R
 import dev.veryniche.welcometoflip.components.NavigationIcon
 import dev.veryniche.welcometoflip.components.ThemedButton
+import dev.veryniche.welcometoflip.config.getTopAppBarColors
 import dev.veryniche.welcometoflip.purchase.Products
 import dev.veryniche.welcometoflip.purchase.PurchaseStatus
 import dev.veryniche.welcometoflip.showkase.getBrowserIntent
@@ -85,7 +86,8 @@ fun AboutScreen(
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.app_name)) },
-                navigationIcon = { NavigationIcon(navController = navController) }
+                navigationIcon = { NavigationIcon(navController = navController) },
+                colors = getTopAppBarColors(),
             )
         },
         modifier = modifier
@@ -157,9 +159,10 @@ fun AboutScreen(
             }
             Spacer(modifier = Modifier.height(Dimen.spacingDouble))
             Text(
-                text = stringResource(id = R.string.about_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE),
+                text = stringResource(id =  R.string.about_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 modifier = modifier.fillMaxWidth()
             )

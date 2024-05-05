@@ -29,6 +29,7 @@ fun AboutAppText(modifier: Modifier = Modifier) {
         pushStringAnnotation(tag = "bgg_wt_link", annotation = stringResource(id = R.string.bgg_link_wt))
         withStyle(
             style = SpanStyle(
+                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                 color = MaterialTheme.colorScheme.secondary,
                 fontWeight = FontWeight.Bold,
                 textDecoration = TextDecoration.Underline
@@ -40,6 +41,7 @@ fun AboutAppText(modifier: Modifier = Modifier) {
         pushStringAnnotation(tag = "bgg_wttm_link", annotation = stringResource(id = R.string.bgg_link_wttm))
         withStyle(
             style = SpanStyle(
+                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                 color = MaterialTheme.colorScheme.secondary,
                 fontWeight = FontWeight.Bold,
                 textDecoration = TextDecoration.Underline
