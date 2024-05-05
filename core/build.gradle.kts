@@ -11,12 +11,11 @@ android {
     defaultConfig {
         minSdk = rootProject.extra["minSdk"] as Int
 
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
-        debug {
-        }
         release {
             isMinifyEnabled = true
             proguardFiles(

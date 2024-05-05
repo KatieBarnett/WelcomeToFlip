@@ -12,13 +12,10 @@ android {
 
     defaultConfig {
         minSdk = rootProject.extra["minSdk"] as Int
-
         consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
-        debug {
-        }
         release {
             isMinifyEnabled = true
             proguardFiles(
