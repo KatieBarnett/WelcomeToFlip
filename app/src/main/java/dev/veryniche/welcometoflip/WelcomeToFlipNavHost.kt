@@ -26,7 +26,7 @@ fun WelcomeToFlipNavHost(
     navController: NavHostController,
     onGameEnd: () -> Unit,
     modifier: Modifier = Modifier,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
 ) {
     var showPurchaseErrorMessage by rememberSaveable { mutableStateOf<Int?>(null) }
     val aboutPurchaseStatus by mainViewModel.aboutPurchaseStatus.collectAsStateWithLifecycle(mapOf())

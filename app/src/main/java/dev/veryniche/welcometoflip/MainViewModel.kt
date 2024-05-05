@@ -19,7 +19,6 @@ import dev.veryniche.welcometoflip.storage.UserPreferencesRepository
 import dev.veryniche.welcometoflip.util.trackPurchaseClick
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -68,6 +67,8 @@ class MainViewModel @AssistedInject constructor(
                     )
             }
         }
+
+    val showAds = purchaseManager.purchases.map { !it.contains(Products.adRemoval) }
 
     init {
         viewModelScope.launch {

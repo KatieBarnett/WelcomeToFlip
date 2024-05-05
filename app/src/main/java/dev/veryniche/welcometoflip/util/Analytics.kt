@@ -37,6 +37,7 @@ object Analytics {
         const val ShuffleGame = "Shuffle Game"
         const val EndGame = "End Game"
         const val PurchaseClick = "Purchase Click"
+        const val BannerAdClick = "Banner Ad Click"
         const val ReviewRequested = "Review Requested"
     }
 }
@@ -75,6 +76,12 @@ internal fun trackScreenView(name: String?) {
     Timber.d(ANALYTICS_LOG_TAG, "Track screen: $name")
     Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
         param(FirebaseAnalytics.Param.SCREEN_NAME, name ?: "Unknown")
+    }
+}
+
+fun trackAction(action: String) {
+    Timber.d("Track action: $action")
+    Firebase.analytics.logEvent(action) {
     }
 }
 

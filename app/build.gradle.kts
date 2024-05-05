@@ -100,8 +100,8 @@ dependencies {
 
     implementation(libs.timber)
     
-//    implementation(libs.play.services.base)
-//    implementation(libs.play.services.ads)
+    implementation(libs.play.services.base)
+    implementation(libs.play.services.ads)
 
     implementation(libs.showkase)
     ksp(libs.showkase.processor)
