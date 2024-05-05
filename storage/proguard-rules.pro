@@ -24,3 +24,4 @@
     <fields>;
 }
 -keep class * extends com.google.crypto.tink.shaded.protobuf.GeneratedMessageLite { *; }
+
