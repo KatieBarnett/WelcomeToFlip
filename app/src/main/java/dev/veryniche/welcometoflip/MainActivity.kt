@@ -1,6 +1,5 @@
 package dev.veryniche.welcometoflip
 
-// import com.google.android.gms.ads.MobileAds
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,14 +10,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -66,11 +70,16 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val showWelcomeDialogOnStart by viewModel.showWelcomeDialog.collectAsStateWithLifecycle(null)
             var showWelcomeDialog by remember(showWelcomeDialogOnStart) { mutableStateOf(showWelcomeDialogOnStart) }
+            val welcomePurchaseStatus by viewModel.welcomePurchaseStatus.collectAsStateWithLifecycle(mapOf())
+            var showPurchaseErrorMessage by rememberSaveable { mutableStateOf<Int?>(null) }
             val showAds by viewModel.showAds.collectAsStateWithLifecycle(false)
             Column(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
                 WelcomeToFlipNavHost(
                     navController = navController,
                     mainViewModel = viewModel,
+                    showPurchaseErrorMessage = {
+                        showPurchaseErrorMessage = it
+                    },
                     onGameEnd = {
                         viewModel.requestReviewIfAble(this@MainActivity)
                     },
@@ -92,12 +101,32 @@ class MainActivity : ComponentActivity() {
             }
             if (showWelcomeDialog == true) {
                 WelcomeDialog(
-                    navController = navController,
+                    purchaseStatus = welcomePurchaseStatus,
+                    onPurchaseClick = { productId ->
+                        viewModel.purchaseProduct(productId) {
+                            showPurchaseErrorMessage = it
+                        }
+                    },
                     onDismissRequest = {
                         showWelcomeDialog = false
                     },
                     saveShowWelcomeOnStart = { value ->
                         viewModel.updateShowWelcomeOnStart(!value)
+                    }
+                )
+            }
+
+            showPurchaseErrorMessage?.let { message ->
+                AlertDialog(
+                    onDismissRequest = { showPurchaseErrorMessage = null },
+                    title = { Text(stringResource(R.string.app_name)) },
+                    text = { Text(stringResource(message)) },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            showPurchaseErrorMessage = null
+                        }) {
+                            Text(stringResource(R.string.purchase_error_dismiss))
+                        }
                     }
                 )
             }

@@ -68,6 +68,20 @@ class MainViewModel @AssistedInject constructor(
             }
         }
 
+    val welcomePurchaseStatus = purchaseManager.availableProducts
+        .combine(purchaseManager.purchases) { availableProducts, purchases ->
+            availableProducts.filter {
+                listOf(Products.adRemoval).contains(it.productId)
+            }.associate {
+                it.productId to
+                    PurchaseStatus(
+                        productId = it.productId,
+                        purchasePrice = it.displayedPrice,
+                        purchased = purchases.contains(it.productId)
+                    )
+            }
+        }
+
     val showAds = purchaseManager.purchases.map { !it.contains(Products.adRemoval) }
 
     init {

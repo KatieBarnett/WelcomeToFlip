@@ -22,10 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import dev.veryniche.welcometoflip.About
 import dev.veryniche.welcometoflip.R
+import dev.veryniche.welcometoflip.purchase.Products
+import dev.veryniche.welcometoflip.purchase.PurchaseStatus
 import dev.veryniche.welcometoflip.theme.Dimen
 import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
 import dev.veryniche.welcometoflip.util.AboutAppText
@@ -34,20 +33,27 @@ import dev.veryniche.welcometoflip.util.UnorderedListText
 
 @Composable
 fun WelcomeDialog(
-    navController: NavController,
+    purchaseStatus: Map<String, PurchaseStatus>,
+    onPurchaseClick: (String) -> Unit,
     onDismissRequest: () -> Unit,
     saveShowWelcomeOnStart: (Boolean) -> Unit
 ) {
     AnimatedTransitionDialog(onDismissRequest = onDismissRequest) { dialogHelper ->
-        WelcomeDialogContent(navController, onDismissRequest, saveShowWelcomeOnStart)
+        WelcomeDialogContent(
+            purchaseStatus = purchaseStatus,
+            onPurchaseClick = onPurchaseClick,
+            saveWelcomePreference = saveShowWelcomeOnStart,
+            triggerAnimatedDismiss = dialogHelper::triggerAnimatedDismiss
+        )
     }
 }
 
 @Composable
 fun WelcomeDialogContent(
-    navController: NavController,
-    onDismissRequest: () -> Unit,
-    saveWelcomePreference: (Boolean) -> Unit
+    purchaseStatus: Map<String, PurchaseStatus>,
+    onPurchaseClick: (String) -> Unit,
+    saveWelcomePreference: (Boolean) -> Unit,
+    triggerAnimatedDismiss: () -> Unit
 ) {
     val scrollableState = rememberScrollState()
     var checkedState by remember { mutableStateOf(false) }
@@ -84,10 +90,13 @@ fun WelcomeDialogContent(
                     .fillMaxWidth()
                     .padding(bottom = Dimen.spacing)
             )
-            RemoveAdsText({
-                navController.navigate(About.route)
-                onDismissRequest.invoke(/*checkedState.value*/)
-            })
+            purchaseStatus[Products.adRemoval]?.let {
+                if (!it.purchased) {
+                    RemoveAdsText({
+                        onPurchaseClick.invoke(it.productId)
+                    })
+                }
+            }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = stringResource(id = R.string.welcome_dont_show_again)
@@ -97,12 +106,13 @@ fun WelcomeDialogContent(
                     onCheckedChange = { checkedState = it }
                 )
             }
-            ThemedButton(content = {
-                Text(stringResource(id = R.string.welcome_close))
-            }, onClick = {
-                saveWelcomePreference.invoke(checkedState)
-                onDismissRequest.invoke()
-            })
+            DialogButton(
+                textRes = R.string.welcome_close,
+                onClick = {
+                    saveWelcomePreference.invoke(checkedState)
+                    triggerAnimatedDismiss.invoke()
+                }
+            )
         }
     }
 }
@@ -111,6 +121,6 @@ fun WelcomeDialogContent(
 @Composable
 fun WelcomeDialogPreview() {
     WelcomeToFlipTheme {
-        WelcomeDialogContent(rememberNavController(), {}, {})
+        WelcomeDialogContent(mapOf(), {}, {}, {})
     }
 }
