@@ -15,6 +15,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import dev.veryniche.welcometoflip.ads.InterstitialAdLocation
 import dev.veryniche.welcometoflip.core.models.mapToGameType
 import dev.veryniche.welcometoflip.screens.AboutScreen
 import dev.veryniche.welcometoflip.screens.ChooseGameScreen
@@ -25,6 +26,7 @@ import dev.veryniche.welcometoflip.screens.SoloGameScreen
 fun WelcomeToFlipNavHost(
     navController: NavHostController,
     onGameEnd: () -> Unit,
+    onShowInterstitialAd: (InterstitialAdLocation) -> Unit,
     modifier: Modifier = Modifier,
     mainViewModel: MainViewModel,
 ) {
@@ -39,6 +41,7 @@ fun WelcomeToFlipNavHost(
             ChooseGameScreen(
                 navController = navController,
                 viewModel = mainViewModel,
+                onShowInterstitialAd = onShowInterstitialAd,
                 onPurchaseError = {
                     showPurchaseErrorMessage = it
                 }
@@ -79,7 +82,8 @@ fun WelcomeToFlipNavHost(
                         viewModel = gameViewModel,
                         gameType = gameType,
                         onGameEnd = onGameEnd,
-                        navController = navController
+                        navController = navController,
+                        onShowInterstitialAd = onShowInterstitialAd,
                     )
                 }
             }

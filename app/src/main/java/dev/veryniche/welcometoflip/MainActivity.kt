@@ -27,8 +27,9 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
-import dev.veryniche.welcometoflip.components.BannerAd
-import dev.veryniche.welcometoflip.components.BannerAdLocation
+import dev.veryniche.welcometoflip.ads.BannerAd
+import dev.veryniche.welcometoflip.ads.BannerAdLocation
+import dev.veryniche.welcometoflip.ads.showInterstitialAd
 import dev.veryniche.welcometoflip.components.WelcomeDialog
 import dev.veryniche.welcometoflip.purchase.PurchaseManager
 import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
@@ -70,6 +71,11 @@ class MainActivity : ComponentActivity() {
                     mainViewModel = viewModel,
                     onGameEnd = {
                         viewModel.requestReviewIfAble(this@MainActivity)
+                    },
+                    onShowInterstitialAd = { location ->
+                        if (showAds) {
+                            showInterstitialAd(this@MainActivity, location)
+                        }
                     },
                     modifier = Modifier.weight(1f)
                 )

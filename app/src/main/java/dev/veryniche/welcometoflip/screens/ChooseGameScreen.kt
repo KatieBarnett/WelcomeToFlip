@@ -35,6 +35,7 @@ import androidx.navigation.compose.rememberNavController
 import dev.veryniche.welcometoflip.Game
 import dev.veryniche.welcometoflip.MainViewModel
 import dev.veryniche.welcometoflip.R
+import dev.veryniche.welcometoflip.ads.InterstitialAdLocation
 import dev.veryniche.welcometoflip.components.AboutActionIcon
 import dev.veryniche.welcometoflip.components.GameTile
 import dev.veryniche.welcometoflip.components.NavigationIcon
@@ -59,6 +60,7 @@ import dev.veryniche.welcometoflip.core.R as Rcore
 fun ChooseGameScreen(
     navController: NavController = rememberNavController(),
     viewModel: MainViewModel,
+    onShowInterstitialAd: (InterstitialAdLocation) -> Unit,
     onPurchaseError: (message: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -99,9 +101,11 @@ fun ChooseGameScreen(
             gameTypes = games,
             savedGames = savedGames,
             chooseNewGameAction = { gameType, solo ->
+                onShowInterstitialAd.invoke(InterstitialAdLocation.StartGame)
                 navController.navigate(route = Game.getRoute(gameType, solo))
             },
             loadGameAction = { savedGame ->
+                onShowInterstitialAd.invoke(InterstitialAdLocation.StartGame)
                 trackLoadGame(savedGame)
                 navController.navigate(route = Game.getRoute(savedGame))
             },
@@ -110,8 +114,7 @@ fun ChooseGameScreen(
                 viewModel.deleteGameAction(savedGame)
             },
             purchaseNewGameAction = { gameType, solo ->
-                viewModel.purchaseGame(gameType, solo) { message: Int ->
-                }
+                viewModel.purchaseGame(gameType, solo, onPurchaseError)
             },
             modifier = Modifier
                 .padding(

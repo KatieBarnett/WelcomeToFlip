@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.veryniche.welcometoflip.GameViewModel
+import dev.veryniche.welcometoflip.ads.InterstitialAdLocation
 import dev.veryniche.welcometoflip.components.AboutActionIcon
 import dev.veryniche.welcometoflip.components.EndGameConfirmationDialog
 import dev.veryniche.welcometoflip.components.EndGameDialog
@@ -53,6 +54,7 @@ import dev.veryniche.welcometoflip.util.trackScreenView
 fun RegularGameScreen(
     viewModel: GameViewModel,
     gameType: GameType,
+    onShowInterstitialAd: (InterstitialAdLocation) -> Unit,
     onGameEnd: () -> Unit,
     navController: NavController = rememberNavController(),
     modifier: Modifier = Modifier
@@ -115,9 +117,11 @@ fun RegularGameScreen(
             gameType = gameType,
             position = position,
             reshuffleStacks = {
+                onShowInterstitialAd.invoke(InterstitialAdLocation.ReshuffleGame)
                 viewModel.reshuffleStacks()
             },
             endGame = {
+                onShowInterstitialAd.invoke(InterstitialAdLocation.EndGame)
                 onGameEnd.invoke()
                 viewModel.endGame {
                     navController.navigateUp()
@@ -134,6 +138,7 @@ fun RegularGameScreen(
             gameType = gameType,
             position = position,
             endGame = {
+                onShowInterstitialAd.invoke(InterstitialAdLocation.EndGame)
                 onGameEnd.invoke()
                 viewModel.endGame {
                     navController.navigateUp()

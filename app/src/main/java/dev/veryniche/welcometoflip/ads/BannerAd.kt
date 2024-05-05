@@ -1,4 +1,4 @@
-package dev.veryniche.welcometoflip.components
+package dev.veryniche.welcometoflip.ads
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +15,8 @@ import dev.veryniche.welcometoflip.util.Analytics
 import dev.veryniche.welcometoflip.util.trackAction
 import timber.log.Timber
 
+//https://medium.com/@amodpkanthe/androids-jetpack-compose-and-admob-ads-33948c55214a
+
 enum class BannerAdLocation(val adId: String) {
     Test(adId = "ca-app-pub-3940256099942544/6300978111"),
     MainScreen(adId = "ca-app-pub-4584531662076255/5101194881")
@@ -28,7 +30,6 @@ fun BannerAd(location: BannerAdLocation, modifier: Modifier = Modifier) {
         if (adRequest.isTestDevice(context)) {
             BannerAd(adId = BannerAdLocation.Test.adId)
         } else {
-            // Replace with your actual ad unit ID.
             BannerAd(adId = location.adId)
         }
     }

@@ -38,6 +38,7 @@ object Analytics {
         const val EndGame = "End Game"
         const val PurchaseClick = "Purchase Click"
         const val BannerAdClick = "Banner Ad Click"
+        const val InterstitialAdClick = "Interstitial Ad Click: "
         const val ReviewRequested = "Review Requested"
     }
 }
