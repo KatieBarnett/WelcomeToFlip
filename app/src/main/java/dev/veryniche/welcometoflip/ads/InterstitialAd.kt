@@ -15,9 +15,9 @@ import timber.log.Timber
 
 enum class InterstitialAdLocation(val adId: String) {
     Test(adId = "ca-app-pub-3940256099942544/1033173712"),
-    StartGame(adId = "ca-app-pub-4584531662076255/5101194881"),
-    ReshuffleGame(adId = "ca-app-pub-4584531662076255/5101194881"),
-    EndGame(adId = "ca-app-pub-4584531662076255/5101194881")
+    StartGame(adId = "ca-app-pub-4584531662076255/1466870502"),
+    ReshuffleStacks(adId = "ca-app-pub-4584531662076255/2297786196"),
+    EndGame(adId = "ca-app-pub-4584531662076255/3629999419")
 }
 
 fun showInterstitialAd(activity: MainActivity, location: InterstitialAdLocation) {

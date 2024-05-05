@@ -117,7 +117,7 @@ fun RegularGameScreen(
             gameType = gameType,
             position = position,
             reshuffleStacks = {
-                onShowInterstitialAd.invoke(InterstitialAdLocation.ReshuffleGame)
+                onShowInterstitialAd.invoke(InterstitialAdLocation.ReshuffleStacks)
                 viewModel.reshuffleStacks()
             },
             endGame = {
