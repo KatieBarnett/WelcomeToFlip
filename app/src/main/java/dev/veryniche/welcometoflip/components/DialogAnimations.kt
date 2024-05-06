@@ -19,6 +19,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -72,6 +73,7 @@ internal fun AnimatedScaleInTransition(
 fun AnimatedTransitionDialog(
     onDismissRequest: () -> Unit,
     contentAlignment: Alignment = Alignment.Center,
+    dialogProperties: DialogProperties = DialogProperties(),
     content: @Composable (AnimatedTransitionDialogHelper) -> Unit
 ) {
     val onDismissSharedFlow: MutableSharedFlow<Any> = remember { MutableSharedFlow() }
@@ -90,11 +92,14 @@ fun AnimatedTransitionDialog(
         }
     }
 
-    Dialog(onDismissRequest = {
-        coroutineScope.launch {
-            startDismissWithExitAnimation(animateTrigger, onDismissRequest)
-        }
-    }) {
+    Dialog(
+        onDismissRequest = {
+            coroutineScope.launch {
+                startDismissWithExitAnimation(animateTrigger, onDismissRequest)
+            }
+        },
+        properties = dialogProperties
+    ) {
         Box(
             contentAlignment = contentAlignment,
             modifier = Modifier.fillMaxSize()

@@ -31,7 +31,7 @@
     <string name="about_developer_url">https://veryniche.dev</string>
     <string name="about_privacy_policy_title">Privacy policy</string>
     <string name="about_privacy_policy_url">https://veryniche.dev/apps/welcometoflip/privacypolicy/</string>
-    <string name="about_privacy_policy">Please click here to view the privacy policy.</string>
+    <string name="about_privacy_policy">Please click here to view the privacy policy</string>
     <string name="about_remove_ads_title">Don\'t want to see ads?</string>
     <string name="about_remove_ads">Remove ads %s</string>
     <string name="about_remove_ads_text">Help me get more games so I can make more apps about them!</string>

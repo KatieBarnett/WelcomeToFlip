@@ -64,7 +64,6 @@ fun GameTile(
         sideBack = { modifier ->
             GameTileBack(
                 textRes = textRes,
-                imageRes = imageRes,
                 purchased = purchased,
                 purchasePrice = purchasePrice,
                 solo = soloAvailable,
@@ -154,7 +153,6 @@ fun GameTileFront(
 @Composable
 fun GameTileBack(
     @StringRes textRes: Int,
-    @DrawableRes imageRes: Int,
     purchased: Boolean,
     purchasePrice: String?,
     solo: Boolean,
@@ -299,7 +297,6 @@ fun GameTileBackPurchasedPreview() {
         Box(Modifier.padding(Dimen.spacingDouble)) {
             GameTileBack(
                 textRes = R.string.game_welcome_to_the_moon,
-                R.drawable.noun_moon_6086589,
                 purchased = true,
                 purchasePrice = "5.00",
                 solo = false,
@@ -320,7 +317,6 @@ fun GameTileBackSoloPurchasedPreview() {
         Box(Modifier.padding(Dimen.spacingDouble)) {
             GameTileBack(
                 textRes = R.string.game_welcome_to_the_moon,
-                R.drawable.noun_moon_6086589,
                 purchased = true,
                 purchasePrice = "5.00",
                 solo = true,
@@ -341,7 +337,6 @@ fun GameTileBackNotPurchasedPreview() {
         Box(Modifier.padding(Dimen.spacingDouble)) {
             GameTileBack(
                 textRes = R.string.game_welcome_to_the_moon,
-                R.drawable.noun_moon_6086589,
                 purchased = false,
                 purchasePrice = "5.00",
                 solo = false,
