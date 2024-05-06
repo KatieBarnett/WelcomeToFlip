@@ -34,6 +34,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -112,6 +113,7 @@ fun ShopItem(product: InAppProduct, onPurchaseClick: (String) -> Unit, modifier:
                     text = product.productDescription,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onPrimary,
+                    textAlign = TextAlign.Left,
                     modifier = Modifier
                 )
                 Text(
@@ -192,7 +194,7 @@ fun ShopScreen(
             item {
                 ShopText(textRes = R.string.shop_text)
             }
-            purchaseStatus.any { multiplayerGameIds.contains(it.key) && it.value.purchased != true }.let {
+            if (purchaseStatus.any { multiplayerGameIds.contains(it.key) && it.value.purchased != true }) {
                 item {
                     ShopHeading(R.string.shop_get_multiplayer_games)
                 }
@@ -246,7 +248,7 @@ fun ShopItemPreview() {
             product = InAppProduct(
                 WelcomeToTheMoon.mapToProductId(false),
                 stringResource(id = WelcomeToTheMoon.displayName),
-                "this is a very long description that talks about how this game is different",
+                "Multiplayer version with the special starship card deck (different distribution to original Welcome To)",
                 "1.00",
                 "AUD",
                 false
@@ -272,7 +274,7 @@ fun ShopScreenPreview() {
                     InAppProduct(
                         WelcomeToTheMoon.mapToProductId(false),
                         stringResource(id = WelcomeToTheMoon.displayName),
-                        "this is a very long description that talks about how this game is different",
+                        "Multiplayer version with the special starship card deck (different distribution to original Welcome To)",
                         "1.00",
                         "AUD",
                         false
@@ -283,7 +285,7 @@ fun ShopScreenPreview() {
                     InAppProduct(
                         WelcomeToClassic.mapToProductId(true),
                         stringResource(id = WelcomeToClassic.displayName),
-                        "Description",
+                        "Solo version with the original construction card deck and set up with AAA validation cards and solo rules.",
                         "1.00",
                         "AUD",
                         false
