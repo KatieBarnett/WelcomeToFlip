@@ -203,17 +203,17 @@ fun ShopScreen(
                     ShopItem(product = it, onPurchaseClick)
                 }
             }
-            purchaseStatus.any { soloGameIds.contains(it.key) && it.value.purchased != true }.let {
-                item {
-                    ShopHeading(R.string.shop_get_solo_games)
-                }
-                items(
-                    purchaseStatus.filter { soloGameIds.contains(it.key) && it.value.purchased != true }
-                        .map { it.value }
-                ) {
-                    ShopItem(product = it, onPurchaseClick)
-                }
-            }
+//          if (purchaseStatus.any { soloGameIds.contains(it.key) && it.value.purchased != true }) {
+//                item {
+//                    ShopHeading(R.string.shop_get_solo_games)
+//                }
+//                items(
+//                    purchaseStatus.filter { soloGameIds.contains(it.key) && it.value.purchased != true }
+//                        .map { it.value }
+//                ) {
+//                    ShopItem(product = it, onPurchaseClick)
+//                }
+//            }
             purchaseStatus[Products.adRemoval]?.let {
                 if (it.purchased != true) {
                     item {
