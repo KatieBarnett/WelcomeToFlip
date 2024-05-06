@@ -1,6 +1,8 @@
 package dev.veryniche.welcometoflip.purchase
 
 import android.app.Activity
+import com.android.billingclient.api.AcknowledgePurchaseParams
+import com.android.billingclient.api.AcknowledgePurchaseResponseListener
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
@@ -52,7 +54,14 @@ class PurchaseManager(
 
     private val purchasesUpdatedListener =
         PurchasesUpdatedListener { _, _ ->
-            coroutineScope.launch {
+            coroutineScope.launch(Dispatchers.IO) {
+                processPurchases()
+            }
+        }
+
+    val acknowledgePurchaseResponseListener =
+        AcknowledgePurchaseResponseListener {
+            coroutineScope.launch(Dispatchers.IO) {
                 processPurchases()
             }
         }
@@ -128,8 +137,18 @@ class PurchaseManager(
             newList.addAll(
                 purchasesResult.purchasesList.filter {
                     it.purchaseState == PurchaseState.PURCHASED
-                }.map {
-                    it.products.firstOrNull().toString()
+                }.map { purchase ->
+                    if (!purchase.isAcknowledged) {
+                        val acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
+                            .setPurchaseToken(purchase.purchaseToken)
+                        withContext(Dispatchers.IO) {
+                            billingClient.acknowledgePurchase(
+                                acknowledgePurchaseParams.build(),
+                                acknowledgePurchaseResponseListener
+                            )
+                        }
+                    }
+                    purchase.products.firstOrNull().toString()
                 }
             )
             newList
