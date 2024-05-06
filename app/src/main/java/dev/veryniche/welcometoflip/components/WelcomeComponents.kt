@@ -95,7 +95,7 @@ fun WelcomeDialogContent(
                     .padding(bottom = Dimen.spacing)
             )
             purchaseStatus[Products.adRemoval]?.let {
-                if (it.purchased != true) {
+                if (it.purchased != true && purchaseStatus[Products.bundle]?.purchased != true) {
                     RemoveAdsText({
                         onPurchaseClick.invoke(it.productId)
                     })

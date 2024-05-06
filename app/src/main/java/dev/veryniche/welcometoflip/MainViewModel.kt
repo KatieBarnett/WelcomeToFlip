@@ -42,13 +42,14 @@ class MainViewModel @AssistedInject constructor(
 
     val games = purchaseManager.availableProducts
         .combine(purchaseManager.purchases) { availableProducts, purchases ->
+            val bundlePurchased = purchases.contains(Products.bundle)
             gameTypes.map { game ->
                 game.copy(
-                    purchased = game.purchased || purchases.contains(game.mapToProductId(false)),
+                    purchased = bundlePurchased || game.purchased || purchases.contains(game.mapToProductId(false)),
                     purchasePrice = availableProducts.find {
                         it.productId == game.mapToProductId(false)
                     }?.displayedPrice,
-                    soloPurchased = game.soloPurchased || purchases.contains(game.mapToProductId(true))
+                    soloPurchased = bundlePurchased || game.soloPurchased || purchases.contains(game.mapToProductId(true))
                 )
             }
         }
@@ -60,7 +61,7 @@ class MainViewModel @AssistedInject constructor(
             }
         }
 
-    val showAds = purchaseManager.purchases.map { !it.contains(Products.adRemoval) }
+    val showAds = purchaseManager.purchases.map { !it.contains(Products.adRemoval) && !it.contains(Products.bundle) }
 
     init {
         viewModelScope.launch {

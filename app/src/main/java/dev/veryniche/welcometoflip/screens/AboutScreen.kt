@@ -138,7 +138,7 @@ fun AboutScreen(
                     .padding(bottom = Dimen.spacing)
             )
             purchaseStatus[Products.adRemoval]?.let {
-                if (it.purchased != true) {
+                if (it.purchased != true && purchaseStatus[Products.bundle]?.purchased != true) {
                     AboutHeading(R.string.about_remove_ads_title)
                     AboutText(R.string.about_remove_ads_text)
                     ThemedButton(content = {
