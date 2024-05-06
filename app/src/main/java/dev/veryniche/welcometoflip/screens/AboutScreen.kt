@@ -15,12 +15,15 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -28,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -35,10 +39,10 @@ import com.airbnb.android.showkase.models.Showkase
 import dev.veryniche.welcometoflip.BuildConfig
 import dev.veryniche.welcometoflip.R
 import dev.veryniche.welcometoflip.components.NavigationIcon
+import dev.veryniche.welcometoflip.components.ShopActionIcon
 import dev.veryniche.welcometoflip.components.ThemedButton
-import dev.veryniche.welcometoflip.config.getTopAppBarColors
+import dev.veryniche.welcometoflip.purchase.InAppProduct
 import dev.veryniche.welcometoflip.purchase.Products
-import dev.veryniche.welcometoflip.purchase.PurchaseStatus
 import dev.veryniche.welcometoflip.showkase.getBrowserIntent
 import dev.veryniche.welcometoflip.theme.Dimen
 import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
@@ -47,6 +51,8 @@ import dev.veryniche.welcometoflip.util.Analytics
 import dev.veryniche.welcometoflip.util.ImageCreditText
 import dev.veryniche.welcometoflip.util.TrackedScreen
 import dev.veryniche.welcometoflip.util.UnorderedListText
+import dev.veryniche.welcometoflip.util.getMediumTopAppBarColors
+import dev.veryniche.welcometoflip.util.getTopAppBarTextSize
 import dev.veryniche.welcometoflip.util.trackScreenView
 
 @Composable
@@ -54,7 +60,7 @@ fun AboutHeading(textRes: Int, modifier: Modifier = Modifier) {
     Text(
         text = stringResource(id = textRes),
         style = MaterialTheme.typography.headlineSmall,
-        color = MaterialTheme.colorScheme.primary,
+        color = MaterialTheme.colorScheme.secondary,
         fontWeight = FontWeight.Bold,
         modifier = modifier.fillMaxWidth()
     )
@@ -73,24 +79,39 @@ fun AboutText(textRes: Int, modifier: Modifier = Modifier) {
 @Composable
 fun AboutScreen(
     navController: NavController = rememberNavController(),
-    purchaseStatus: Map<String, PurchaseStatus>,
+    showShopMenuItem: Boolean,
+    purchaseStatus: Map<String, InAppProduct>,
     onPurchaseClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollableState = rememberScrollState()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    val topAppBarTextSize = getTopAppBarTextSize(scrollBehavior.state.collapsedFraction)
+
     val context = LocalContext.current
     TrackedScreen {
         trackScreenView(name = Analytics.Screen.About)
     }
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = stringResource(id = R.string.app_name)) },
+            MediumTopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.app_name),
+                        fontSize = topAppBarTextSize.sp
+                    )
+                },
                 navigationIcon = { NavigationIcon(navController = navController) },
-                colors = getTopAppBarColors(),
+                actions = {
+                    if (showShopMenuItem) {
+                        ShopActionIcon(navController = navController)
+                    }
+                },
+                scrollBehavior = scrollBehavior,
+                colors = getMediumTopAppBarColors()
             )
         },
-        modifier = modifier
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         Column(
             verticalArrangement = Arrangement.spacedBy(Dimen.spacingDouble),
@@ -117,11 +138,11 @@ fun AboutScreen(
                     .padding(bottom = Dimen.spacing)
             )
             purchaseStatus[Products.adRemoval]?.let {
-                if (!it.purchased) {
+                if (it.purchased != true) {
                     AboutHeading(R.string.about_remove_ads_title)
                     AboutText(R.string.about_remove_ads_text)
                     ThemedButton(content = {
-                        Text(text = stringResource(id = R.string.about_remove_ads, it.purchasePrice))
+                        Text(text = stringResource(id = R.string.about_remove_ads, it.displayedPrice))
                     }, onClick = {
                         onPurchaseClick.invoke(it.productId)
                     })
@@ -159,7 +180,7 @@ fun AboutScreen(
             }
             Spacer(modifier = Modifier.height(Dimen.spacingDouble))
             Text(
-                text = stringResource(id =  R.string.about_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE),
+                text = stringResource(id = R.string.about_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
@@ -170,27 +191,29 @@ fun AboutScreen(
     }
 }
 
-@Preview(group = "About Screen", showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun AboutScreenPreview() {
     WelcomeToFlipTheme {
         AboutScreen(
             purchaseStatus = mapOf(
-                Pair(Products.adRemoval, PurchaseStatus(Products.adRemoval, false, "$1.00"))
+                Pair(Products.adRemoval, InAppProduct(Products.adRemoval, "Ad Removal", "Ad Removal", "1.00", "AUD", false))
             ),
+            showShopMenuItem = true,
             onPurchaseClick = {}
         )
     }
 }
 
-@Preview(group = "About Screen", showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun AboutScreenPurchasedPreview() {
     WelcomeToFlipTheme {
         AboutScreen(
             purchaseStatus = mapOf(
-                Pair(Products.adRemoval, PurchaseStatus(Products.adRemoval, true, "$1.00"))
+                Pair(Products.adRemoval, InAppProduct(Products.adRemoval, "Ad Removal", "Ad Removal", "1.00", "AUD", true))
             ),
+            showShopMenuItem = false,
             onPurchaseClick = {}
         )
     }

@@ -29,6 +29,7 @@ object Analytics {
     object Screen {
         const val ChooseGame = "Choose Game"
         const val About = "About"
+        const val Shop = "Shop"
     }
 
     object Action {

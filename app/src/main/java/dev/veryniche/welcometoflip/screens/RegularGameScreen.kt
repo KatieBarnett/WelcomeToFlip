@@ -30,8 +30,8 @@ import dev.veryniche.welcometoflip.components.EndGameConfirmationDialog
 import dev.veryniche.welcometoflip.components.EndGameDialog
 import dev.veryniche.welcometoflip.components.GameContainer
 import dev.veryniche.welcometoflip.components.NavigationIcon
+import dev.veryniche.welcometoflip.components.ShopActionIcon
 import dev.veryniche.welcometoflip.components.Stack
-import dev.veryniche.welcometoflip.config.getTopAppBarColors
 import dev.veryniche.welcometoflip.core.models.Astronaut
 import dev.veryniche.welcometoflip.core.models.Card
 import dev.veryniche.welcometoflip.core.models.GameType
@@ -47,6 +47,7 @@ import dev.veryniche.welcometoflip.theme.Dimen
 import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
 import dev.veryniche.welcometoflip.util.TrackedScreen
 import dev.veryniche.welcometoflip.util.getStackSize
+import dev.veryniche.welcometoflip.util.getTopAppBarColors
 import dev.veryniche.welcometoflip.util.observeLifecycle
 import dev.veryniche.welcometoflip.util.trackScreenView
 
@@ -55,6 +56,7 @@ import dev.veryniche.welcometoflip.util.trackScreenView
 fun RegularGameScreen(
     viewModel: GameViewModel,
     gameType: GameType,
+    showShopMenuItem: Boolean,
     onShowInterstitialAd: (InterstitialAdLocation) -> Unit,
     onGameEnd: () -> Unit,
     navController: NavController = rememberNavController(),
@@ -78,7 +80,12 @@ fun RegularGameScreen(
             TopAppBar(
                 title = { Text(text = stringResource(id = gameType.displayName)) },
                 navigationIcon = { NavigationIcon(navController = navController) },
-                actions = { AboutActionIcon(navController) },
+                actions = {
+                    if (showShopMenuItem) {
+                        ShopActionIcon(navController = navController)
+                    }
+                    AboutActionIcon(navController)
+                },
                 colors = getTopAppBarColors(),
             )
         },

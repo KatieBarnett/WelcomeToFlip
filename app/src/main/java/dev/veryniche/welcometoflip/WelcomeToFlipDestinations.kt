@@ -10,6 +10,7 @@ sealed class WelcomeToFlipDestination(val route: String)
 
 data object ChooseGame : WelcomeToFlipDestination("ChooseGame")
 data object About : WelcomeToFlipDestination("About")
+data object Shop : WelcomeToFlipDestination("Shop")
 
 data object Game : WelcomeToFlipDestination("Game") {
 

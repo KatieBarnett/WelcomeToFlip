@@ -1,5 +1,6 @@
 package dev.veryniche.welcometoflip.util
 
+import dev.veryniche.welcometoflip.purchase.InAppProduct
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -13,4 +14,6 @@ fun Long.displayDateTime(dateTimeFormat: String): String {
     val dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(this), ZoneId.systemDefault())
     return dateTime.format(DateTimeFormatter.ofPattern(dateTimeFormat))
 }
+
+fun Map<String, InAppProduct>.isAvailablePurchases() = any { it.value.purchased != true }
 

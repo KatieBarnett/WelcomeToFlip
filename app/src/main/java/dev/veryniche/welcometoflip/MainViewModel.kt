@@ -11,7 +11,6 @@ import dev.veryniche.welcometoflip.core.models.GameType
 import dev.veryniche.welcometoflip.core.models.SavedGame
 import dev.veryniche.welcometoflip.purchase.Products
 import dev.veryniche.welcometoflip.purchase.PurchaseManager
-import dev.veryniche.welcometoflip.purchase.PurchaseStatus
 import dev.veryniche.welcometoflip.purchase.mapToProductId
 import dev.veryniche.welcometoflip.review.ReviewManager
 import dev.veryniche.welcometoflip.storage.SavedGamesRepository
@@ -54,31 +53,10 @@ class MainViewModel @AssistedInject constructor(
             }
         }
 
-    val aboutPurchaseStatus = purchaseManager.availableProducts
+    val availableProductInAppProduct = purchaseManager.availableProducts
         .combine(purchaseManager.purchases) { availableProducts, purchases ->
-            availableProducts.filter {
-                listOf(Products.adRemoval).contains(it.productId)
-            }.associate {
-                it.productId to
-                    PurchaseStatus(
-                        productId = it.productId,
-                        purchasePrice = it.displayedPrice,
-                        purchased = purchases.contains(it.productId)
-                    )
-            }
-        }
-
-    val welcomePurchaseStatus = purchaseManager.availableProducts
-        .combine(purchaseManager.purchases) { availableProducts, purchases ->
-            availableProducts.filter {
-                listOf(Products.adRemoval).contains(it.productId)
-            }.associate {
-                it.productId to
-                    PurchaseStatus(
-                        productId = it.productId,
-                        purchasePrice = it.displayedPrice,
-                        purchased = purchases.contains(it.productId)
-                    )
+            availableProducts.associate {
+                it.productId to it.copy(purchased = purchases.contains(it.productId))
             }
         }
 

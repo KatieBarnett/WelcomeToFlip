@@ -1,19 +1,27 @@
 package dev.veryniche.welcometoflip.purchase
 
+import androidx.annotation.DrawableRes
 import dev.veryniche.welcometoflip.core.models.GameType
 import dev.veryniche.welcometoflip.core.models.WelcomeToClassic
 import dev.veryniche.welcometoflip.core.models.WelcomeToTheMoon
+import dev.veryniche.welcometoflip.core.models.mapToGameType
 import dev.veryniche.welcometoflip.purchase.Products.PRODUCT_PREFIX
 import dev.veryniche.welcometoflip.purchase.Products.SOLO_SUFFIX
+
+val multiplayerGameIds = listOf(
+    WelcomeToTheMoon.mapToProductId(false),
+)
+
+val soloGameIds = listOf(
+    WelcomeToClassic.mapToProductId(true),
+    WelcomeToTheMoon.mapToProductId(true),
+)
 
 val appProductList =
     listOf(
         getProductQuery(Products.adRemoval),
         getProductQuery(Products.bundle),
-        getProductQuery(WelcomeToClassic.mapToProductId(true)),
-        getProductQuery(WelcomeToTheMoon.mapToProductId(false)),
-        getProductQuery(WelcomeToTheMoon.mapToProductId(true)),
-    )
+    ) + multiplayerGameIds.map { getProductQuery(it) } + soloGameIds.map { getProductQuery(it) }
 
 object Products {
     const val PRODUCT_PREFIX = "dev.veryniche.welcometoflip"
@@ -33,8 +41,16 @@ fun GameType.mapToProductId(solo: Boolean): String {
     }
 }
 
-data class PurchaseStatus(
-    val productId: String,
-    val purchased: Boolean,
-    val purchasePrice: String,
-)
+@DrawableRes fun String.getLargeIcon(): Int? {
+    return when (this) {
+        // TODO add images for ad removal and bundle
+        else -> {
+            val gameName = this
+                .replace("$PRODUCT_PREFIX.", "")
+                .replace(".$SOLO_SUFFIX", "")
+            gameName.mapToGameType()?.largeIcon?.let {
+                return it
+            }
+        }
+    }
+}

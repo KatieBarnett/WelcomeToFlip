@@ -2,6 +2,7 @@ package dev.veryniche.welcometoflip.core.models
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.ui.text.toLowerCase
 
 data class GameType(
     @DrawableRes val icon: Int,
@@ -16,9 +17,9 @@ data class GameType(
 )
 
 fun String.mapToGameType(): GameType? {
-    return when (this) {
-        WelcomeToClassic.name -> WelcomeToClassic
-        WelcomeToTheMoon.name -> WelcomeToTheMoon
+    return when (this.lowercase()) {
+        WelcomeToClassic.name.lowercase() -> WelcomeToClassic
+        WelcomeToTheMoon.name.lowercase() -> WelcomeToTheMoon
         else -> null
     }
 }

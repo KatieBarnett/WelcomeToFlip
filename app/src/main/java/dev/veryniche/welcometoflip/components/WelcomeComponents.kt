@@ -24,8 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import dev.veryniche.welcometoflip.R
+import dev.veryniche.welcometoflip.purchase.InAppProduct
 import dev.veryniche.welcometoflip.purchase.Products
-import dev.veryniche.welcometoflip.purchase.PurchaseStatus
 import dev.veryniche.welcometoflip.theme.Dimen
 import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
 import dev.veryniche.welcometoflip.util.AboutAppText
@@ -34,7 +34,7 @@ import dev.veryniche.welcometoflip.util.UnorderedListText
 
 @Composable
 fun WelcomeDialog(
-    purchaseStatus: Map<String, PurchaseStatus>,
+    purchaseStatus: Map<String, InAppProduct>,
     onPurchaseClick: (String) -> Unit,
     onDismissRequest: () -> Unit,
     saveShowWelcomeOnStart: (Boolean) -> Unit
@@ -54,7 +54,7 @@ fun WelcomeDialog(
 
 @Composable
 fun WelcomeDialogContent(
-    purchaseStatus: Map<String, PurchaseStatus>,
+    purchaseStatus: Map<String, InAppProduct>,
     onPurchaseClick: (String) -> Unit,
     saveWelcomePreference: (Boolean) -> Unit,
     triggerAnimatedDismiss: () -> Unit
@@ -95,7 +95,7 @@ fun WelcomeDialogContent(
                     .padding(bottom = Dimen.spacing)
             )
             purchaseStatus[Products.adRemoval]?.let {
-                if (!it.purchased) {
+                if (it.purchased != true) {
                     RemoveAdsText({
                         onPurchaseClick.invoke(it.productId)
                     })

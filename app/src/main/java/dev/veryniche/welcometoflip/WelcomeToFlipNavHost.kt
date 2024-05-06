@@ -1,20 +1,20 @@
 package dev.veryniche.welcometoflip
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import dev.veryniche.welcometoflip.ads.InterstitialAdLocation
 import dev.veryniche.welcometoflip.core.models.mapToGameType
+import dev.veryniche.welcometoflip.purchase.InAppProduct
 import dev.veryniche.welcometoflip.screens.AboutScreen
 import dev.veryniche.welcometoflip.screens.ChooseGameScreen
 import dev.veryniche.welcometoflip.screens.RegularGameScreen
+import dev.veryniche.welcometoflip.screens.ShopScreen
 import dev.veryniche.welcometoflip.screens.SoloGameScreen
+import dev.veryniche.welcometoflip.util.isAvailablePurchases
 
 @Composable
 fun WelcomeToFlipNavHost(
@@ -24,8 +24,8 @@ fun WelcomeToFlipNavHost(
     onShowInterstitialAd: (InterstitialAdLocation) -> Unit,
     modifier: Modifier = Modifier,
     mainViewModel: MainViewModel,
+    purchaseStatus: Map<String, InAppProduct>,
 ) {
-    val aboutPurchaseStatus by mainViewModel.aboutPurchaseStatus.collectAsStateWithLifecycle(mapOf())
     NavHost(
         navController = navController,
         startDestination = ChooseGame.route,
@@ -36,6 +36,7 @@ fun WelcomeToFlipNavHost(
                 navController = navController,
                 viewModel = mainViewModel,
                 onShowInterstitialAd = onShowInterstitialAd,
+                showShopMenuItem = purchaseStatus.isAvailablePurchases(),
                 onPurchaseError = {
                     showPurchaseErrorMessage.invoke(it)
                 }
@@ -44,7 +45,19 @@ fun WelcomeToFlipNavHost(
         composable(route = About.route) {
             AboutScreen(
                 navController = navController,
-                purchaseStatus = aboutPurchaseStatus,
+                purchaseStatus = purchaseStatus,
+                showShopMenuItem = purchaseStatus.isAvailablePurchases(),
+                onPurchaseClick = { productId ->
+                    mainViewModel.purchaseProduct(productId) {
+                        showPurchaseErrorMessage.invoke(it)
+                    }
+                },
+            )
+        }
+        composable(route = Shop.route) {
+            ShopScreen(
+                navController = navController,
+                purchaseStatus = purchaseStatus,
                 onPurchaseClick = { productId ->
                     mainViewModel.purchaseProduct(productId) {
                         showPurchaseErrorMessage.invoke(it)
@@ -53,7 +66,6 @@ fun WelcomeToFlipNavHost(
             )
         }
         composable(route = Game.routeWithArgs, arguments = Game.arguments, deepLinks = Game.deepLinks) {
-            // TODO handle navigation errors
             it.arguments?.getString(Game.gameTypeArg)?.mapToGameType()?.let { gameType ->
                 val seed = it.arguments?.getString(Game.seedArg)?.toLong() ?: System.currentTimeMillis()
                 val position = it.arguments?.getString(Game.positionArg)?.toInt() ?: 0
@@ -78,6 +90,7 @@ fun WelcomeToFlipNavHost(
                         onGameEnd = onGameEnd,
                         navController = navController,
                         onShowInterstitialAd = onShowInterstitialAd,
+                        showShopMenuItem = purchaseStatus.isAvailablePurchases(),
                     )
                 }
             }

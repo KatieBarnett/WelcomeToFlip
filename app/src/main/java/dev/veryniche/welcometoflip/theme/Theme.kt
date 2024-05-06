@@ -1,14 +1,7 @@
 package dev.veryniche.welcometoflip.theme
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import dev.veryniche.welcometoflip.core.theme.Black
-import dev.veryniche.welcometoflip.core.theme.Cream
-import dev.veryniche.welcometoflip.core.theme.GreyLight
-import dev.veryniche.welcometoflip.core.theme.Plum
-import dev.veryniche.welcometoflip.core.theme.White
 
 @Composable
 fun WelcomeToFlipTheme(

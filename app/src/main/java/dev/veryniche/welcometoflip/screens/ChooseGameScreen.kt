@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
@@ -40,19 +39,19 @@ import dev.veryniche.welcometoflip.ads.InterstitialAdLocation
 import dev.veryniche.welcometoflip.components.AboutActionIcon
 import dev.veryniche.welcometoflip.components.GameTile
 import dev.veryniche.welcometoflip.components.NavigationIcon
+import dev.veryniche.welcometoflip.components.ShopActionIcon
 import dev.veryniche.welcometoflip.components.ThemedIconButton
-import dev.veryniche.welcometoflip.config.getMediumTopAppBarColors
 import dev.veryniche.welcometoflip.core.models.GameType
 import dev.veryniche.welcometoflip.core.models.SavedGame
 import dev.veryniche.welcometoflip.core.models.WelcomeToClassic
 import dev.veryniche.welcometoflip.core.models.WelcomeToTheMoon
 import dev.veryniche.welcometoflip.theme.Dimen
-import dev.veryniche.welcometoflip.theme.Dimen.AppBar.CollapsedTextSize
-import dev.veryniche.welcometoflip.theme.Dimen.AppBar.ExpandedTextSize
 import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
 import dev.veryniche.welcometoflip.util.Analytics
 import dev.veryniche.welcometoflip.util.TrackedScreen
 import dev.veryniche.welcometoflip.util.displayDateTime
+import dev.veryniche.welcometoflip.util.getMediumTopAppBarColors
+import dev.veryniche.welcometoflip.util.getTopAppBarTextSize
 import dev.veryniche.welcometoflip.util.trackDeleteGame
 import dev.veryniche.welcometoflip.util.trackLoadGame
 import dev.veryniche.welcometoflip.util.trackScreenView
@@ -64,24 +63,34 @@ fun ChooseGameScreen(
     navController: NavController = rememberNavController(),
     viewModel: MainViewModel,
     onShowInterstitialAd: (InterstitialAdLocation) -> Unit,
+    showShopMenuItem: Boolean,
     onPurchaseError: (message: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val savedGames: List<SavedGame> by viewModel.savedGames.collectAsState(initial = emptyList())
     val games: List<GameType> by viewModel.games.collectAsState(initial = emptyList())
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    val topAppBarTextSize = getTopAppBarTextSize(scrollBehavior.state.collapsedFraction)
 
     TrackedScreen {
         trackScreenView(name = Analytics.Screen.ChooseGame)
     }
-    val topAppBarTextSize = (CollapsedTextSize + (ExpandedTextSize - CollapsedTextSize) * (1 - scrollBehavior.state.collapsedFraction))
-
     Scaffold(
         topBar = {
             MediumTopAppBar(
-                title = { Text(text = stringResource(id = R.string.app_name), fontSize = topAppBarTextSize.sp) },
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.app_name),
+                        fontSize = topAppBarTextSize.sp
+                    )
+                },
                 navigationIcon = { NavigationIcon(navController = navController) },
-                actions = { AboutActionIcon(navController) },
+                actions = {
+                    if (showShopMenuItem) {
+                        ShopActionIcon(navController = navController)
+                    }
+                    AboutActionIcon(navController)
+                },
                 scrollBehavior = scrollBehavior,
                 colors = getMediumTopAppBarColors()
             )
@@ -144,16 +153,16 @@ fun ChooseGameBody(
             GameTile(
                 textRes = gameType.displayName,
                 imageRes = gameType.largeIcon,
-                purchased = gameType.purchased ?: false,
+                purchased = gameType.purchased,
                 purchasePrice = gameType.purchasePrice,
                 soloAvailable = gameType.soloAvailable,
-                soloPurchased = gameType.soloPurchased ?: false,
+                soloPurchased = gameType.soloPurchased,
                 soloPurchasePrice = gameType.soloPurchasePrice,
                 onGameClick = { solo ->
                     val isPurchased = if (solo) {
-                        gameType.soloPurchased == true
+                        gameType.soloPurchased
                     } else {
-                        gameType.purchased == true
+                        gameType.purchased
                     }
                     if (isPurchased) {
                         chooseNewGameAction.invoke(gameType, solo)

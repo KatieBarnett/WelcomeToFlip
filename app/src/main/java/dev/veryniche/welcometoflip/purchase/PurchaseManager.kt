@@ -23,10 +23,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-data class Product(
+data class InAppProduct(
     val productId: String,
+    val productName: String,
+    val productDescription: String,
     val purchasePrice: String?,
     val purchaseCurrency: String?,
+    val purchased: Boolean?,
 ) {
     val displayedPrice = "$purchasePrice $purchaseCurrency"
 }
@@ -44,7 +47,7 @@ class PurchaseManager(
     private val _purchases = MutableStateFlow<List<String>>(emptyList())
     val purchases = _purchases.asStateFlow()
 
-    private val _availableProducts = MutableStateFlow<List<Product>>(emptyList())
+    private val _availableProducts = MutableStateFlow<List<InAppProduct>>(emptyList())
     val availableProducts = _availableProducts.asStateFlow()
 
     private val purchasesUpdatedListener =
@@ -97,10 +100,13 @@ class PurchaseManager(
             val newList = it.toMutableList()
             newList.addAll(
                 productDetailsResult.productDetailsList?.map {
-                    Product(
+                    InAppProduct(
                         productId = it.productId,
+                        productName = it.name,
+                        productDescription = it.description,
                         purchasePrice = it.oneTimePurchaseOfferDetails?.formattedPrice,
-                        purchaseCurrency = it.oneTimePurchaseOfferDetails?.priceCurrencyCode
+                        purchaseCurrency = it.oneTimePurchaseOfferDetails?.priceCurrencyCode,
+                        purchased = null
                     )
                 } ?: listOf()
             )
