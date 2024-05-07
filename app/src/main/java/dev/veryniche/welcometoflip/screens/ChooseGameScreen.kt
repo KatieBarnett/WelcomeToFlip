@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -37,17 +36,13 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.veryniche.welcometoflip.Game
 import dev.veryniche.welcometoflip.MainViewModel
 import dev.veryniche.welcometoflip.R
 import dev.veryniche.welcometoflip.ads.InterstitialAdLocation
-import dev.veryniche.welcometoflip.components.AboutActionIcon
 import dev.veryniche.welcometoflip.components.GameTile
-import dev.veryniche.welcometoflip.components.NavigationIcon
-import dev.veryniche.welcometoflip.components.ShopActionIcon
 import dev.veryniche.welcometoflip.components.ThemedIconButton
 import dev.veryniche.welcometoflip.core.models.GameType
 import dev.veryniche.welcometoflip.core.models.SavedGame
@@ -57,11 +52,10 @@ import dev.veryniche.welcometoflip.previews.getPreviewWindowSizeClass
 import dev.veryniche.welcometoflip.theme.Dimen
 import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
 import dev.veryniche.welcometoflip.util.Analytics
+import dev.veryniche.welcometoflip.util.CollapsingTopAppBar
 import dev.veryniche.welcometoflip.util.TrackedScreen
 import dev.veryniche.welcometoflip.util.conditional
 import dev.veryniche.welcometoflip.util.displayDateTime
-import dev.veryniche.welcometoflip.util.getMediumTopAppBarColors
-import dev.veryniche.welcometoflip.util.getTopAppBarTextSize
 import dev.veryniche.welcometoflip.util.trackDeleteGame
 import dev.veryniche.welcometoflip.util.trackLoadGame
 import dev.veryniche.welcometoflip.util.trackScreenView
@@ -81,29 +75,18 @@ fun ChooseGameScreen(
     val savedGames: List<SavedGame> by viewModel.savedGames.collectAsState(initial = emptyList())
     val games: List<GameType> by viewModel.games.collectAsState(initial = emptyList())
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-    val topAppBarTextSize = getTopAppBarTextSize(scrollBehavior.state.collapsedFraction)
 
     TrackedScreen {
         trackScreenView(name = Analytics.Screen.ChooseGame)
     }
     Scaffold(
         topBar = {
-            MediumTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.app_name),
-                        fontSize = topAppBarTextSize.sp
-                    )
-                },
-                navigationIcon = { NavigationIcon(navController = navController) },
-                actions = {
-                    if (showShopMenuItem) {
-                        ShopActionIcon(navController = navController)
-                    }
-                    AboutActionIcon(navController)
-                },
+            CollapsingTopAppBar(
+                titleRes = R.string.app_name,
+                navController = navController,
                 scrollBehavior = scrollBehavior,
-                colors = getMediumTopAppBarColors()
+                showShopMenuItem = showShopMenuItem,
+                showAboutMenuItem = true,
             )
         },
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
@@ -226,11 +209,13 @@ fun SavedGame(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(Dimen.spacing),
-            modifier = modifier.conditional(windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium, {
-                fillMaxWidth(0.5f)
-            }, {
-                widthIn(max = 400.dp)
-            }).padding(horizontal = Dimen.spacing)
+            modifier = modifier
+                .conditional(windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium, {
+                    fillMaxWidth(0.5f)
+                }, {
+                    widthIn(max = 400.dp)
+                })
+                .padding(horizontal = Dimen.spacing)
         ) {
             savedGame.gameType?.let {
                 Icon(

@@ -17,7 +17,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -36,15 +35,12 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.airbnb.android.showkase.models.Showkase
 import dev.veryniche.welcometoflip.BuildConfig
 import dev.veryniche.welcometoflip.R
-import dev.veryniche.welcometoflip.components.NavigationIcon
-import dev.veryniche.welcometoflip.components.ShopActionIcon
 import dev.veryniche.welcometoflip.components.ThemedButton
 import dev.veryniche.welcometoflip.previews.getPreviewWindowSizeClass
 import dev.veryniche.welcometoflip.purchase.InAppProduct
@@ -54,11 +50,10 @@ import dev.veryniche.welcometoflip.theme.Dimen
 import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
 import dev.veryniche.welcometoflip.util.AboutAppText
 import dev.veryniche.welcometoflip.util.Analytics
+import dev.veryniche.welcometoflip.util.CollapsingTopAppBar
 import dev.veryniche.welcometoflip.util.ImageCreditText
 import dev.veryniche.welcometoflip.util.TrackedScreen
 import dev.veryniche.welcometoflip.util.UnorderedListText
-import dev.veryniche.welcometoflip.util.getMediumTopAppBarColors
-import dev.veryniche.welcometoflip.util.getTopAppBarTextSize
 import dev.veryniche.welcometoflip.util.trackScreenView
 
 @Composable
@@ -93,29 +88,18 @@ fun AboutScreen(
 ) {
     val scrollableState = rememberScrollState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-    val topAppBarTextSize = getTopAppBarTextSize(scrollBehavior.state.collapsedFraction)
-
     val context = LocalContext.current
     TrackedScreen {
         trackScreenView(name = Analytics.Screen.About)
     }
     Scaffold(
         topBar = {
-            MediumTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.app_name),
-                        fontSize = topAppBarTextSize.sp
-                    )
-                },
-                navigationIcon = { NavigationIcon(navController = navController) },
-                actions = {
-                    if (showShopMenuItem) {
-                        ShopActionIcon(navController = navController)
-                    }
-                },
+            CollapsingTopAppBar(
+                titleRes = R.string.app_name,
+                navController = navController,
                 scrollBehavior = scrollBehavior,
-                colors = getMediumTopAppBarColors()
+                showShopMenuItem = showShopMenuItem,
+                showAboutMenuItem = false,
             )
         },
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)

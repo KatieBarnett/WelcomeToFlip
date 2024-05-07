@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -36,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import dev.veryniche.welcometoflip.core.R
 import dev.veryniche.welcometoflip.theme.Dimen
 import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
+import dev.veryniche.welcometoflip.util.conditional
 
 const val CARD_ASPECT_RATIO = 3 / 1.8f
 
@@ -90,6 +92,7 @@ fun GameTileFront(
     soloAvailable: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val fontScale = LocalDensity.current.fontScale
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
@@ -110,7 +113,9 @@ fun GameTileFront(
                         .padding(Dimen.spacingDouble)
                 )
                 Box(
-                    Modifier.weight(0.66f)
+                    Modifier.conditional(fontScale <= 1.5, {
+                        weight(0.66f)
+                    }, { weight(0.33f) })
                 ) {
                     Image(
                         painter = painterResource(id = imageRes),
@@ -179,7 +184,7 @@ fun GameTileBack(
                 .padding(Dimen.spacingDouble)
                 .fillMaxWidth()
         )
-        Column(modifier = Modifier.padding(32.dp).weight(1f), verticalArrangement = Arrangement.SpaceAround) {
+        Column(modifier = Modifier.padding(horizontal = 32.dp).weight(1f), verticalArrangement = Arrangement.SpaceAround) {
             ElevatedButton(
                 onClick = {
                     onClick.invoke()

@@ -20,7 +20,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -42,12 +41,9 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.veryniche.welcometoflip.R
-import dev.veryniche.welcometoflip.components.AboutActionIcon
-import dev.veryniche.welcometoflip.components.NavigationIcon
 import dev.veryniche.welcometoflip.core.models.WelcomeToClassic
 import dev.veryniche.welcometoflip.core.models.WelcomeToTheMoon
 import dev.veryniche.welcometoflip.previews.getPreviewWindowSizeClass
@@ -59,9 +55,8 @@ import dev.veryniche.welcometoflip.purchase.multiplayerGameIds
 import dev.veryniche.welcometoflip.theme.Dimen
 import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
 import dev.veryniche.welcometoflip.util.Analytics
+import dev.veryniche.welcometoflip.util.CollapsingTopAppBar
 import dev.veryniche.welcometoflip.util.TrackedScreen
-import dev.veryniche.welcometoflip.util.getMediumTopAppBarColors
-import dev.veryniche.welcometoflip.util.getTopAppBarTextSize
 import dev.veryniche.welcometoflip.util.trackScreenView
 
 @Composable
@@ -160,26 +155,17 @@ fun ShopScreen(
     windowSizeClass: WindowSizeClass,
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-    val topAppBarTextSize = getTopAppBarTextSize(scrollBehavior.state.collapsedFraction)
-
     TrackedScreen {
         trackScreenView(name = Analytics.Screen.Shop)
     }
     Scaffold(
         topBar = {
-            MediumTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.shop_title),
-                        fontSize = topAppBarTextSize.sp
-                    )
-                },
-                navigationIcon = { NavigationIcon(navController = navController) },
-                actions = {
-                    AboutActionIcon(navController)
-                },
+            CollapsingTopAppBar(
+                titleRes = R.string.shop_title,
+                navController = navController,
                 scrollBehavior = scrollBehavior,
-                colors = getMediumTopAppBarColors()
+                showShopMenuItem = false,
+                showAboutMenuItem = true,
             )
         },
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
