@@ -69,8 +69,10 @@ class MainActivity : ComponentActivity() {
         WelcomeToFlipTheme {
             val navController = rememberNavController()
             val showWelcomeDialogOnStart by viewModel.showWelcomeDialog.collectAsStateWithLifecycle(null)
-            var showWelcomeDialog by remember(showWelcomeDialogOnStart) { mutableStateOf(showWelcomeDialogOnStart) }
-            val availableProductpurchaseStatus by viewModel.availableProductInAppProduct.collectAsStateWithLifecycle(
+            var showWelcomeDialog by rememberSaveable(showWelcomeDialogOnStart) {
+                mutableStateOf(showWelcomeDialogOnStart)
+            }
+            val availableInAppProducts by viewModel.availableInAppProducts.collectAsStateWithLifecycle(
                 mapOf()
             )
             var showPurchaseErrorMessage by rememberSaveable { mutableStateOf<Int?>(null) }
@@ -79,7 +81,7 @@ class MainActivity : ComponentActivity() {
                 WelcomeToFlipNavHost(
                     navController = navController,
                     mainViewModel = viewModel,
-                    purchaseStatus = availableProductpurchaseStatus,
+                    purchaseStatus = availableInAppProducts,
                     showPurchaseErrorMessage = {
                         showPurchaseErrorMessage = it
                     },
@@ -104,7 +106,7 @@ class MainActivity : ComponentActivity() {
             }
             if (showWelcomeDialog == true) {
                 WelcomeDialog(
-                    purchaseStatus = availableProductpurchaseStatus,
+                    purchaseStatus = availableInAppProducts,
                     onPurchaseClick = { productId ->
                         viewModel.purchaseProduct(productId) {
                             showPurchaseErrorMessage = it

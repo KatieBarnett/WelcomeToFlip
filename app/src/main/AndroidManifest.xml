@@ -34,6 +34,7 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/Theme.WelcomeToFlip.Starting"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

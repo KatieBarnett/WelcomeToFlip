@@ -36,7 +36,9 @@ class MainViewModel @AssistedInject constructor(
 
     private val userPreferencesFlow = userPreferencesRepository.userPreferencesFlow
 
-    val showWelcomeDialog = userPreferencesFlow.map { it.showWelcomeOnStart }
+    val showWelcomeDialog = userPreferencesFlow.map {
+        it.showWelcomeOnStart
+    }
 
     private val gameTypes = deckRepository.getAvailableGames()
 
@@ -54,7 +56,7 @@ class MainViewModel @AssistedInject constructor(
             }
         }
 
-    val availableProductInAppProduct = purchaseManager.availableProducts
+    val availableInAppProducts = purchaseManager.availableProducts
         .combine(purchaseManager.purchases) { availableProducts, purchases ->
             availableProducts.associate {
                 it.productId to it.copy(purchased = purchases.contains(it.productId))

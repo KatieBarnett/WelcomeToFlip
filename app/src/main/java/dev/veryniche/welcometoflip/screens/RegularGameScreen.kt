@@ -70,8 +70,8 @@ fun RegularGameScreen(
     val advancePositionEnabled by viewModel.advancePositionEnabled.observeAsState(true)
     val reversePositionEnabled by viewModel.reversePositionEnabled.observeAsState(true)
     val isEndGame by viewModel.isEndGame.observeAsState(false)
-    var showEndGameDialog by remember(isEndGame) { mutableStateOf(isEndGame) }
-    var showEndGameConfirmationDialog by remember { mutableStateOf(false) }
+    var showEndGameDialog by rememberSaveable(isEndGame) { mutableStateOf(isEndGame) }
+    var showEndGameConfirmationDialog by rememberSaveable { mutableStateOf(false) }
 
     viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
 
