@@ -1,5 +1,6 @@
 package dev.veryniche.welcometoflip.core.models
 
+import dev.veryniche.welcometoflip.core.BuildConfig
 import dev.veryniche.welcometoflip.core.R
 import dev.veryniche.welcometoflip.core.theme.*
 
@@ -18,6 +19,7 @@ val WelcomeToTheMoon = GameType(
     largeIcon = R.drawable.noun_moon_6086589,
     displayName = R.string.game_welcome_to_the_moon,
     soloAvailable = false,
+    purchased = BuildConfig.DEBUG // Multiplayer purchased by default
 )
 
 // Welcome To Classic
