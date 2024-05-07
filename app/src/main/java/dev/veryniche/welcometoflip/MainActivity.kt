@@ -14,6 +14,9 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,7 +26,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -59,6 +61,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @OptIn(ExperimentalMaterial3AdaptiveApi::class)
     @Composable
     fun WelcomeToFlipApp() {
         val coroutineScope = rememberCoroutineScope()
@@ -77,6 +80,8 @@ class MainActivity : ComponentActivity() {
             )
             var showPurchaseErrorMessage by rememberSaveable { mutableStateOf<Int?>(null) }
             val showAds by viewModel.showAds.collectAsStateWithLifecycle(false)
+
+            val windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
             Column(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
                 WelcomeToFlipNavHost(
                     navController = navController,
@@ -93,6 +98,7 @@ class MainActivity : ComponentActivity() {
                             showInterstitialAd(this@MainActivity, location)
                         }
                     },
+                    windowSizeClass = windowSizeClass,
                     modifier = Modifier.weight(1f)
                 )
                 if (showAds) {
@@ -117,7 +123,8 @@ class MainActivity : ComponentActivity() {
                     },
                     saveShowWelcomeOnStart = { value ->
                         viewModel.updateShowWelcomeOnStart(!value)
-                    }
+                    },
+                    windowSizeClass = windowSizeClass,
                 )
             }
 
@@ -136,11 +143,5 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
-    }
-
-    @Preview(group = "Full App", showSystemUi = true, showBackground = true)
-    @Composable
-    fun DefaultPreview() {
-        WelcomeToFlipApp()
     }
 }

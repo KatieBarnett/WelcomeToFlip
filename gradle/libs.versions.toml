@@ -26,6 +26,8 @@ splashscreen = "1.1.0-rc01"
 timber = "5.0.1"
 lifecycleRuntimeCompose = "2.7.0"
 datastorePreferences = "1.1.1"
+material3WindowSizeClass = "1.2.1"
+material3Adaptive = "1.0.0-alpha06"
 
 [libraries]
 billing = { group = "com.android.billingclient", name = "billing-ktx", version.ref = "billing" }
@@ -64,6 +66,8 @@ splashscreen = { group = "androidx.core", name = "core-splashscreen", version.re
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeCompose" }
 datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
+material3-windowsizeclass = { group = "androidx.compose.material3", name = "material3-window-size-class", version.ref = "material3WindowSizeClass" }
+material3-adaptive = { group = "androidx.compose.material3", name = "material3-adaptive", version.ref = "material3Adaptive" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

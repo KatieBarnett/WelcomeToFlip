@@ -12,6 +12,8 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,11 +39,12 @@ fun WelcomeDialog(
     purchaseStatus: Map<String, InAppProduct>,
     onPurchaseClick: (String) -> Unit,
     onDismissRequest: () -> Unit,
-    saveShowWelcomeOnStart: (Boolean) -> Unit
+    saveShowWelcomeOnStart: (Boolean) -> Unit,
+    windowSizeClass: WindowSizeClass
 ) {
     AnimatedTransitionDialog(
         onDismissRequest = onDismissRequest,
-        dialogProperties = DialogProperties(usePlatformDefaultWidth = false)
+        dialogProperties = DialogProperties(usePlatformDefaultWidth = windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact)
     ) { dialogHelper ->
         WelcomeDialogContent(
             purchaseStatus = purchaseStatus,
@@ -70,7 +73,7 @@ fun WelcomeDialogContent(
             verticalArrangement = Arrangement.spacedBy(Dimen.spacingDouble),
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .padding(Dimen.spacing)
+                .padding(Dimen.spacingDouble)
                 .verticalScroll(scrollableState)
         ) {
             Text(

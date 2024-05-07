@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
@@ -23,7 +24,9 @@ import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +38,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -46,12 +50,12 @@ import dev.veryniche.welcometoflip.components.AboutActionIcon
 import dev.veryniche.welcometoflip.components.NavigationIcon
 import dev.veryniche.welcometoflip.core.models.WelcomeToClassic
 import dev.veryniche.welcometoflip.core.models.WelcomeToTheMoon
+import dev.veryniche.welcometoflip.previews.getPreviewWindowSizeClass
 import dev.veryniche.welcometoflip.purchase.InAppProduct
 import dev.veryniche.welcometoflip.purchase.Products
 import dev.veryniche.welcometoflip.purchase.getLargeIcon
 import dev.veryniche.welcometoflip.purchase.mapToProductId
 import dev.veryniche.welcometoflip.purchase.multiplayerGameIds
-import dev.veryniche.welcometoflip.purchase.soloGameIds
 import dev.veryniche.welcometoflip.theme.Dimen
 import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
 import dev.veryniche.welcometoflip.util.Analytics
@@ -153,6 +157,7 @@ fun ShopScreen(
     purchaseStatus: Map<String, InAppProduct>,
     onPurchaseClick: (String) -> Unit,
     modifier: Modifier = Modifier,
+    windowSizeClass: WindowSizeClass,
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val topAppBarTextSize = getTopAppBarTextSize(scrollBehavior.state.collapsedFraction)
@@ -179,32 +184,37 @@ fun ShopScreen(
         },
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(Dimen.spacingDouble),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxWidth()
                 .padding(
                     top = innerPadding.calculateTopPadding(),
                     start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
                     end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
                     bottom = 0.dp
                 )
-                .padding(Dimen.spacingDouble)
         ) {
-            item {
-                ShopText(textRes = R.string.shop_text)
-            }
-            if (purchaseStatus.any { multiplayerGameIds.contains(it.key) && it.value.purchased != true }) {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(Dimen.spacingDouble),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .padding(Dimen.spacingDouble)
+                    .widthIn(max = 500.dp)
+            ) {
                 item {
-                    ShopHeading(R.string.shop_get_multiplayer_games)
+                    ShopText(textRes = R.string.shop_text)
                 }
-                items(
-                    purchaseStatus.filter { multiplayerGameIds.contains(it.key) && it.value.purchased != true }
-                        .map { it.value }
-                ) {
-                    ShopItem(product = it, onPurchaseClick)
+                if (purchaseStatus.any { multiplayerGameIds.contains(it.key) && it.value.purchased != true }) {
+                    item {
+                        ShopHeading(R.string.shop_get_multiplayer_games)
+                    }
+                    items(
+                        purchaseStatus.filter { multiplayerGameIds.contains(it.key) && it.value.purchased != true }
+                            .map { it.value }
+                    ) {
+                        ShopItem(product = it, onPurchaseClick)
+                    }
                 }
-            }
 //          if (purchaseStatus.any { soloGameIds.contains(it.key) && it.value.purchased != true }) {
 //                item {
 //                    ShopHeading(R.string.shop_get_solo_games)
@@ -216,23 +226,24 @@ fun ShopScreen(
 //                    ShopItem(product = it, onPurchaseClick)
 //                }
 //            }
-            purchaseStatus[Products.adRemoval]?.let {
-                if (it.purchased != true) {
-                    item {
-                        ShopHeading(R.string.shop_remove_ads_title)
-                    }
-                    item {
-                        ShopItem(product = it, onPurchaseClick)
+                purchaseStatus[Products.adRemoval]?.let {
+                    if (it.purchased != true) {
+                        item {
+                            ShopHeading(R.string.shop_remove_ads_title)
+                        }
+                        item {
+                            ShopItem(product = it, onPurchaseClick)
+                        }
                     }
                 }
-            }
-            purchaseStatus[Products.bundle]?.let {
-                if (it.purchased != true) {
-                    item {
-                        ShopHeading(R.string.shop_bundle_title)
-                    }
-                    item {
-                        ShopItem(product = it, onPurchaseClick)
+                purchaseStatus[Products.bundle]?.let {
+                    if (it.purchased != true) {
+                        item {
+                            ShopHeading(R.string.shop_bundle_title)
+                        }
+                        item {
+                            ShopItem(product = it, onPurchaseClick)
+                        }
                     }
                 }
             }
@@ -258,7 +269,10 @@ fun ShopItemPreview() {
     }
 }
 
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Preview(showBackground = true)
+@Preview(showBackground = true, device = Devices.TABLET)
+@Preview(showBackground = true, device = "spec:id=reference_tablet,shape=Normal,width=800,height=1280,unit=dp,dpi=240")
 @Composable
 fun ShopScreenPreview() {
     WelcomeToFlipTheme {
@@ -303,7 +317,8 @@ fun ShopScreenPreview() {
                     )
                 )
             ),
-            onPurchaseClick = {}
+            onPurchaseClick = {},
+            windowSizeClass = getPreviewWindowSizeClass()
         )
     }
 }

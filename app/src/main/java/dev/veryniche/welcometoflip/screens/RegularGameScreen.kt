@@ -9,15 +9,17 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -60,7 +62,8 @@ fun RegularGameScreen(
     onShowInterstitialAd: (InterstitialAdLocation) -> Unit,
     onGameEnd: () -> Unit,
     navController: NavController = rememberNavController(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    windowSizeClass: WindowSizeClass
 ) {
     TrackedScreen {
         trackScreenView(name = gameType.name)
@@ -176,7 +179,9 @@ fun RegularGame(
     }
 }
 
-@Preview(group = "Regular Game Screen", showBackground = true)
+@Preview(showBackground = true)
+@Preview(showBackground = true, device = Devices.TABLET)
+@Preview(showBackground = true, device = "spec:id=reference_tablet,shape=Normal,width=800,height=1280,unit=dp,dpi=240")
 @Composable
 fun RegularGamePreview() {
     val stacks = listOf(

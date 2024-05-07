@@ -2,6 +2,7 @@ package dev.veryniche.welcometoflip.util
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -60,7 +61,7 @@ fun AboutAppText(modifier: Modifier = Modifier) {
                     context.startActivity(intent)
                 }
         },
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     )
 }
 

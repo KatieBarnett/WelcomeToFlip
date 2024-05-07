@@ -1,15 +1,20 @@
 package dev.veryniche.welcometoflip.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -18,6 +23,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -45,10 +53,12 @@ import dev.veryniche.welcometoflip.core.models.GameType
 import dev.veryniche.welcometoflip.core.models.SavedGame
 import dev.veryniche.welcometoflip.core.models.WelcomeToClassic
 import dev.veryniche.welcometoflip.core.models.WelcomeToTheMoon
+import dev.veryniche.welcometoflip.previews.getPreviewWindowSizeClass
 import dev.veryniche.welcometoflip.theme.Dimen
 import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
 import dev.veryniche.welcometoflip.util.Analytics
 import dev.veryniche.welcometoflip.util.TrackedScreen
+import dev.veryniche.welcometoflip.util.conditional
 import dev.veryniche.welcometoflip.util.displayDateTime
 import dev.veryniche.welcometoflip.util.getMediumTopAppBarColors
 import dev.veryniche.welcometoflip.util.getTopAppBarTextSize
@@ -65,7 +75,8 @@ fun ChooseGameScreen(
     onShowInterstitialAd: (InterstitialAdLocation) -> Unit,
     showShopMenuItem: Boolean,
     onPurchaseError: (message: Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    windowSizeClass: WindowSizeClass
 ) {
     val savedGames: List<SavedGame> by viewModel.savedGames.collectAsState(initial = emptyList())
     val games: List<GameType> by viewModel.games.collectAsState(initial = emptyList())
@@ -116,6 +127,7 @@ fun ChooseGameScreen(
             purchaseNewGameAction = { gameType, solo ->
                 viewModel.purchaseGame(gameType, solo, onPurchaseError)
             },
+            windowSizeClass = windowSizeClass,
             modifier = Modifier
                 .padding(
                     top = innerPadding.calculateTopPadding(),
@@ -135,14 +147,24 @@ fun ChooseGameBody(
     purchaseNewGameAction: (gameType: GameType, solo: Boolean) -> Unit,
     loadGameAction: (savedGame: SavedGame) -> Unit,
     deleteSavedGameAction: (savedGame: SavedGame) -> Unit,
+    windowSizeClass: WindowSizeClass,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
-        horizontalAlignment = Alignment.Start,
+    LazyVerticalGrid(
+        columns = if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
+            GridCells.Fixed(1)
+        } else if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium) {
+            GridCells.Fixed(2)
+        } else {
+            GridCells.Adaptive(minSize = 400.dp)
+        },
         verticalArrangement = Arrangement.spacedBy(Dimen.spacingDouble),
+        horizontalArrangement = Arrangement.spacedBy(Dimen.spacingDouble),
         modifier = modifier.padding(Dimen.spacingDouble)
     ) {
-        item {
+        item(span = {
+            GridItemSpan(maxLineSpan)
+        }) {
             Text(
                 text = stringResource(id = R.string.main_instruction),
                 style = MaterialTheme.typography.headlineSmall,
@@ -174,15 +196,19 @@ fun ChooseGameBody(
             )
         }
         if (savedGames.isNotEmpty()) {
-            item {
+            item(span = {
+                GridItemSpan(maxLineSpan)
+            }) {
                 Text(
                     text = stringResource(id = R.string.saved_instruction),
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier
                 )
             }
-            items(savedGames) { game ->
-                SavedGame(game, loadGameAction, deleteSavedGameAction)
+            items(savedGames, span = {
+                GridItemSpan(maxLineSpan)
+            }) { game ->
+                SavedGame(game, loadGameAction, deleteSavedGameAction, windowSizeClass)
             }
         }
     }
@@ -193,36 +219,49 @@ fun SavedGame(
     savedGame: SavedGame,
     loadGameAction: (savedGame: SavedGame) -> Unit,
     deleteGameAction: (savedGame: SavedGame) -> Unit,
+    windowSizeClass: WindowSizeClass,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(Dimen.spacing),
-        modifier = modifier.padding(horizontal = Dimen.spacing)
-    ) {
-        savedGame.gameType?.let {
-            Icon(
-                painter = painterResource(id = it.icon),
-                contentDescription = stringResource(id = it.displayName),
-                modifier = Modifier
-                    .size(Dimen.SavedGame.iconSize)
+    Box(modifier = modifier) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Dimen.spacing),
+            modifier = modifier.conditional(windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium, {
+                fillMaxWidth(0.5f)
+            }, {
+                widthIn(max = 400.dp)
+            }).padding(horizontal = Dimen.spacing)
+        ) {
+            savedGame.gameType?.let {
+                Icon(
+                    painter = painterResource(id = it.icon),
+                    contentDescription = stringResource(id = it.displayName),
+                    modifier = Modifier
+                        .size(Dimen.SavedGame.iconSize)
+                )
+            }
+            Column {
+                Text(savedGame.lastModified.displayDateTime(stringResource(id = R.string.date_time_format)))
+                Text(
+                    stringResource(
+                        id = R.string.position_label,
+                        savedGame.displayPosition,
+                        savedGame.stackSize
+                    )
+                )
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            ThemedIconButton(
+                altTextRes = R.string.delete_saved_button,
+                iconRes = Rcore.drawable.noun_bin_2034046,
+                onClick = { deleteGameAction.invoke(savedGame) }
+            )
+            ThemedIconButton(
+                altTextRes = R.string.load_saved_button,
+                iconRes = Rcore.drawable.noun_arrow_60381,
+                onClick = { loadGameAction.invoke(savedGame) }
             )
         }
-        Column {
-            Text(savedGame.lastModified.displayDateTime(stringResource(id = R.string.date_time_format)))
-            Text(stringResource(id = R.string.position_label, savedGame.displayPosition, savedGame.stackSize))
-        }
-        Spacer(modifier = Modifier.weight(1f))
-        ThemedIconButton(
-            altTextRes = R.string.delete_saved_button,
-            iconRes = Rcore.drawable.noun_bin_2034046,
-            onClick = { deleteGameAction.invoke(savedGame) }
-        )
-        ThemedIconButton(
-            altTextRes = R.string.load_saved_button,
-            iconRes = Rcore.drawable.noun_arrow_60381,
-            onClick = { loadGameAction.invoke(savedGame) }
-        )
     }
 }
 
@@ -241,6 +280,7 @@ fun SavedGamePreview() {
             ),
             loadGameAction = {},
             deleteGameAction = {},
+            windowSizeClass = getPreviewWindowSizeClass(),
             modifier = Modifier
         )
     }
@@ -261,12 +301,15 @@ fun SavedGamePreviewSolo() {
             ),
             loadGameAction = {},
             deleteGameAction = {},
+            windowSizeClass = getPreviewWindowSizeClass(),
             modifier = Modifier
         )
     }
 }
 
-@Preview(group = "Choose Game Screen", showBackground = true)
+@Preview(showBackground = true)
+@Preview(showBackground = true, device = Devices.TABLET)
+@Preview(showBackground = true, device = "spec:id=reference_tablet,shape=Normal,width=800,height=1280,unit=dp,dpi=240")
 @Composable
 fun ChooseGameBodyPreview() {
     WelcomeToFlipTheme {
@@ -293,6 +336,7 @@ fun ChooseGameBodyPreview() {
             loadGameAction = {},
             deleteSavedGameAction = {},
             purchaseNewGameAction = { gameType, solo -> },
+            windowSizeClass = getPreviewWindowSizeClass(),
             modifier = Modifier
         )
     }

@@ -1,5 +1,6 @@
 package dev.veryniche.welcometoflip
 
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -25,6 +26,7 @@ fun WelcomeToFlipNavHost(
     modifier: Modifier = Modifier,
     mainViewModel: MainViewModel,
     purchaseStatus: Map<String, InAppProduct>,
+    windowSizeClass: WindowSizeClass,
 ) {
     NavHost(
         navController = navController,
@@ -35,6 +37,7 @@ fun WelcomeToFlipNavHost(
             ChooseGameScreen(
                 navController = navController,
                 viewModel = mainViewModel,
+                windowSizeClass = windowSizeClass,
                 onShowInterstitialAd = onShowInterstitialAd,
                 showShopMenuItem = purchaseStatus.isAvailablePurchases(),
                 onPurchaseError = {
@@ -46,6 +49,7 @@ fun WelcomeToFlipNavHost(
             AboutScreen(
                 navController = navController,
                 purchaseStatus = purchaseStatus,
+                windowSizeClass = windowSizeClass,
                 showShopMenuItem = purchaseStatus.isAvailablePurchases(),
                 onPurchaseClick = { productId ->
                     mainViewModel.purchaseProduct(productId) {
@@ -58,6 +62,7 @@ fun WelcomeToFlipNavHost(
             ShopScreen(
                 navController = navController,
                 purchaseStatus = purchaseStatus,
+                windowSizeClass = windowSizeClass,
                 onPurchaseClick = { productId ->
                     mainViewModel.purchaseProduct(productId) {
                         showPurchaseErrorMessage.invoke(it)
@@ -89,6 +94,7 @@ fun WelcomeToFlipNavHost(
                         gameType = gameType,
                         onGameEnd = onGameEnd,
                         navController = navController,
+                        windowSizeClass = windowSizeClass,
                         onShowInterstitialAd = onShowInterstitialAd,
                         showShopMenuItem = purchaseStatus.isAvailablePurchases(),
                     )

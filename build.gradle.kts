@@ -3,7 +3,7 @@
 
 ext {
     extra["appVersionName"] = "1.0.0"
-    extra["appVersionCode"] = 6
+    extra["appVersionCode"] = 8
     extra["compileSdk"] = 34
     extra["targetSdk"] = 34
     extra["minSdk"] = 26
