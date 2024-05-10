@@ -63,8 +63,7 @@ fun CollapsingTopAppBar(
         MediumTopAppBar(
             title = {
                 Text(
-                    text = fontScale.toString(),
-//                        text = stringResource(titleRes),
+                    text = stringResource(titleRes),
                     fontSize = topAppBarTextSize.sp
                 )
             },
