@@ -21,12 +21,15 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -149,6 +152,7 @@ fun ShopItem(product: InAppProduct, onPurchaseClick: (String) -> Unit, modifier:
 @Composable
 fun ShopScreen(
     navController: NavController = rememberNavController(),
+    snackbarHostState: SnackbarHostState,
     purchaseStatus: Map<String, InAppProduct>,
     onPurchaseClick: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -167,6 +171,9 @@ fun ShopScreen(
                 showShopMenuItem = false,
                 showAboutMenuItem = true,
             )
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
         },
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
@@ -304,7 +311,8 @@ fun ShopScreenPreview() {
                 )
             ),
             onPurchaseClick = {},
-            windowSizeClass = getPreviewWindowSizeClass()
+            windowSizeClass = getPreviewWindowSizeClass(),
+            snackbarHostState = remember { SnackbarHostState() }
         )
     }
 }

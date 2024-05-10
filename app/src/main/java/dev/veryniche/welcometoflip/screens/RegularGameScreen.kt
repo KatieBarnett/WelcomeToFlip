@@ -7,10 +7,14 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +36,7 @@ import dev.veryniche.welcometoflip.components.EndGameConfirmationDialog
 import dev.veryniche.welcometoflip.components.EndGameDialog
 import dev.veryniche.welcometoflip.components.GameContainer
 import dev.veryniche.welcometoflip.components.NavigationIcon
+import dev.veryniche.welcometoflip.components.ScreenOnToggle
 import dev.veryniche.welcometoflip.components.ShopActionIcon
 import dev.veryniche.welcometoflip.components.Stack
 import dev.veryniche.welcometoflip.core.models.Astronaut
@@ -56,11 +61,15 @@ import dev.veryniche.welcometoflip.util.trackScreenView
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegularGameScreen(
+    snackbarHostState: SnackbarHostState,
     viewModel: GameViewModel,
     gameType: GameType,
     showShopMenuItem: Boolean,
     onShowInterstitialAd: (InterstitialAdLocation) -> Unit,
     onGameEnd: () -> Unit,
+    keepScreenOn: Boolean,
+    onKeepScreenOnSet: (Boolean) -> Unit,
+    keepScreenOnAction: (Boolean) -> Unit,
     navController: NavController = rememberNavController(),
     modifier: Modifier = Modifier,
     windowSizeClass: WindowSizeClass
@@ -78,12 +87,23 @@ fun RegularGameScreen(
 
     viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
 
+    LaunchedEffect(Unit) {
+        keepScreenOnAction.invoke(keepScreenOn)
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            keepScreenOnAction.invoke(false)
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = gameType.displayName)) },
                 navigationIcon = { NavigationIcon(navController = navController) },
                 actions = {
+                    ScreenOnToggle(keepScreenOn, onKeepScreenOnSet, snackbarHostState)
                     if (showShopMenuItem) {
                         ShopActionIcon(navController = navController)
                     }
@@ -91,6 +111,9 @@ fun RegularGameScreen(
                 },
                 colors = getTopAppBarColors(),
             )
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
         },
         modifier = modifier
     ) { innerPadding ->

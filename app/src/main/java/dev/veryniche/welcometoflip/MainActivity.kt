@@ -1,6 +1,8 @@
 package dev.veryniche.welcometoflip
 
 import android.os.Bundle
+import android.view.Window
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
@@ -61,6 +64,15 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private fun setKeepScreenOn(window: Window, screenOn: Boolean){
+        if (screenOn) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+        Timber.d("Updating screen on setting to: $screenOn")
+    }
+
     @OptIn(ExperimentalMaterial3AdaptiveApi::class)
     @Composable
     fun WelcomeToFlipApp() {
@@ -71,6 +83,7 @@ class MainActivity : ComponentActivity() {
         }
         WelcomeToFlipTheme {
             val navController = rememberNavController()
+            val snackbarHostState = remember { SnackbarHostState() }
             val showWelcomeDialogOnStart by viewModel.showWelcomeDialog.collectAsStateWithLifecycle(null)
             var showWelcomeDialog by rememberSaveable(showWelcomeDialogOnStart) {
                 mutableStateOf(showWelcomeDialogOnStart)
@@ -82,11 +95,23 @@ class MainActivity : ComponentActivity() {
             val showAds by viewModel.showAds.collectAsStateWithLifecycle(false)
 
             val windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+
+            val keepScreenOn by viewModel.keepScreenOn.collectAsStateWithLifecycle(false)
+
             Column(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
                 WelcomeToFlipNavHost(
                     navController = navController,
                     mainViewModel = viewModel,
                     purchaseStatus = availableInAppProducts,
+                    snackbarHostState = snackbarHostState,
+                    keepScreenOn = keepScreenOn,
+                    onKeepScreenOnSet = {
+                        viewModel.updateKeepScreenOn(it)
+                        setKeepScreenOn(window, it)
+                    },
+                    keepScreenOnAction = {
+                        setKeepScreenOn(window, it)
+                    },
                     showPurchaseErrorMessage = {
                         showPurchaseErrorMessage = it
                     },

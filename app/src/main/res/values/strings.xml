@@ -91,5 +91,9 @@
     <string name="shop_remove_ads">Remove ads %s</string>
     <string name="shop_purchase">Purchase: %s</string>
     <string name="shop_bundle_title">Bundles:</string>
+
+    <string name="toggle_screen_on">Toggle screen on while playing</string>
+    <string name="toggle_screen_on_confirmation">The screen will stay on while playing.</string>
+    <string name="toggle_screen_off_confirmation">The screen will automatically turn off while playing depending on your device settings.</string>
     
 </resources>

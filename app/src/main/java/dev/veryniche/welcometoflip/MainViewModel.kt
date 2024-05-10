@@ -40,6 +40,10 @@ class MainViewModel @AssistedInject constructor(
         it.showWelcomeOnStart
     }
 
+    val keepScreenOn = userPreferencesFlow.map {
+        it.keepScreenOn
+    }
+
     private val gameTypes = deckRepository.getAvailableGames()
 
     val games = purchaseManager.availableProducts
@@ -96,6 +100,12 @@ class MainViewModel @AssistedInject constructor(
     fun updateShowWelcomeOnStart(value: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             userPreferencesRepository.updateShowWelcomeOnStart(value)
+        }
+    }
+
+    fun updateKeepScreenOn(value: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            userPreferencesRepository.updateKeepScreenOn(value)
         }
     }
 

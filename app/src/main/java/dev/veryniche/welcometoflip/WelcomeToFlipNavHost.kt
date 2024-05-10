@@ -1,5 +1,6 @@
 package dev.veryniche.welcometoflip
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,7 +21,11 @@ import dev.veryniche.welcometoflip.util.isAvailablePurchases
 @Composable
 fun WelcomeToFlipNavHost(
     navController: NavHostController,
+    snackbarHostState: SnackbarHostState,
     onGameEnd: () -> Unit,
+    keepScreenOn: Boolean,
+    onKeepScreenOnSet: (Boolean) -> Unit,
+    keepScreenOnAction: (Boolean) -> Unit,
     showPurchaseErrorMessage: (Int) -> Unit,
     onShowInterstitialAd: (InterstitialAdLocation) -> Unit,
     modifier: Modifier = Modifier,
@@ -36,6 +41,7 @@ fun WelcomeToFlipNavHost(
         composable(route = ChooseGame.route) {
             ChooseGameScreen(
                 navController = navController,
+                snackbarHostState = snackbarHostState,
                 viewModel = mainViewModel,
                 windowSizeClass = windowSizeClass,
                 onShowInterstitialAd = onShowInterstitialAd,
@@ -48,6 +54,7 @@ fun WelcomeToFlipNavHost(
         composable(route = About.route) {
             AboutScreen(
                 navController = navController,
+                snackbarHostState = snackbarHostState,
                 purchaseStatus = purchaseStatus,
                 windowSizeClass = windowSizeClass,
                 showShopMenuItem = purchaseStatus.isAvailablePurchases(),
@@ -61,6 +68,7 @@ fun WelcomeToFlipNavHost(
         composable(route = Shop.route) {
             ShopScreen(
                 navController = navController,
+                snackbarHostState = snackbarHostState,
                 purchaseStatus = purchaseStatus,
                 windowSizeClass = windowSizeClass,
                 onPurchaseClick = { productId ->
@@ -91,12 +99,16 @@ fun WelcomeToFlipNavHost(
                     }
                     RegularGameScreen(
                         viewModel = gameViewModel,
+                        snackbarHostState = snackbarHostState,
                         gameType = gameType,
                         onGameEnd = onGameEnd,
                         navController = navController,
                         windowSizeClass = windowSizeClass,
                         onShowInterstitialAd = onShowInterstitialAd,
                         showShopMenuItem = purchaseStatus.isAvailablePurchases(),
+                        keepScreenOn = keepScreenOn,
+                        onKeepScreenOnSet = onKeepScreenOnSet,
+                        keepScreenOnAction = keepScreenOnAction
                     )
                 }
             }
