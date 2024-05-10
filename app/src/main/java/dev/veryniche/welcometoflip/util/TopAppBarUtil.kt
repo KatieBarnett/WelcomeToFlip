@@ -34,9 +34,7 @@ fun CollapsingTopAppBar(
     modifier: Modifier = Modifier
 ) {
     val topAppBarTextSize = getTopAppBarTextSize(scrollBehavior.state.collapsedFraction)
-
     val fontScale = LocalDensity.current.fontScale
-
     if (fontScale > 1.5) {
         LargeTopAppBar(
             title = {

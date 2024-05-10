@@ -8,6 +8,7 @@ data class GameType(
     @DrawableRes val icon: Int,
     @DrawableRes val largeIcon: Int,
     @StringRes val displayName: Int,
+    @StringRes val actionCardName: Int,
     val name: String,
     val purchased: Boolean = false,
     val purchasePrice: String? = null,

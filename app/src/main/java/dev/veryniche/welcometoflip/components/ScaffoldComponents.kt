@@ -2,8 +2,10 @@ package dev.veryniche.welcometoflip.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.BrightnessHigh
 import androidx.compose.material.icons.filled.BrightnessLow
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
@@ -12,11 +14,14 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import dev.veryniche.welcometoflip.About
+import dev.veryniche.welcometoflip.ChartScreen
 import dev.veryniche.welcometoflip.R
 import dev.veryniche.welcometoflip.Shop
+import dev.veryniche.welcometoflip.core.models.GameType
 import kotlinx.coroutines.launch
 
 @Composable
@@ -28,6 +33,20 @@ fun NavigationIcon(navController: NavController) {
             Icon(
                 imageVector = Icons.Filled.ArrowBack,
                 contentDescription = stringResource(id = R.string.navigate_back)
+            )
+        }
+    }
+}
+
+@Composable
+fun CloseIcon(navController: NavController) {
+    if (navController.previousBackStackEntry != null) {
+        IconButton(
+            onClick = { navController.navigateUp() }
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Close,
+                contentDescription = stringResource(id = R.string.navigate_close)
             )
         }
     }
@@ -53,6 +72,19 @@ fun ShopActionIcon(navController: NavController) {
         Icon(
             imageVector = Icons.Filled.ShoppingCart,
             contentDescription = stringResource(id = R.string.navigate_shop)
+        )
+    }
+}
+
+@Composable
+fun ChartActionItem(navController: NavController, gameType: GameType) {
+    IconButton(
+        onClick = { navController.navigate(ChartScreen.getRoute(gameType)) }
+    ) {
+        Icon(
+            imageVector = Icons.Filled.BarChart,
+            contentDescription = stringResource(id = R.string.navigate_chart),
+            modifier = Modifier.rotate(90f)
         )
     }
 }

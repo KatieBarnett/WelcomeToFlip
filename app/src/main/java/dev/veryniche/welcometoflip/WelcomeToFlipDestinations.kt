@@ -12,6 +12,26 @@ data object ChooseGame : WelcomeToFlipDestination("ChooseGame")
 data object About : WelcomeToFlipDestination("About")
 data object Shop : WelcomeToFlipDestination("Shop")
 
+data object ChartScreen : WelcomeToFlipDestination("ChartScreen") {
+
+    const val gameTypeArg = "gameType"
+    val routeWithArgs = "$route/{$gameTypeArg}"
+    val arguments = listOf(
+        navArgument(gameTypeArg) { type = NavType.StringType },
+    )
+
+    val deepLinks = listOf(
+        navDeepLink { uriPattern = "welcomeToFlip://$route/{$gameTypeArg}" },
+        navDeepLink {
+            uriPattern = "welcomeToFlip://$route/{$gameTypeArg}"
+        }
+    )
+
+    fun getRoute(gameType: GameType): String {
+        return "$route/${gameType.name}"
+    }
+}
+
 data object Game : WelcomeToFlipDestination("Game") {
 
     const val gameTypeArg = "gameType"

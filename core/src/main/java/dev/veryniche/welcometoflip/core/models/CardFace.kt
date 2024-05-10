@@ -11,16 +11,11 @@ sealed class CardFace(
 sealed class Action(
     drawableRes: Int,
     backgroundColor: Color
-): CardFace(drawableRes, backgroundColor)
+) : CardFace(drawableRes, backgroundColor)
 
-sealed class Number(drawableRes: Int): CardFace(drawableRes, null)
+sealed class Number(drawableRes: Int) : CardFace(drawableRes, null)
 
 sealed class Letter(
     drawableRes: Int,
     backgroundColor: Color
-): CardFace(drawableRes, backgroundColor)
-
-
-
- 
-    
+) : CardFace(drawableRes, backgroundColor)

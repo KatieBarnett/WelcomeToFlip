@@ -1,21 +1,27 @@
 package dev.veryniche.welcometoflip
 
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import dev.veryniche.welcometoflip.ads.InterstitialAdLocation
 import dev.veryniche.welcometoflip.core.models.mapToGameType
 import dev.veryniche.welcometoflip.purchase.InAppProduct
 import dev.veryniche.welcometoflip.screens.AboutScreen
+import dev.veryniche.welcometoflip.screens.ChartScreen
 import dev.veryniche.welcometoflip.screens.ChooseGameScreen
 import dev.veryniche.welcometoflip.screens.RegularGameScreen
 import dev.veryniche.welcometoflip.screens.ShopScreen
 import dev.veryniche.welcometoflip.screens.SoloGameScreen
+import dev.veryniche.welcometoflip.util.SetDialogDestinationToEdgeToEdge
 import dev.veryniche.welcometoflip.util.isAvailablePurchases
 
 @Composable
@@ -77,6 +83,29 @@ fun WelcomeToFlipNavHost(
                     }
                 },
             )
+        }
+        dialog(
+            route = ChartScreen.routeWithArgs,
+            arguments = ChartScreen.arguments,
+            deepLinks = ChartScreen.deepLinks,
+            dialogProperties = DialogProperties(
+                usePlatformDefaultWidth = true,
+                decorFitsSystemWindows = false
+            )
+        ) {
+            it.arguments?.getString(ChartScreen.gameTypeArg)?.mapToGameType()?.let { gameType ->
+                val chartViewModel = hiltViewModel<ChartViewModel, ChartViewModel.ChartViewModelFactory> { factory ->
+                    factory.create(gameType)
+                }
+                SetDialogDestinationToEdgeToEdge()
+                ChartScreen(
+                    navController = navController,
+                    snackbarHostState = snackbarHostState,
+                    gameType = gameType,
+                    deck = chartViewModel.deck,
+                    modifier = Modifier
+                )
+            }
         }
         composable(route = Game.routeWithArgs, arguments = Game.arguments, deepLinks = Game.deepLinks) {
             it.arguments?.getString(Game.gameTypeArg)?.mapToGameType()?.let { gameType ->
