@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.ksp)
     alias(libs.plugins.paparazzi)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -51,12 +52,15 @@ android {
         compose = true
         buildConfig = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
     ksp {
         arg("skipPrivatePreviews", "true")
     }
+}
+
+composeCompiler {
+    enableStrongSkippingMode = true
+    reportsDestination = layout.buildDirectory.dir("compose_compiler")
+//    stabilityConfigurationFile = rootProject.layout.projectDirectory.file("stability_config.conf")
 }
 
 dependencies {
@@ -101,7 +105,6 @@ dependencies {
     implementation(libs.play.core.ktx)
 
     implementation(libs.timber)
-    
     implementation(libs.play.services.base)
     implementation(libs.play.services.ads)
 
