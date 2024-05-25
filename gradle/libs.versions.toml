@@ -1,5 +1,5 @@
 [versions]
-androidGradlePlugin = "8.6.0-alpha03"
+androidGradlePlugin = "8.6.0-alpha02"
 billing = "7.0.0"
 compose-bom = "2024.05.00"
 compose-runtime = "1.7.0-beta01"
