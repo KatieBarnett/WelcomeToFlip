@@ -20,5 +20,6 @@ plugins {
     alias(libs.plugins.google.services) apply (false)
     alias(libs.plugins.ksp) apply (false)
     alias(libs.plugins.paparazzi) apply (false)
+    alias(libs.plugins.compose.compiler) apply (false)
 }
 true // Needed to make the Suppress annotation work for the plugins block

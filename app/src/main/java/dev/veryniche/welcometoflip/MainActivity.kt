@@ -44,6 +44,7 @@ import dev.veryniche.welcometoflip.ads.showInterstitialAd
 import dev.veryniche.welcometoflip.components.WelcomeDialog
 import dev.veryniche.welcometoflip.purchase.PurchaseManager
 import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
+import dev.veryniche.welcometoflip.viewmodels.MainViewModel
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -84,19 +85,23 @@ class MainActivity : ComponentActivity() {
         WelcomeToFlipTheme {
             val navController = rememberNavController()
             val snackbarHostState = remember { SnackbarHostState() }
-            val showWelcomeDialogOnStart by viewModel.showWelcomeDialog.collectAsStateWithLifecycle(null)
+            val showWelcomeDialogOnStart by viewModel.showWelcomeDialog.collectAsStateWithLifecycle(null,
+                lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current
+            )
             var showWelcomeDialog by rememberSaveable(showWelcomeDialogOnStart) {
                 mutableStateOf(showWelcomeDialogOnStart)
             }
-            val availableInAppProducts by viewModel.availableInAppProducts.collectAsStateWithLifecycle(
-                mapOf()
+            val availableInAppProducts by viewModel.availableInAppProducts.collectAsStateWithLifecycle(mapOf(),
+                lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current
             )
             var showPurchaseErrorMessage by rememberSaveable { mutableStateOf<Int?>(null) }
-            val showAds by viewModel.showAds.collectAsStateWithLifecycle(false)
+            val showAds by viewModel.showAds.collectAsStateWithLifecycle(false,
+                lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current)
 
             val windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
 
-            val keepScreenOn by viewModel.keepScreenOn.collectAsStateWithLifecycle(false)
+            val keepScreenOn by viewModel.keepScreenOn.collectAsStateWithLifecycle(false,
+                lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current)
 
             Column(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
                 WelcomeToFlipNavHost(
