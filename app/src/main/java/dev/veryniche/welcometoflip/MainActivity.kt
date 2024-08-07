@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun setKeepScreenOn(window: Window, screenOn: Boolean){
+    private fun setKeepScreenOn(window: Window, screenOn: Boolean) {
         if (screenOn) {
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         } else {
@@ -85,23 +85,29 @@ class MainActivity : ComponentActivity() {
         WelcomeToFlipTheme {
             val navController = rememberNavController()
             val snackbarHostState = remember { SnackbarHostState() }
-            val showWelcomeDialogOnStart by viewModel.showWelcomeDialog.collectAsStateWithLifecycle(null,
+            val showWelcomeDialogOnStart by viewModel.showWelcomeDialog.collectAsStateWithLifecycle(
+                null,
                 lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current
             )
             var showWelcomeDialog by rememberSaveable(showWelcomeDialogOnStart) {
                 mutableStateOf(showWelcomeDialogOnStart)
             }
-            val availableInAppProducts by viewModel.availableInAppProducts.collectAsStateWithLifecycle(mapOf(),
+            val availableInAppProducts by viewModel.availableInAppProducts.collectAsStateWithLifecycle(
+                mapOf(),
                 lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current
             )
             var showPurchaseErrorMessage by rememberSaveable { mutableStateOf<Int?>(null) }
-            val showAds by viewModel.showAds.collectAsStateWithLifecycle(false,
-                lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current)
+            val showAds by viewModel.showAds.collectAsStateWithLifecycle(
+                false,
+                lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current
+            )
 
             val windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
 
-            val keepScreenOn by viewModel.keepScreenOn.collectAsStateWithLifecycle(false,
-                lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current)
+            val keepScreenOn by viewModel.keepScreenOn.collectAsStateWithLifecycle(
+                false,
+                lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current
+            )
 
             Column(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
                 WelcomeToFlipNavHost(

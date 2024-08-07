@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -32,7 +33,8 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import dev.veryniche.welcometoflip.GameViewModel
+import dev.veryniche.welcometoflip.R
+import dev.veryniche.welcometoflip.viewmodels.GameViewModel
 import dev.veryniche.welcometoflip.ads.InterstitialAdLocation
 import dev.veryniche.welcometoflip.components.AboutActionIcon
 import dev.veryniche.welcometoflip.components.ChartActionItem
@@ -43,6 +45,7 @@ import dev.veryniche.welcometoflip.components.NavigationIcon
 import dev.veryniche.welcometoflip.components.ScreenOnToggle
 import dev.veryniche.welcometoflip.components.ShopActionIcon
 import dev.veryniche.welcometoflip.components.Stack
+import dev.veryniche.welcometoflip.components.ThemedButton
 import dev.veryniche.welcometoflip.core.models.Astronaut
 import dev.veryniche.welcometoflip.core.models.Card
 import dev.veryniche.welcometoflip.core.models.GameType
@@ -77,7 +80,6 @@ fun RegularGameScreen(
     keepScreenOnAction: (Boolean) -> Unit,
     navController: NavController = rememberNavController(),
     modifier: Modifier = Modifier,
-    windowSizeClass: WindowSizeClass
 ) {
     TrackedScreen {
         trackScreenView(name = gameType.name)
@@ -154,10 +156,16 @@ fun RegularGameScreen(
         GameContainer(
             displayPosition = position + 1,
             displayEndPosition = viewModel.stacks.getStackSize() ?: 0,
-            advancePosition = {
-                viewModel.advancePosition()
+            button  = { modifier ->
+                ThemedButton(onClick = {
+                    viewModel.advancePosition()
+                }, enabled = advancePositionEnabled, modifier = modifier) {
+                    Text(
+                        text = stringResource(id = R.string.flip_button),
+                        style = MaterialTheme.typography.displayMedium
+                    )
+                }
             },
-            advancePositionEnabled = advancePositionEnabled,
             reversePosition = {
                 viewModel.reversePosition()
             },

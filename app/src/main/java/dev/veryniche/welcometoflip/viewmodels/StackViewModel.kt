@@ -1,4 +1,4 @@
-package dev.veryniche.welcometoflip
+package dev.veryniche.welcometoflip.viewmodels
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

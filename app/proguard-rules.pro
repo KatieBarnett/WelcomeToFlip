@@ -25,6 +25,7 @@
 }
 -keep class * extends com.google.crypto.tink.shaded.protobuf.GeneratedMessageLite { *; }
 
+
 # from Missing classes detected while running R8 message
 -dontwarn dev.veryniche.welcometoflip.core.models.Action
 -dontwarn dev.veryniche.welcometoflip.core.models.Astronaut
@@ -57,3 +58,6 @@
 -dontwarn dev.veryniche.welcometoflip.storage.UserPreferencesRepository
 -dontwarn dev.veryniche.welcometoflip.storage.di.DataStoreModule_ProvidePreferencesDataStoreFactory
 -dontwarn dev.veryniche.welcometoflip.storage.di.DataStoreModule_ProvidesSavedGamesDataStoreFactory
+
+-dontwarn dev.veryniche.welcometoflip.core.models.CommonGameDataKt
+-dontwarn dev.veryniche.welcometoflip.core.models.Number

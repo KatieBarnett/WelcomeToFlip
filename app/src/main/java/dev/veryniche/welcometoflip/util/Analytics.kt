@@ -23,8 +23,6 @@ import dev.veryniche.welcometoflip.util.Analytics.Action.ReviewRequested
 import dev.veryniche.welcometoflip.util.Analytics.Action.ShuffleGame
 import timber.log.Timber
 
-private const val ANALYTICS_LOG_TAG = "Analytics"
-
 object Analytics {
     object Screen {
         const val ChooseGame = "Choose Game"
@@ -76,7 +74,7 @@ fun TrackedScreen(
 }
 
 internal fun trackScreenView(name: String?) {
-    Timber.d(ANALYTICS_LOG_TAG, "Track screen: $name")
+    Timber.d("Track screen: $name")
     Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
         param(FirebaseAnalytics.Param.SCREEN_NAME, name ?: "Unknown")
     }
@@ -89,19 +87,19 @@ fun trackAction(action: String) {
 }
 
 fun trackReviewRequested() {
-    Timber.d(ANALYTICS_LOG_TAG, "Track action: Review requested")
+    Timber.d("Track action: Review requested")
     Firebase.analytics.logEvent(ReviewRequested) {}
 }
 
 fun trackPurchaseClick(purchaseId: String) {
-    Timber.d(ANALYTICS_LOG_TAG, "Track action: Purchase: $purchaseId")
+    Timber.d("Track action: Purchase: $purchaseId")
     Firebase.analytics.logEvent(PurchaseClick) {
         param(FirebaseAnalytics.Param.ITEM_ID, purchaseId)
     }
 }
 
 fun trackLoadGame(savedGame: SavedGame) {
-    Timber.d(ANALYTICS_LOG_TAG, "Track action: $LoadGame (${savedGame.gameType?.name}: ${savedGame.position})")
+    Timber.d("Track action: $LoadGame (${savedGame.gameType?.name}: ${savedGame.position})")
     Firebase.analytics.logEvent(LoadGame) {
         param(FirebaseAnalytics.Param.INDEX, savedGame.position.toDouble())
         param(FirebaseAnalytics.Param.CONTENT_TYPE, savedGame.gameType?.name ?: "Unknown")
@@ -109,7 +107,7 @@ fun trackLoadGame(savedGame: SavedGame) {
 }
 
 fun trackDeleteGame(savedGame: SavedGame) {
-    Timber.d(ANALYTICS_LOG_TAG, "Track action: $DeleteGame (${savedGame.gameType?.name}: ${savedGame.position})")
+    Timber.d("Track action: $DeleteGame (${savedGame.gameType?.name}: ${savedGame.position})")
     Firebase.analytics.logEvent(DeleteGame) {
         param(FirebaseAnalytics.Param.INDEX, savedGame.position.toDouble())
         param(FirebaseAnalytics.Param.CONTENT_TYPE, savedGame.gameType?.name ?: "Unknown")
@@ -117,7 +115,7 @@ fun trackDeleteGame(savedGame: SavedGame) {
 }
 
 fun trackShuffleGame(gameType: GameType, position: Int) {
-    Timber.d(ANALYTICS_LOG_TAG, "Track action: $ShuffleGame (${gameType.name}: ${position})")
+    Timber.d("Track action: $ShuffleGame (${gameType.name}: ${position})")
     Firebase.analytics.logEvent(ShuffleGame) {
         param(FirebaseAnalytics.Param.INDEX, position.toDouble())
         param(FirebaseAnalytics.Param.CONTENT_TYPE, gameType.name)
@@ -125,7 +123,7 @@ fun trackShuffleGame(gameType: GameType, position: Int) {
 }
 
 fun trackEndGame(gameType: GameType, position: Int) {
-    Timber.d(ANALYTICS_LOG_TAG, "Track action: $EndGame (${gameType.name}: ${position})")
+    Timber.d("Track action: $EndGame (${gameType.name}: ${position})")
     Firebase.analytics.logEvent(EndGame) {
         param(FirebaseAnalytics.Param.INDEX, position.toDouble())
         param(FirebaseAnalytics.Param.CONTENT_TYPE, gameType.name)

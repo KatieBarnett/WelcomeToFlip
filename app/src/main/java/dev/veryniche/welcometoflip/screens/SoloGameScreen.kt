@@ -1,294 +1,214 @@
 package dev.veryniche.welcometoflip.screens
 
-import androidx.compose.animation.core.CubicBezierEasing
-import androidx.compose.animation.core.animate
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.zIndex
-import dev.veryniche.welcometoflip.SoloGamePhase
-import dev.veryniche.welcometoflip.SoloGameViewModel
-import dev.veryniche.welcometoflip.SoloState
-import dev.veryniche.welcometoflip.components.BasicStackLayout
-import dev.veryniche.welcometoflip.components.EndGameDialog
-import dev.veryniche.welcometoflip.components.PileInsertionLayout
-import dev.veryniche.welcometoflip.components.SoloAstraLayout
-import dev.veryniche.welcometoflip.components.SoloGameContainer
-import dev.veryniche.welcometoflip.components.SoloSlotLayout
-import dev.veryniche.welcometoflip.core.models.Astronaut
-import dev.veryniche.welcometoflip.core.models.Card
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import dev.veryniche.welcometoflip.ads.InterstitialAdLocation
+import dev.veryniche.welcometoflip.components.AboutActionIcon
+import dev.veryniche.welcometoflip.components.ChartActionItem
+import dev.veryniche.welcometoflip.components.GameContainer
+import dev.veryniche.welcometoflip.components.NavigationIcon
+import dev.veryniche.welcometoflip.components.ScreenOnToggle
+import dev.veryniche.welcometoflip.components.ShopActionIcon
+import dev.veryniche.welcometoflip.components.SoloGame
 import dev.veryniche.welcometoflip.core.models.GameType
-import dev.veryniche.welcometoflip.core.models.Lightning
-import dev.veryniche.welcometoflip.core.models.Number1
-import dev.veryniche.welcometoflip.core.models.Number2
-import dev.veryniche.welcometoflip.core.models.Number3
-import dev.veryniche.welcometoflip.core.models.Plant
-import dev.veryniche.welcometoflip.core.models.Robot
-import dev.veryniche.welcometoflip.core.models.SoloA
-import dev.veryniche.welcometoflip.core.models.SoloB
-import dev.veryniche.welcometoflip.core.models.SoloC
-import dev.veryniche.welcometoflip.core.models.Water
-import dev.veryniche.welcometoflip.core.models.X
-import dev.veryniche.welcometoflip.theme.Dimen
-import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
 import dev.veryniche.welcometoflip.util.TrackedScreen
+import dev.veryniche.welcometoflip.util.getMediumTopAppBarColors
+import dev.veryniche.welcometoflip.util.getTopAppBarColors
 import dev.veryniche.welcometoflip.util.observeLifecycle
 import dev.veryniche.welcometoflip.util.trackScreenView
+import dev.veryniche.welcometoflip.viewmodels.SoloGameViewModel
+import dev.veryniche.welcometoflip.viewmodels.SoloState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SoloGameScreen(viewModel: SoloGameViewModel,
-                 gameType: GameType,
-                 onGameEnd: () -> Unit,
-                 modifier: Modifier = Modifier
+fun SoloGameScreen(
+    snackbarHostState: SnackbarHostState,
+    viewModel: SoloGameViewModel,
+    gameType: GameType,
+    showShopMenuItem: Boolean,
+    onShowInterstitialAd: (InterstitialAdLocation) -> Unit,
+    onGameEnd: () -> Unit,
+    keepScreenOn: Boolean,
+    onKeepScreenOnSet: (Boolean) -> Unit,
+    keepScreenOnAction: (Boolean) -> Unit,
+    navController: NavController = rememberNavController(),
+    modifier: Modifier = Modifier
 ) {
     TrackedScreen {
-        trackScreenView(name = gameType.name)
+        trackScreenView(name = gameType.name + " Solo")
     }
 
-    val position by viewModel.position.observeAsState(viewModel.initialPosition)
-    val advancePositionEnabled by viewModel.advancePositionEnabled.observeAsState(true)
-    val isEndGame by viewModel.isEndGame.observeAsState(false)
+    val currentState by viewModel.currentState.collectAsStateWithLifecycle(
+        SoloState(),
+        lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current
+    )
 
-    var showEndGameDialog by remember { mutableStateOf(false) }
-    if (isEndGame && showEndGameDialog == false) {
-        showEndGameDialog = true
-    }
+//    val position by viewModel.position.observeAsState(viewModel.initialPosition)
+//    val advancePositionEnabled by viewModel.advancePositionEnabled.observeAsState(true)
+//    val advancePositionEnabled by remember {
+//        derivedStateOf {
+//            currentState.drawStack.isEmpty() // TODO This is not quite right
+//        }
+//    }
 
-    val phase by viewModel.phase.observeAsState(SoloGamePhase.SETUP)
-    val currentState by viewModel.currentState.observeAsState(SoloState())
-    val activeCardToAstra by viewModel.activeCardToAstra.observeAsState(null)
+//    var showEndGameDialog by remember { mutableStateOf(false) }
+//    if (isEndGame && showEndGameDialog == false) {
+//        showEndGameDialog = true
+//    }
+
+//    val phase by viewModel.phase.observeAsState(SoloGamePhase.SETUP)
+//    val currentState by viewModel.currentState.observeAsState(SoloState())
+//    val activeCardToAstra by viewModel.activeCardToAstra.observeAsState(null)
 
     viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
 
-    SoloGameContainer(
-        displayPosition = position + 1,
-        displayEndPosition = currentState.totalPosition, 
-        gameType = gameType,
-        content = { contentModifier ->
-            when (phase) {
-                SoloGamePhase.SETUP -> SoloGameSetup(
-                    stacks = viewModel.stacks,
-                    soloPile = viewModel.soloEffectCards,
-                    onAnimationComplete = {
-                        viewModel.setupSoloDrawStack()
-                        viewModel.setupAstraCards()
-                        viewModel.advancePosition()
+//    val position by viewModel.position.observeAsState(viewModel.initialPosition)
+//    val advancePositionEnabled by viewModel.advancePositionEnabled.observeAsState(true)
+//    val reversePositionEnabled by viewModel.reversePositionEnabled.observeAsState(true)
+//    val isEndGame by viewModel.isEndGame.observeAsState(false)
+//    var showEndGameDialog by rememberSaveable(isEndGame) { mutableStateOf(isEndGame) }
+//    var showEndGameConfirmationDialog by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        keepScreenOnAction.invoke(keepScreenOn)
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            keepScreenOnAction.invoke(false)
+        }
+    }
+    val coroutineScope: CoroutineScope = rememberCoroutineScope()
+    val fontScale = LocalDensity.current.fontScale
+    Scaffold(
+        topBar = {
+            if (fontScale > 1.5) {
+                MediumTopAppBar(
+                    title = {
+                        Text(
+                            text = stringResource(id = gameType.displayName),
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
                     },
-                    modifier = contentModifier
+                    navigationIcon = { NavigationIcon(navController = navController) },
+                    actions = {
+                        ScreenOnToggle(keepScreenOn, onKeepScreenOnSet, snackbarHostState)
+                        ChartActionItem(navController, gameType)
+                        if (showShopMenuItem) {
+                            ShopActionIcon(navController = navController)
+                        }
+                        AboutActionIcon(navController)
+                    },
+                    colors = getMediumTopAppBarColors(),
                 )
-                SoloGamePhase.PLAY -> SoloGame(
-                    state = currentState,
-                    activeCardChoice = {
-                        viewModel.handleActiveCardClick(it)
+            } else {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = stringResource(id = gameType.displayName),
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
                     },
-                    activeCardsDiscarded = currentState.cardsDiscarded,
-                    activeCardDiscardAnimationComplete = {
-                        viewModel.checkRemainingActiveCards()
+                    navigationIcon = { NavigationIcon(navController = navController) },
+                    actions = {
+                        ScreenOnToggle(keepScreenOn, onKeepScreenOnSet, snackbarHostState)
+                        ChartActionItem(navController, gameType)
+                        if (showShopMenuItem) {
+                            ShopActionIcon(navController = navController)
+                        }
+                        AboutActionIcon(navController)
                     },
-                    activeCardToAstra = currentState.cardDiscardedToAstra,
-                    modifier = contentModifier,
-                    astraCardAnimationComplete = {}
+                    colors = getTopAppBarColors(),
                 )
             }
         },
-        modifier = modifier
-    )
-
-    if (showEndGameDialog) {
-        EndGameDialog(
-            gameType = gameType,
-            position = position,
-            reshuffleStacks = {
-                viewModel.reshuffleStacks()
-            },
-            endGame = {
-                viewModel.endGame(onGameEnd)
-            },
-            onDismissRequest = {
-                showEndGameDialog = false
-            }
-        )
-    }
-}
-
-@Composable
-fun SoloGameSetup(stacks: List<List<Card>>,
-                  soloPile: List<Card>,
-                  onAnimationComplete: () -> Unit,
-                  modifier: Modifier = Modifier) {
-
-    val offsetPercents = stacks.map { remember { mutableStateOf(1f) }}
-    
-    val stackSpacing = with(LocalDensity.current) {
-        Dimen.spacing.toPx()
-    }
-
-    val animationSpec = tween<Float>(1000, easing = CubicBezierEasing(0.4f, 0.0f, 0.8f, 0.8f))
-
-    var combineAnimationTrigger by remember { mutableStateOf(false) }
-
-    LaunchedEffect(key1 = combineAnimationTrigger) {
-        if (combineAnimationTrigger) {
-            stacks.forEachIndexed { index, _ ->
-                animate(
-                    initialValue = 1f,
-                    targetValue = 0f,
-                    animationSpec = animationSpec
-                ) { value: Float, _: Float ->
-                    offsetPercents[index].value = value
-                }
-            }
-            onAnimationComplete.invoke()
-        }
-    }
-
-    Layout(modifier = modifier.fillMaxSize(),
-        content = {
-            stacks.forEachIndexed { index, stack ->
-                Box(modifier = Modifier
-                    .zIndex((stacks.size - index).toFloat())
-                    .layoutId("Stack")) {
-                    if (index == stacks.size - 1) {
-                        PileInsertionLayout(soloPile, onAnimationComplete = {
-                            combineAnimationTrigger = true
-                        })
-                    }
-                    BasicStackLayout(stack.first().action)
-                }
-            }
-        }
-    ) { measurables, constraints ->
-        val stackPlaceables = measurables.filter { it.layoutId == "Stack" }
-
-        layout(constraints.maxWidth, constraints.maxHeight) {
-            val stackHeight = (constraints.maxHeight / stacks.size - (stackSpacing / (stacks.size - 1))).toInt()
-            val stackConstraints = constraints.copy(
-                minHeight = minOf(constraints.minHeight, stackHeight),
-                maxHeight = minOf(constraints.maxHeight, stackHeight)
-            )
-
-            val initialYs = stackPlaceables.mapIndexed { index, _ -> 
-                stackHeight * index + stackSpacing * index
-            }
-
-            stackPlaceables.forEachIndexed { index, placeable ->
-                placeable.measure(stackConstraints).place(0, (initialYs[index] * offsetPercents[index].value).toInt())
-            }
-        }
-
-    }
-}
-
-@Composable
-fun SoloGame(state: SoloState,
-             activeCardChoice: (Int) -> Unit,
-             activeCardToAstra: Int?,
-             activeCardsDiscarded: List<Int>,
-             astraCardAnimationComplete: () -> Unit,
-             activeCardDiscardAnimationComplete: () -> Unit,
-             modifier: Modifier = Modifier) {
-
-    SoloSlotLayout(
-        drawStack = state.drawStackTopCard,
-        discardStack = state.discardStackTopCard,
-        activeCards = state.activeCards,
-        astraCards = {
-            SoloAstraLayout(
-                astraCards = state.astraCards,
-                effectCards = state.effectCards,
-                modifier = it)
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
         },
-        activeCardChoice = activeCardChoice,
-        activeCardToAstra = activeCardToAstra,
-        activeCardsDiscarded = activeCardsDiscarded,
-        astraCardAnimationComplete = astraCardAnimationComplete,
-        activeCardDiscardAnimationComplete = activeCardDiscardAnimationComplete,
         modifier = modifier
-    )
-}
-
-@Preview(group = "Solo Game Screen", showBackground = true)
-@Composable
-fun SoloGameSetupPreview() {
-
-    val stacks = listOf(
-        listOf(
-            Card(Robot, Number1),
-            Card(Lightning, Number1)
-        ),
-        listOf(
-            Card(Lightning, Number2),
-            Card(Plant, Number2)
-        ),
-        listOf(
-            Card(X, Number3),
-            Card(Astronaut, Number3),
-            Card(Water, Number3)
-        )
-    )
-    
-    val soloPile = listOf(
-        Card(SoloA, SoloA),
-        Card(SoloB, SoloB),
-        Card(SoloC, SoloC)
-    )
-
-    WelcomeToFlipTheme {
-        SoloGameSetup(stacks, soloPile, {}, Modifier)
+    ) { innerPadding ->
+        Box(Modifier.padding(innerPadding))
+//        GameContainer(
+//            displayPosition = 0, // TO FIX //currentState.discardStack + 1,
+//            displayEndPosition = 0, // TO FIX  currentState.totalPosition,
+////            gameType = gameType,
+//            content = { contentModifier ->
+////            when (phase) {
+////                SoloGamePhase.SETUP -> SoloGameSetup(
+////                    stacks = viewModel.stacks,
+////                    soloPile = viewModel.soloEffectCards,
+////                    onAnimationComplete = {
+////                        viewModel.setupSoloDrawStack()
+////                        viewModel.setupAstraCards()
+////                        viewModel.advancePosition()
+////                    },
+////                    modifier = contentModifier
+////                )
+////                SoloGamePhase.PLAY ->
+//                SoloGame(
+//                    state = currentState,
+//                    onDrawCards = {
+//                        coroutineScope.launch {
+//                            viewModel.drawCards()
+//                        }
+//                    },
+//                    onSelectAstraCard = {
+//                    },
+//                    modifier = contentModifier,
+//                )
+////            }
+//            },
+//            modifier = Modifier.padding(
+//                top = innerPadding.calculateTopPadding(),
+//                start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
+//                end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
+//                bottom = 0.dp
+//            )
+//        )
     }
-}
 
-@Preview(group = "Solo Game Screen", showBackground = true)
-@Composable
-fun SoloGamePreview() {
-
-    val stacks = listOf(
-        listOf(
-            Card(Robot, Number1),
-            Card(Lightning, Number1)
-        ),
-        listOf(
-            Card(Lightning, Number2),
-            Card(Plant, Number2)
-        ),
-        listOf(
-            Card(X, Number3),
-            Card(Astronaut, Number3),
-            Card(Water, Number3)
-        )
-    )
-
-//    WelcomeToFlipTheme {
-//        SoloGame(SoloState(
-//            drawStackTopCard = Card(action = Astronaut, number = Number12),
-//            discardStackTopCard = Card(action = Lightning, number = Number10),
-//            activeCards = listOf(
-//                Card(action = X, number = Number1),
-//                Card(action = Plant, number = Number2),
-//                Card(action = Water, number = Number3)),
-//            astraCards = mapOf(
-//                Plant to 0,
-//                Water to 1,
-//                Lightning to 2,
-//                Robot to 3,
-//                Astronaut to 4,
-//                X to 5),
-//            effectCards = listOf(AstraA, AstraB, AstraC)
-//        ),
-//            astraCardAnimationComplete = {})
+//    if (showEndGameDialog) {
+//        EndGameDialog(
+//            gameType = gameType,
+//            position = position,
+//            reshuffleStacks = {
+//                viewModel.reshuffleStacks()
+//            },
+//            endGame = {
+//                viewModel.endGame(onGameEnd)
+//            },
+//            onDismissRequest = {
+//                showEndGameDialog = false
+//            }
+//        )
 //    }
 }

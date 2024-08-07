@@ -1,4 +1,4 @@
-package dev.veryniche.welcometoflip
+package dev.veryniche.welcometoflip.viewmodels
 
 import android.app.Activity
 import androidx.lifecycle.ViewModel
@@ -7,6 +7,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.veryniche.welcometoflip.BuildConfig
+import dev.veryniche.welcometoflip.DeckRepository
 import dev.veryniche.welcometoflip.core.models.GameType
 import dev.veryniche.welcometoflip.core.models.SavedGame
 import dev.veryniche.welcometoflip.purchase.Products
@@ -48,7 +50,7 @@ class MainViewModel @AssistedInject constructor(
 
     val games = purchaseManager.availableProducts
         .combine(purchaseManager.purchases) { availableProducts, purchases ->
-            val bundlePurchased = purchases.contains(Products.bundle)
+            val bundlePurchased = purchases.contains(Products.bundle) || BuildConfig.DEBUG
             gameTypes.map { game ->
                 game.copy(
                     purchased = bundlePurchased || game.purchased || purchases.contains(game.mapToProductId(false)),
@@ -67,7 +69,9 @@ class MainViewModel @AssistedInject constructor(
             }
         }
 
-    val showAds = purchaseManager.purchases.map { !it.contains(Products.adRemoval) && !it.contains(Products.bundle) }
+    val showAds = purchaseManager.purchases.map {
+        (!it.contains(Products.adRemoval) && !it.contains(Products.bundle)) || BuildConfig.DEBUG
+    }
 
     init {
         viewModelScope.launch {

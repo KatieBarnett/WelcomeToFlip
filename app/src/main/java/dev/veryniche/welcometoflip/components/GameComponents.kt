@@ -23,12 +23,11 @@ import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
 fun GameContainer(
     displayPosition: Int,
     displayEndPosition: Int,
-    advancePosition: () -> Unit,
-    advancePositionEnabled: Boolean,
     reversePosition: () -> Unit,
     reversePositionEnabled: Boolean,
     endGame: () -> Unit,
     content: @Composable (Modifier) -> Unit,
+    button: @Composable (Modifier) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -71,44 +70,8 @@ fun GameContainer(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(Dimen.Button.spacing)
         ) {
-            ThemedButton(onClick = {
-                advancePosition.invoke()
-            }, enabled = advancePositionEnabled, modifier = Modifier.weight(1f)) {
-                Text(
-                    text = stringResource(id = R.string.flip_button),
-                    style = MaterialTheme.typography.displayMedium
-                )
-            }
+            button.invoke(Modifier.weight(1f))
         }
-    }
-}
-
-@Composable
-fun SoloGameContainer(
-    displayPosition: Int,
-    displayEndPosition: Int,
-    gameType: GameType,
-    content: @Composable (modifier: Modifier) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(Dimen.spacing),
-        modifier = modifier
-            .fillMaxSize()
-            .padding(Dimen.spacing)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(Dimen.spacing)
-        ) {
-            Text(stringResource(id = gameType.displayName), modifier = modifier.weight(1f))
-            Text(stringResource(id = R.string.deck_position, displayPosition, displayEndPosition))
-        }
-        content(
-            modifier = Modifier
-                .weight(1f)
-        )
     }
 }
 
@@ -119,16 +82,21 @@ fun GameContainerPreview() {
         GameContainer(
             displayPosition = 1,
             displayEndPosition = 10,
-            advancePosition = {},
-            advancePositionEnabled = true,
             reversePosition = {},
             reversePositionEnabled = true,
             endGame = {},
             content = { modifier ->
                 Text("Game content", modifier = modifier)
             },
+            button  = { modifier ->
+                ThemedButton(onClick = {}, enabled = true, modifier = modifier) {
+                    Text(
+                        text = stringResource(id = R.string.flip_button),
+                        style = MaterialTheme.typography.displayMedium
+                    )
+                }
+            },
             modifier = Modifier
         )
     }
 }
-

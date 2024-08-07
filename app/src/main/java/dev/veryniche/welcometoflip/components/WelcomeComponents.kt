@@ -44,7 +44,9 @@ fun WelcomeDialog(
 ) {
     AnimatedTransitionDialog(
         onDismissRequest = onDismissRequest,
-        dialogProperties = DialogProperties(usePlatformDefaultWidth = windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact)
+        dialogProperties = DialogProperties(
+            usePlatformDefaultWidth = windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact
+        )
     ) { dialogHelper ->
         WelcomeDialogContent(
             purchaseStatus = purchaseStatus,

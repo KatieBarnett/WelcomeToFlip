@@ -1,10 +1,11 @@
-package dev.veryniche.welcometoflip
+package dev.veryniche.welcometoflip.viewmodels
 
 import androidx.lifecycle.ViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.veryniche.welcometoflip.DeckRepository
 import dev.veryniche.welcometoflip.core.models.GameType
 
 @HiltViewModel(assistedFactory = ChartViewModel.ChartViewModelFactory::class)

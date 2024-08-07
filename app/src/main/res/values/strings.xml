@@ -71,7 +71,7 @@
 
     <string name="solo_draw_stack">Draw stack</string>
     <string name="solo_discard_stack">Discard stack</string>
-    <string name="solo_action_instruction">Select your cards to use:</string>
+    <string name="solo_action_instruction">Select your cards to use and move to the discard pile:</string>
     <string name="solo_astra">Cards for Astra:</string>
 
     <string name="debug_showkase">Showkase Browser</string>

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -24,7 +25,7 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import dev.veryniche.welcometoflip.StackViewModel
+import dev.veryniche.welcometoflip.viewmodels.StackViewModel
 import dev.veryniche.welcometoflip.core.models.Astronaut
 import dev.veryniche.welcometoflip.core.models.Card
 import dev.veryniche.welcometoflip.core.models.CardFace
@@ -67,8 +68,8 @@ fun StackLayout(
     transitionTrigger: Int = 0,
     modifier: Modifier = Modifier
 ) {
-    var offset by remember(transitionTrigger) { mutableStateOf(0f) }
-    var flipRotation by remember(transitionTrigger) { mutableStateOf(0f) }
+    var offset by remember(transitionTrigger) { mutableFloatStateOf(0f) }
+    var flipRotation by remember(transitionTrigger) { mutableFloatStateOf(0f) }
     val animationSpec = tween<Float>(1000, easing = CubicBezierEasing(0.4f, 0.0f, 0.8f, 0.8f))
     val animationSpecFlip = tween<Float>(1000, easing = CubicBezierEasing(0.4f, 0.0f, 0.8f, 0.8f))
 
@@ -87,8 +88,7 @@ fun StackLayout(
         modifier = modifier
             .fillMaxSize(),
         content = {
-            numberStack(modifier = Modifier.layoutId("NumberStack"))
-            actionStack(modifier = Modifier.layoutId("ActionStack"))
+            numberStack(Modifier.layoutId("ActionStack"))
             flipCard?.let {
                 val modifier = Modifier
                     .layoutId("FlipCard")

@@ -21,6 +21,10 @@ import dev.veryniche.welcometoflip.screens.ShopScreen
 import dev.veryniche.welcometoflip.screens.SoloGameScreen
 import dev.veryniche.welcometoflip.util.SetDialogDestinationToEdgeToEdge
 import dev.veryniche.welcometoflip.util.isAvailablePurchases
+import dev.veryniche.welcometoflip.viewmodels.ChartViewModel
+import dev.veryniche.welcometoflip.viewmodels.GameViewModel
+import dev.veryniche.welcometoflip.viewmodels.MainViewModel
+import dev.veryniche.welcometoflip.viewmodels.SoloGameViewModel
 
 @Composable
 fun WelcomeToFlipNavHost(
@@ -109,35 +113,44 @@ fun WelcomeToFlipNavHost(
             it.arguments?.getString(Game.gameTypeArg)?.mapToGameType()?.let { gameType ->
                 val seed = it.arguments?.getString(Game.seedArg)?.toLong() ?: System.currentTimeMillis()
                 val position = it.arguments?.getString(Game.positionArg)?.toInt() ?: 0
+                val gameViewModel = hiltViewModel<GameViewModel, GameViewModel.GameViewModelFactory> { factory ->
+                    factory.create(gameType, seed, position)
+                }
+                RegularGameScreen(
+                    viewModel = gameViewModel,
+                    snackbarHostState = snackbarHostState,
+                    gameType = gameType,
+                    onGameEnd = onGameEnd,
+                    navController = navController,
+                    onShowInterstitialAd = onShowInterstitialAd,
+                    showShopMenuItem = purchaseStatus.isAvailablePurchases(),
+                    keepScreenOn = keepScreenOn,
+                    onKeepScreenOnSet = onKeepScreenOnSet,
+                    keepScreenOnAction = keepScreenOnAction
+                )
+            }
+        }
+        composable(route = SoloGame.routeWithArgs, arguments = SoloGame.arguments, deepLinks = SoloGame.deepLinks) {
+            it.arguments?.getString(SoloGame.gameTypeArg)?.mapToGameType()?.let { gameType ->
+                val seed = it.arguments?.getString(Game.seedArg)?.toLong() ?: System.currentTimeMillis()
+                val position = it.arguments?.getString(Game.positionArg)?.toInt() ?: 0
 
-                if (gameType.soloAvailable) {
-                    val soloGameViewModel =
-                        hiltViewModel<SoloGameViewModel, SoloGameViewModel.SoloGameViewModelFactory> { factory ->
-                            factory.create(gameType, seed, position)
-                        }
-                    SoloGameScreen(
-                        viewModel = soloGameViewModel,
-                        gameType = gameType,
-                        onGameEnd = { navController.navigateUp() }
-                    )
-                } else {
-                    val gameViewModel = hiltViewModel<GameViewModel, GameViewModel.GameViewModelFactory> { factory ->
+                val soloGameViewModel =
+                    hiltViewModel<SoloGameViewModel, SoloGameViewModel.SoloGameViewModelFactory> { factory ->
                         factory.create(gameType, seed, position)
                     }
-                    RegularGameScreen(
-                        viewModel = gameViewModel,
-                        snackbarHostState = snackbarHostState,
-                        gameType = gameType,
-                        onGameEnd = onGameEnd,
-                        navController = navController,
-                        windowSizeClass = windowSizeClass,
-                        onShowInterstitialAd = onShowInterstitialAd,
-                        showShopMenuItem = purchaseStatus.isAvailablePurchases(),
-                        keepScreenOn = keepScreenOn,
-                        onKeepScreenOnSet = onKeepScreenOnSet,
-                        keepScreenOnAction = keepScreenOnAction
-                    )
-                }
+                SoloGameScreen(
+                    viewModel = soloGameViewModel,
+                    snackbarHostState = snackbarHostState,
+                    gameType = gameType,
+                    onGameEnd = onGameEnd,
+                    navController = navController,
+                    onShowInterstitialAd = onShowInterstitialAd,
+                    showShopMenuItem = purchaseStatus.isAvailablePurchases(),
+                    keepScreenOn = keepScreenOn,
+                    onKeepScreenOnSet = onKeepScreenOnSet,
+                    keepScreenOnAction = keepScreenOnAction
+                )
             }
         }
     }

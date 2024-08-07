@@ -41,8 +41,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.veryniche.welcometoflip.Game
-import dev.veryniche.welcometoflip.MainViewModel
+import dev.veryniche.welcometoflip.viewmodels.MainViewModel
 import dev.veryniche.welcometoflip.R
+import dev.veryniche.welcometoflip.SoloGame
 import dev.veryniche.welcometoflip.ads.InterstitialAdLocation
 import dev.veryniche.welcometoflip.components.GameTile
 import dev.veryniche.welcometoflip.components.ThemedIconButton
@@ -102,7 +103,11 @@ fun ChooseGameScreen(
             savedGames = savedGames,
             chooseNewGameAction = { gameType, solo ->
                 onShowInterstitialAd.invoke(InterstitialAdLocation.StartGame)
-                navController.navigate(route = Game.getRoute(gameType, solo))
+                if (solo) {
+                    navController.navigate(route = SoloGame.getRoute(gameType))
+                } else {
+                    navController.navigate(route = Game.getRoute(gameType))
+                }
             },
             loadGameAction = { savedGame ->
                 onShowInterstitialAd.invoke(InterstitialAdLocation.StartGame)

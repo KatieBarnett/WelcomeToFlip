@@ -10,7 +10,8 @@ val WelcomeToClassic = GameType(
     largeIcon = R.drawable.noun_house_6786764,
     displayName = R.string.game_welcome_to_classic,
     actionCardName = R.string.game_welcome_to_classic_action_card_name,
-    soloAvailable = false,
+    soloAvailable = true,
+    soloPurchased = BuildConfig.DEBUG,
     purchased = true // Multiplayer purchased by default
 )
 
@@ -21,7 +22,8 @@ val WelcomeToTheMoon = GameType(
     displayName = R.string.game_welcome_to_the_moon,
     actionCardName = R.string.game_welcome_to_the_moon_action_card_name,
     soloAvailable = false,
-    purchased = BuildConfig.DEBUG // Multiplayer purchased by default
+    soloPurchased = BuildConfig.DEBUG,
+    purchased = BuildConfig.DEBUG
 )
 
 // Welcome To Classic

@@ -1,4 +1,4 @@
-package dev.veryniche.welcometoflip
+package dev.veryniche.welcometoflip.viewmodels
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -11,6 +11,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.veryniche.welcometoflip.DeckRepository
 import dev.veryniche.welcometoflip.core.models.Card
 import dev.veryniche.welcometoflip.core.models.GameType
 import dev.veryniche.welcometoflip.storage.SavedGamesRepository
@@ -20,10 +21,10 @@ import kotlin.math.ceil
 import kotlin.random.Random
 
 @HiltViewModel(assistedFactory = GameViewModel.GameViewModelFactory::class)
-open class GameViewModel @AssistedInject constructor(
-    @Assisted open val gameType: GameType,
-    @Assisted open val gameSeed: Long,
-    @Assisted open val initialPosition: Int,
+class GameViewModel @AssistedInject constructor(
+    @Assisted val gameType: GameType,
+    @Assisted val gameSeed: Long,
+    @Assisted val initialPosition: Int,
     private val deckRepository: DeckRepository,
     private val savedGamesRepository: SavedGamesRepository
 ) : ViewModel(), DefaultLifecycleObserver {
