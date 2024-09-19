@@ -96,12 +96,16 @@ dependencies {
 
     implementation(libs.splashscreen)
 
-    implementation(libs.play.core.ktx)
-
     implementation(libs.timber)
     
     implementation(libs.play.services.base)
     implementation(libs.play.services.ads)
+
+
+    implementation(libs.play.review)
+    implementation(libs.play.review.ktx)
+    implementation(libs.play.app.update)
+    implementation(libs.play.app.update.ktx)
 
     implementation(libs.showkase)
     ksp(libs.showkase.processor)

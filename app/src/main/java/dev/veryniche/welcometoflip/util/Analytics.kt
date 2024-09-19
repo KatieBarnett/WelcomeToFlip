@@ -76,31 +76,31 @@ fun TrackedScreen(
 internal fun trackScreenView(name: String?) {
     Timber.d("Track screen: $name")
     Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
-        param(FirebaseAnalytics.Param.SCREEN_NAME, name ?: "Unknown")
+        param(FirebaseAnalytics.Param.SCREEN_NAME, name?.replace(" ", "_") ?: "Unknown")
     }
 }
 
 fun trackAction(action: String) {
     Timber.d("Track action: $action")
-    Firebase.analytics.logEvent(action) {
+    Firebase.analytics.logEvent(action.replace(" ", "_")) {
     }
 }
 
 fun trackReviewRequested() {
     Timber.d("Track action: Review requested")
-    Firebase.analytics.logEvent(ReviewRequested) {}
+    Firebase.analytics.logEvent(ReviewRequested.replace(" ", "_")) {}
 }
 
 fun trackPurchaseClick(purchaseId: String) {
     Timber.d("Track action: Purchase: $purchaseId")
-    Firebase.analytics.logEvent(PurchaseClick) {
+    Firebase.analytics.logEvent(PurchaseClick.replace(" ", "_")) {
         param(FirebaseAnalytics.Param.ITEM_ID, purchaseId)
     }
 }
 
 fun trackLoadGame(savedGame: SavedGame) {
     Timber.d("Track action: $LoadGame (${savedGame.gameType?.name}: ${savedGame.position})")
-    Firebase.analytics.logEvent(LoadGame) {
+    Firebase.analytics.logEvent(LoadGame.replace(" ", "_")) {
         param(FirebaseAnalytics.Param.INDEX, savedGame.position.toDouble())
         param(FirebaseAnalytics.Param.CONTENT_TYPE, savedGame.gameType?.name ?: "Unknown")
     }
@@ -108,24 +108,24 @@ fun trackLoadGame(savedGame: SavedGame) {
 
 fun trackDeleteGame(savedGame: SavedGame) {
     Timber.d("Track action: $DeleteGame (${savedGame.gameType?.name}: ${savedGame.position})")
-    Firebase.analytics.logEvent(DeleteGame) {
+    Firebase.analytics.logEvent(DeleteGame.replace(" ", "_")) {
         param(FirebaseAnalytics.Param.INDEX, savedGame.position.toDouble())
         param(FirebaseAnalytics.Param.CONTENT_TYPE, savedGame.gameType?.name ?: "Unknown")
     }
 }
 
 fun trackShuffleGame(gameType: GameType, position: Int) {
-    Timber.d("Track action: $ShuffleGame (${gameType.name}: ${position})")
-    Firebase.analytics.logEvent(ShuffleGame) {
+    Timber.d("Track action: $ShuffleGame (${gameType.name}: $position)")
+    Firebase.analytics.logEvent(ShuffleGame.replace(" ", "_")) {
         param(FirebaseAnalytics.Param.INDEX, position.toDouble())
-        param(FirebaseAnalytics.Param.CONTENT_TYPE, gameType.name)
+        param(FirebaseAnalytics.Param.CONTENT_TYPE, gameType.name.replace(" ", "_"))
     }
 }
 
 fun trackEndGame(gameType: GameType, position: Int) {
-    Timber.d("Track action: $EndGame (${gameType.name}: ${position})")
-    Firebase.analytics.logEvent(EndGame) {
+    Timber.d("Track action: $EndGame (${gameType.name}: $position)")
+    Firebase.analytics.logEvent(EndGame.replace(" ", "_")) {
         param(FirebaseAnalytics.Param.INDEX, position.toDouble())
-        param(FirebaseAnalytics.Param.CONTENT_TYPE, gameType.name)
+        param(FirebaseAnalytics.Param.CONTENT_TYPE, gameType.name.replace(" ", "_"))
     }
 }
