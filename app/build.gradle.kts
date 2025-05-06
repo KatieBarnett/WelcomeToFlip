@@ -44,6 +44,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "17"
@@ -60,6 +61,8 @@ android {
 dependencies {
     implementation(project(":storage"))
     implementation(project(":core"))
+
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     implementation(libs.core)
     implementation(libs.hilt)
@@ -100,8 +103,6 @@ dependencies {
     
     implementation(libs.play.services.base)
     implementation(libs.play.services.ads)
-
-
     implementation(libs.play.review)
     implementation(libs.play.review.ktx)
     implementation(libs.play.app.update)

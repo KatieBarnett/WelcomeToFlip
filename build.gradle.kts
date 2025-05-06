@@ -1,6 +1,3 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
-
 ext {
     extra["appVersionName"] = "1.1.0"
     extra["appVersionCode"] = 10
@@ -10,7 +7,6 @@ ext {
 }
 
 plugins {
-//    id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.kotlin.android) apply false

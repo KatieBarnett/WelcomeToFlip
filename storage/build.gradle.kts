@@ -67,18 +67,38 @@ protobuf {
     }
 }
 
-androidComponents {
-    onVariants(selector().all()) { variant ->
-        afterEvaluate {
-            val protoTask =
-                project.tasks.getByName("generate" + variant.name.replaceFirstChar { it.uppercaseChar() } + "Proto") as GenerateProtoTask
+//androidComponents {
+//    onVariants(selector().all()) { variant ->
+//        afterEvaluate {
+//            val protoTask =
+//                project.tasks.getByName("generate" + variant.name.replaceFirstChar { it.uppercaseChar() } + "Proto") as GenerateProtoTask
+//
+//            project.tasks.getByName("ksp" + variant.name.replaceFirstChar { it.uppercaseChar() } + "Kotlin") {
+//                dependsOn(protoTask)
+//                (this as org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompileTool<*>).setSource(
+//                    protoTask.outputBaseDir
+//                )
+//            }
+//        }
+//    }
+//}
 
-            project.tasks.getByName("ksp" + variant.name.replaceFirstChar { it.uppercaseChar() } + "Kotlin") {
-                dependsOn(protoTask)
-                (this as org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompileTool<*>).setSource(
-                    protoTask.outputBaseDir
-                )
-            }
-        }
-    }
-}
+//androidComponents {
+//    onVariants(selector().all()) { variant ->
+//        afterEvaluate {
+//            val protoTask =
+//                project.tasks.getByName("generate" + variant.name.replaceFirstChar { it.uppercaseChar() } + "Proto") as GenerateProtoTask
+//
+//            project.tasks.withType(com.google.devtools.ksp.gradle.KspTask::class.java).configureEach {
+//                if (name.contains(variant.name, ignoreCase = true)) {
+//                    dependsOn(protoTask)
+//                    // Add the generated source directory to KSP's inputs
+//                    // The specific property might vary, check KSP documentation
+//                    // Often it's related to source directories or options
+//                    // Example (may need adjustment based on KSP version):
+//                    source(protoTask.outputBaseDir)
+//                }
+//            }
+//        }
+//    }
+//}

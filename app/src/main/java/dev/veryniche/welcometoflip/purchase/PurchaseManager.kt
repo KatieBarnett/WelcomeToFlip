@@ -92,9 +92,6 @@ class PurchaseManager(
     }
 
     suspend fun processAvailableProducts() {
-        val productList = ArrayList<QueryProductDetailsParams.Product>()
-        productList.addAll(productList)
-
         val params = QueryProductDetailsParams.newBuilder()
         params.setProductList(appProductList)
 
