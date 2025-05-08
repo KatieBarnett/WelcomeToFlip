@@ -8,6 +8,7 @@ object Dimen {
     val spacing = 8.dp
     val spacingDouble = spacing * 2
     val spacingHalf = spacing / 2
+    val spacingQuarter = spacing / 4
 
     val bulletTextIndent = 12.sp
     

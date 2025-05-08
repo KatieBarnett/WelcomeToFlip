@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -50,8 +51,10 @@ import dev.veryniche.welcometoflip.core.models.Lightning
 import dev.veryniche.welcometoflip.core.models.Number1
 import dev.veryniche.welcometoflip.core.models.Number10
 import dev.veryniche.welcometoflip.core.models.Number12
+import dev.veryniche.welcometoflip.core.models.Number15
 import dev.veryniche.welcometoflip.core.models.Number2
 import dev.veryniche.welcometoflip.core.models.Number3
+import dev.veryniche.welcometoflip.core.models.Park
 import dev.veryniche.welcometoflip.core.models.Plant
 import dev.veryniche.welcometoflip.core.models.Robot
 import dev.veryniche.welcometoflip.core.models.SoloA
@@ -59,10 +62,12 @@ import dev.veryniche.welcometoflip.core.models.SoloB
 import dev.veryniche.welcometoflip.core.models.SoloC
 import dev.veryniche.welcometoflip.core.models.Water
 import dev.veryniche.welcometoflip.core.models.X
+import dev.veryniche.welcometoflip.core.models.welcomeToClassicDeck
 import dev.veryniche.welcometoflip.theme.Dimen
 import dev.veryniche.welcometoflip.theme.WelcomeToFlipTheme
 import dev.veryniche.welcometoflip.viewmodels.ActiveCardSelectionResult
 import timber.log.Timber
+import kotlin.collections.chunked
 
 private data class SoloSlotCoords(
     val drawStack: Coordinate,
@@ -369,6 +374,45 @@ fun SoloSlotLayout(
 }
 
 @Composable
+fun SoloAAALayout(
+    aaaCards: List<Card>,
+    effectCards: List<Letter>,
+    modifier: Modifier = Modifier
+) {
+    var cardsInRow by remember { mutableStateOf(13) }
+    while (aaaCards.size / 3f > cardsInRow) {
+        cardsInRow = cardsInRow + 4
+    }
+    val astraCardChunks = aaaCards.chunked(cardsInRow)
+    Column(verticalArrangement = Arrangement.spacedBy(Dimen.spacing), modifier = modifier) {
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(Dimen.spacingHalf)
+        ) {
+            for (j in 0..2) {
+                astraCardChunks.getOrNull(j)?.let {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(Dimen.spacingHalf),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        for (i in 0..cardsInRow - 1) {
+                            it.getOrNull(i)?.let {
+                                SoloAAAItem(it, modifier = Modifier.weight(1f))
+                            } ?: Spacer(Modifier.weight(1f))
+                        }
+                    }
+                } ?: Spacer(Modifier.weight(1f))
+            }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(Dimen.spacing), modifier = Modifier.weight(0.25f)) {
+            effectCards.forEach {
+                SoloEffectItem(it)
+            }
+        }
+    }
+}
+
+@Composable
 fun SoloAstraLayout(
     astraCards: Map<Action, Int>,
     effectCards: List<Letter>,
@@ -433,6 +477,47 @@ fun SoloAstraItem(
 }
 
 @Composable
+fun SoloAAAItem(
+    item: Card,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier.fillMaxSize()
+    ) {
+        Surface(
+            color = item.action.backgroundColor ?: MaterialTheme.colorScheme.surface,
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(Dimen.Card.radius))
+                .border(
+                    width = Dimen.Card.border,
+                    color = MaterialTheme.colorScheme.outline,
+                    shape = RoundedCornerShape(Dimen.Card.radius)
+                )
+        ) {}
+
+        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
+            Image(
+                painter = painterResource(item.number.drawableRes),
+                contentDescription = stringResource(id = R.string.action_deck_alt),
+                modifier = Modifier
+                    .fillMaxSize(0.8f)
+                    .weight(1f)
+            )
+            Image(
+                painter = painterResource(item.action.drawableRes),
+                contentDescription = stringResource(id = R.string.action_deck_alt),
+                modifier = Modifier
+                    .padding(Dimen.spacingQuarter)
+                    .fillMaxSize(0.8f)
+                    .weight(1f)
+            )
+        }
+    }
+}
+
+@Composable
 fun SoloEffectItem(
     item: Letter?,
     modifier: Modifier = Modifier
@@ -487,6 +572,62 @@ fun SoloAstraItemPreview() {
             Plant to 88,
             modifier = Modifier
                 .height(100.dp)
+                .padding(Dimen.spacing)
+        )
+    }
+}
+
+@Preview(group = "Solo Game Components", showBackground = true)
+@Composable
+fun SoloAAAItemPreview() {
+    WelcomeToFlipTheme {
+        SoloAAAItem(
+            Card(Park, Number15),
+            modifier = Modifier
+                .height(100.dp)
+                .width(50.dp)
+                .padding(Dimen.spacing)
+        )
+    }
+}
+
+@Preview(group = "Solo Game Components", showBackground = true)
+@Composable
+fun SoloAAALayoutPreviewSmall() {
+    WelcomeToFlipTheme {
+        SoloAAALayout(
+            aaaCards = welcomeToClassicDeck.subList(0, 8),
+            effectCards = listOf(SoloA, SoloB, SoloC),
+            modifier = Modifier
+                .height(200.dp)
+                .padding(Dimen.spacing)
+        )
+    }
+}
+
+@Preview(group = "Solo Game Components", showBackground = true)
+@Composable
+fun SoloAAALayoutPreview() {
+    WelcomeToFlipTheme {
+        SoloAAALayout(
+            aaaCards = welcomeToClassicDeck.subList(0, 33),
+            effectCards = listOf(SoloA, SoloB, SoloC),
+            modifier = Modifier
+                .height(200.dp)
+                .padding(Dimen.spacing)
+        )
+    }
+}
+
+@Preview(group = "Solo Game Components", showBackground = true)
+@Composable
+fun SoloAAALayoutPreviewLarge() {
+    WelcomeToFlipTheme {
+        SoloAAALayout(
+            aaaCards = welcomeToClassicDeck,
+            effectCards = listOf(SoloA, SoloB, SoloC),
+            modifier = Modifier
+                .height(200.dp)
                 .padding(Dimen.spacing)
         )
     }
@@ -569,7 +710,7 @@ fun SoloSlotLayoutStartPreview() {
                         Astronaut to 0,
                         X to 0
                     ),
-                    effectCards = listOf(SoloA, ),
+                    effectCards = listOf(SoloA,),
                     modifier = it
                         .height(400.dp)
                         .padding(Dimen.spacing)
