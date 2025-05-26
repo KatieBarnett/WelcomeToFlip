@@ -1,5 +1,5 @@
 [versions]
-agp = "8.11.0-alpha08"
+agp = "8.12.0-alpha02"
 billing = "7.1.1"
 compose-bom = "2025.04.01"
 composeNavigation = "2.8.9"
