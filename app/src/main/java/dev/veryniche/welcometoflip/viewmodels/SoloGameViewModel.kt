@@ -8,14 +8,16 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.veryniche.welcometoflip.DeckRepository
-import dev.veryniche.welcometoflip.core.models.Action
 import dev.veryniche.welcometoflip.core.models.Card
 import dev.veryniche.welcometoflip.core.models.GameType
 import dev.veryniche.welcometoflip.core.models.Letter
+import dev.veryniche.welcometoflip.core.models.WelcomeToClassic
+import dev.veryniche.welcometoflip.core.models.WelcomeToTheMoon
 import dev.veryniche.welcometoflip.storage.SavedGamesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.collections.chunked
 import kotlin.random.Random
 
 @HiltViewModel(assistedFactory = SoloGameViewModel.SoloGameViewModelFactory::class)
@@ -44,58 +46,162 @@ class SoloGameViewModel @AssistedInject constructor(
 //        }
 //    }
 
-    private val _currentState = MutableStateFlow<SoloState>(SoloState())
+    private val _currentState = MutableStateFlow(SoloState(gameType = gameType))
     val currentState = _currentState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            val soloEffectCards = deckRepository.getSoloEffectCards(gameType)
 
-            val soloStack = mutableListOf<Card>()
-            val discardStack = mutableListOf<Card>()
-            val shuffledDeck = deckRepository.getDeck(gameType).shuffled(Random(gameSeed))
-            soloStack.addAll(shuffledDeck.subList(0, 20))
-            val effectCards = soloEffectCards.shuffled()
-            soloStack.add(effectCards.first())
-            discardStack.addAll(effectCards.subList(1, 3))
-            soloStack.shuffle()
-            soloStack.addAll(shuffledDeck.subList(20, shuffledDeck.size))
-
-            val astraCards = deckRepository.getAvailableActions(gameType).map {
-                it to 0
-            }.toMap()
+            val (drawStack, discardStack) = initialiseDecks()
 
             _currentState.emit(
                 SoloState(
-                    drawStack = soloStack,
+                    drawStack = drawStack,
                     discardStack = discardStack,
-                    astraCards = astraCards
+                    aiStack = listOf<Card>(),
+                    gameType = gameType,
                 )
             )
         }
     }
 
+    fun initialiseDecks(): Pair<List<Card>, List<Card>> {
+        val soloEffectCards = deckRepository.getSoloEffectCards(gameType)
+        val shuffledDeck = deckRepository.getDeck(gameType).shuffled(Random(gameSeed))
+        val drawStack = mutableListOf<Card>()
+        val discardStack = mutableListOf<Card>()
+        val effectCards = soloEffectCards.shuffled()
+        when (gameType) {
+            WelcomeToClassic -> {
+                drawStack.addAll(shuffledDeck.take(20))
+                drawStack.add(effectCards.first())
+                discardStack.addAll(effectCards.drop(1))
+                drawStack.shuffle()
+                drawStack.addAll(shuffledDeck.drop(20))
+            }
+            WelcomeToTheMoon -> {
+                val chunkedDeck = shuffledDeck.chunked(shuffledDeck.size / 3)
+                drawStack.addAll(chunkedDeck.first())
+                drawStack.addAll(effectCards)
+                drawStack.shuffle()
+                for (i in 1..chunkedDeck.size - 1) {
+                    drawStack.addAll(chunkedDeck[i])
+                }
+            }
+        }
+        return drawStack to discardStack
+    }
 
+    // Draw three cards
     suspend fun drawCards() {
-        _currentState.emit(
-            currentState.value.copy(
-                activeCards = currentState.value.drawStack.take(ACTIVE_CARD_COUNT),
-                drawStack = currentState.value.drawStack.drop(ACTIVE_CARD_COUNT)
+        val gameEnd = if (currentState.value.drawStack.size < ACTIVE_CARD_COUNT) {
+            handleEmptyDrawDeck()
+        } else {
+            false
+        }
+        if (!gameEnd) {
+            var activeCards = currentState.value.drawStack.take(ACTIVE_CARD_COUNT)
+            var consumedCards = ACTIVE_CARD_COUNT
+            while (activeCards.any { card -> card.action is Letter }) {
+                val effectCard = activeCards.first { card -> card.action is Letter }
+                activeCards = activeCards.minus(effectCard)
+                currentState.value.drawStack.getOrNull(consumedCards)?.let {
+                    activeCards = activeCards.plus(it)
+                }
+                consumedCards++
+                _currentState.emit(
+                    currentState.value.copy(
+                        discardStack = currentState.value.discardStack.plus(effectCard),
+                        phase = SoloGamePhase.EffectCardDrawn(effectCard),
+                    )
+                )
+            }
+            val drawStack = currentState.value.drawStack.drop(consumedCards)
+            _currentState.emit(
+                currentState.value.copy(
+                    activeCards = activeCards,
+                    drawStack = drawStack,
+                    phase = SoloGamePhase.DrawCards,
+                )
             )
-        )
+        }
+    }
+
+    // Check for effect card
+    suspend fun handleEffectCard() {
+    }
+
+    // Player clicks on player card
+    suspend fun selectPlayerCard(card: Card) {
+    }
+
+    // Remaining card for AAA/Astra
+    suspend fun selectAiCard(card: Card) {
+    }
+
+    suspend fun handleEmptyDrawDeck(): Boolean {
+        val currentState = currentState.value
+        return when (gameType) {
+            WelcomeToClassic -> {
+                // Just reshuffle discard pile
+                _currentState.emit(
+                    currentState.copy(
+                        drawStack = listOf(),
+                        discardStack = currentState.drawStack.shuffled(),
+                        reshuffleCount = currentState.reshuffleCount + 1,
+                        phase = SoloGamePhase.Reshuffle,
+                    )
+                )
+                false // game end
+            }
+            WelcomeToTheMoon -> {
+                // First time reshuffle discard pile
+                if (currentState.reshuffleCount == 0) {
+                    _currentState.emit(
+                        currentState.copy(
+                            drawStack = listOf(),
+                            discardStack = currentState.drawStack.shuffled(),
+                            reshuffleCount = currentState.reshuffleCount + 1,
+                            phase = SoloGamePhase.Reshuffle,
+                        )
+                    )
+                    false // game end
+                } else {
+                    _currentState.emit(currentState.copy(phase = SoloGamePhase.EndGame))
+                    true // game end
+                }
+            }
+            else -> {
+                true // Weird state
+            }
+        }
+    }
+
+    // Game end choice
+    suspend fun handleGameEnd() {
+        _currentState.emit(currentState.value.copy(phase = SoloGamePhase.EndGame))
     }
 }
 
-enum class SoloGamePhase {
-    SETUP, PLAY
+sealed class SoloGamePhase {
+    object Setup : SoloGamePhase()
+    object DrawCards : SoloGamePhase()
+    data class EffectCardDrawn(val card: Card) : SoloGamePhase()
+    data class PlayerSelection(val card: Card) : SoloGamePhase()
+    data class AiSelection(val card: Card) : SoloGamePhase()
+    object Reshuffle : SoloGamePhase()
+    object EndGame : SoloGamePhase()
 }
 
 data class SoloState(
+    val phase: SoloGamePhase = SoloGamePhase.Setup,
     val drawStack: List<Card> = listOf(),
     val discardStack: List<Card> = listOf(),
     val activeCards: List<Card> = listOf(),
-    val astraCards: Map<Action, Int> = mapOf(),
-    val effectCards: List<Letter> = listOf(),
+    val drawnEffectCards: List<Letter> = listOf(),
+    val aiStack: List<Card> = listOf(),
+    val gameType: GameType,
+    val reshuffleCount: Int = 0,
 ) {
     val drawStackTopCard: Card?
         get() = drawStack.firstOrNull()

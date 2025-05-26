@@ -21,7 +21,7 @@ val WelcomeToTheMoon = GameType(
     largeIcon = R.drawable.noun_moon_6086589,
     displayName = R.string.game_welcome_to_the_moon,
     actionCardName = R.string.game_welcome_to_the_moon_action_card_name,
-    soloAvailable = false,
+    soloAvailable = true,
     soloPurchased = BuildConfig.DEBUG,
     purchased = BuildConfig.DEBUG
 )

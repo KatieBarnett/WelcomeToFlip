@@ -1,8 +1,6 @@
 package dev.veryniche.welcometoflip.screens
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MediumTopAppBar
@@ -16,21 +14,17 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.veryniche.welcometoflip.ads.InterstitialAdLocation
 import dev.veryniche.welcometoflip.components.AboutActionIcon
 import dev.veryniche.welcometoflip.components.ChartActionItem
-import dev.veryniche.welcometoflip.components.GameContainer
 import dev.veryniche.welcometoflip.components.NavigationIcon
 import dev.veryniche.welcometoflip.components.ScreenOnToggle
 import dev.veryniche.welcometoflip.components.ShopActionIcon
@@ -66,8 +60,7 @@ fun SoloGameScreen(
     }
 
     val currentState by viewModel.currentState.collectAsStateWithLifecycle(
-        SoloState(),
-        lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current
+        SoloState(gameType = gameType),
     )
 
 //    val position by viewModel.position.observeAsState(viewModel.initialPosition)
@@ -156,24 +149,45 @@ fun SoloGameScreen(
         },
         modifier = modifier
     ) { innerPadding ->
-        Box(Modifier.padding(innerPadding))
+        Box(Modifier.padding(innerPadding)) {
+            SoloGame(
+                state = currentState,
+                onDrawCards = {
+                    coroutineScope.launch {
+                        viewModel.drawCards()
+                    }
+                },
+                onSelectPlayerCard = { card ->
+                    coroutineScope.launch {
+                        viewModel.selectPlayerCard(card)
+                    }
+                },
+                onSelectAiCard = {card ->
+                    coroutineScope.launch {
+                        viewModel.selectAiCard(card)
+                    }
+                },
+                modifier = Modifier
+            )
+        }
+
 //        GameContainer(
 //            displayPosition = 0, // TO FIX //currentState.discardStack + 1,
 //            displayEndPosition = 0, // TO FIX  currentState.totalPosition,
-////            gameType = gameType,
+// //            gameType = gameType,
 //            content = { contentModifier ->
-////            when (phase) {
-////                SoloGamePhase.SETUP -> SoloGameSetup(
-////                    stacks = viewModel.stacks,
-////                    soloPile = viewModel.soloEffectCards,
-////                    onAnimationComplete = {
-////                        viewModel.setupSoloDrawStack()
-////                        viewModel.setupAstraCards()
-////                        viewModel.advancePosition()
-////                    },
-////                    modifier = contentModifier
-////                )
-////                SoloGamePhase.PLAY ->
+// //            when (phase) {
+// //                SoloGamePhase.SETUP -> SoloGameSetup(
+// //                    stacks = viewModel.stacks,
+// //                    soloPile = viewModel.soloEffectCards,
+// //                    onAnimationComplete = {
+// //                        viewModel.setupSoloDrawStack()
+// //                        viewModel.setupAstraCards()
+// //                        viewModel.advancePosition()
+// //                    },
+// //                    modifier = contentModifier
+// //                )
+// //                SoloGamePhase.PLAY ->
 //                SoloGame(
 //                    state = currentState,
 //                    onDrawCards = {
@@ -185,7 +199,7 @@ fun SoloGameScreen(
 //                    },
 //                    modifier = contentModifier,
 //                )
-////            }
+// //            }
 //            },
 //            modifier = Modifier.padding(
 //                top = innerPadding.calculateTopPadding(),
