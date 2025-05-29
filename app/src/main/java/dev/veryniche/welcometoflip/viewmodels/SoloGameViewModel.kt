@@ -189,7 +189,7 @@ sealed class SoloGamePhase(val name: String) {
     object DrawCards : SoloGamePhase(name = "DrawCards")
     object SelectCards : SoloGamePhase(name = "SelectCards")
     data class EffectCardDrawn(val card: Card) : SoloGamePhase(name = "EffectCardDrawn")
-    data class PlayerSelection(val card: Card) : SoloGamePhase(name = "PlayerSelection")
+    object PlayerSelection : SoloGamePhase(name = "PlayerSelection") // TODO pass in which selections have been made
     data class AiSelection(val card: Card) : SoloGamePhase(name = "AiSelection")
     object Reshuffle : SoloGamePhase(name = "Reshuffle")
     object EndGame : SoloGamePhase(name = "EndGame")

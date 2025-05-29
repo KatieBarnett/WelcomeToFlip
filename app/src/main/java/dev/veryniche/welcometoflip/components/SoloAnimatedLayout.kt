@@ -87,7 +87,16 @@ fun SoloAnimatedLayout(
                             }
                             is SoloGamePhase.EffectCardDrawn -> TODO()
                             SoloGamePhase.EndGame -> TODO()
-                            is SoloGamePhase.PlayerSelection -> TODO()
+                            SoloGamePhase.PlayerSelection -> {
+                                PlayerSelectionLayout(
+                                    drawStack = drawStack.firstOrNull(),
+                                    discardStack = discardStack.firstOrNull(),
+                                    activeCards = activeCards,
+                                    gameType = gameType,
+                                    aiCards = aiCards,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
                             SoloGamePhase.Reshuffle -> TODO()
                             SoloGamePhase.SelectCards -> {
                                 SelectCardsLayout(
@@ -123,6 +132,15 @@ fun SoloAnimatedLayoutPreview() {
         ),
         SoloState(
             phase = SoloGamePhase.SelectCards,
+            drawStack = welcomeToClassicDeck.subList(0, 10),
+            discardStack = welcomeToClassicDeck.subList(10, 15),
+            activeCards = welcomeToClassicDeck.subList(15, 18),
+            drawnEffectCards = listOf(SoloA),
+            aiStack = welcomeToClassicDeck.subList(18, 33),
+            gameType = WelcomeToClassic,
+        ),
+        SoloState(
+            phase = SoloGamePhase.PlayerSelection,
             drawStack = welcomeToClassicDeck.subList(0, 10),
             discardStack = welcomeToClassicDeck.subList(10, 15),
             activeCards = welcomeToClassicDeck.subList(15, 18),
