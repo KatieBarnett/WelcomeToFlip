@@ -183,14 +183,16 @@ class SoloGameViewModel @AssistedInject constructor(
     }
 }
 
-sealed class SoloGamePhase {
-    object Setup : SoloGamePhase()
-    object DrawCards : SoloGamePhase()
-    data class EffectCardDrawn(val card: Card) : SoloGamePhase()
-    data class PlayerSelection(val card: Card) : SoloGamePhase()
-    data class AiSelection(val card: Card) : SoloGamePhase()
-    object Reshuffle : SoloGamePhase()
-    object EndGame : SoloGamePhase()
+sealed class SoloGamePhase(val name: String) {
+    object Setup : SoloGamePhase(name = "Setup")
+
+    object DrawCards : SoloGamePhase(name = "DrawCards")
+    object SelectCards : SoloGamePhase(name = "SelectCards")
+    data class EffectCardDrawn(val card: Card) : SoloGamePhase(name = "EffectCardDrawn")
+    data class PlayerSelection(val card: Card) : SoloGamePhase(name = "PlayerSelection")
+    data class AiSelection(val card: Card) : SoloGamePhase(name = "AiSelection")
+    object Reshuffle : SoloGamePhase(name = "Reshuffle")
+    object EndGame : SoloGamePhase(name = "EndGame")
 }
 
 data class SoloState(
